@@ -65,12 +65,12 @@ export const _SignUp = (props: SignUpProps) => {
     if (props.isLoggedIn) {
       navigate('/');
     }
-  }, [props.isLoggedIn, navigate], );
+  }, [props.isLoggedIn, navigate]);
 
   React.useEffect(() => {
     redirectIfLoggedIn();
   }, [redirectIfLoggedIn]);
-  
+
   const theme = useTheme();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

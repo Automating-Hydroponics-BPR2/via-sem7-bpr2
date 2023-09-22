@@ -137,7 +137,7 @@ export const _SignIn = (props: SignInProps) => {
                 sx={{ cursor: 'pointer' }}
                 variant="body2"
                 onClick={() => {
-                  alert("Link clicked");
+                  alert('Link clicked');
                 }}>
                 {'Forgot password?'}
               </Link>
