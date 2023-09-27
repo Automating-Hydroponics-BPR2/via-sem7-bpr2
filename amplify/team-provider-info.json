@@ -1,0 +1,33 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-viasem7bpr2client-dev-172334-authRole",
+      "UnauthRoleArn": "arn:aws:iam::479471548163:role/amplify-viasem7bpr2client-dev-172334-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::479471548163:role/amplify-viasem7bpr2client-dev-172334-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-viasem7bpr2client-dev-172334-deployment",
+      "UnauthRoleName": "amplify-viasem7bpr2client-dev-172334-unauthRole",
+      "StackName": "amplify-viasem7bpr2client-dev-172334",
+      "StackId": "arn:aws:cloudformation:eu-central-1:479471548163:stack/amplify-viasem7bpr2client-dev-172334/297ece10-5a25-11ee-bd7a-02a64c19d24f",
+      "AmplifyAppId": "d3a82aapyyhwng"
+    },
+    "categories": {
+      "function": {
+        "viabpr2": {
+          "deploymentBucketName": "amplify-viasem7bpr2client-dev-172334-deployment",
+          "s3Key": "amplify-builds/viabpr2-65335a53486d7774636c-build.zip"
+        },
+        "devicesTriggere97ebce0": {
+          "deploymentBucketName": "amplify-viasem7bpr2client-dev-172334-deployment",
+          "s3Key": "amplify-builds/devicesTriggere97ebce0-326f6449347376473633-build.zip"
+        }
+      },
+      "storage": {
+        "devices": {}
+      },
+      "api": {
+        "bpr2api": {}
+      }
+    }
+  }
+}

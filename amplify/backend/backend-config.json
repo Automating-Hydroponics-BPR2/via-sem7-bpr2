@@ -1,0 +1,95 @@
+{
+  "api": {
+    "bpr2api": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "viabpr2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
+  "function": {
+    "devicesTriggere97ebce0": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "devices"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "viabpr2": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributeEnvMap": {
+            "Arn": "TABLE_ARN",
+            "Name": "TABLE_NAME"
+          },
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "storage",
+          "resourceName": "devices"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_devicesTriggere97ebce0_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "devicesTriggere97ebce0"
+        }
+      ]
+    },
+    "AMPLIFY_function_devicesTriggere97ebce0_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "devicesTriggere97ebce0"
+        }
+      ]
+    },
+    "AMPLIFY_function_viabpr2_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "viabpr2"
+        }
+      ]
+    },
+    "AMPLIFY_function_viabpr2_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "viabpr2"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "devices": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    }
+  }
+}
