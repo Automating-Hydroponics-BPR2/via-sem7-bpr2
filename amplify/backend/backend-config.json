@@ -41,6 +41,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_bpr2lambda1_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bpr2lambda1"
+        }
+      ]
+    },
+    "AMPLIFY_function_bpr2lambda1_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bpr2lambda1"
+        }
+      ]
+    },
     "AMPLIFY_hosting_amplifyhosting_appId": {
       "usedBy": [
         {

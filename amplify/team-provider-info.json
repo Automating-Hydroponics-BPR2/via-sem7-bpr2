@@ -13,13 +13,19 @@
     },
     "categories": {
       "function": {
-        "bpr2lambda1": {}
+        "bpr2lambda1": {
+          "deploymentBucketName": "amplify-viasem7bpr2-dev-140637-deployment",
+          "s3Key": "amplify-builds/bpr2lambda1-54623375586b75556477-build.zip"
+        }
       },
       "hosting": {
         "amplifyhosting": {
           "appId": "d36cs0wh270jpt",
           "type": "cicd"
         }
+      },
+      "storage": {
+        "bpr2storage": {}
       }
     }
   }

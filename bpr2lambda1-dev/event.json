@@ -1,0 +1,17 @@
+{
+  "httpMethod": "GET",
+  "path": "/devices/getDevice/:deviceName",
+  "queryStringParameters": {
+    "deviceName": "My Device"
+  },
+  "headers": {
+    "Content-Type": "application/json",
+    "apiKey": "KgbxBGrQZZ7MuIwTiJkHooS1Vt6787c3Xud2rdcf"
+  },
+  "body": {
+    "name": "My Device",
+    "type": "My Device Type",
+    "reading": "1234567890",
+    "dateTime": "2018-01-01T00:00:00.000Z"
+  }
+}
