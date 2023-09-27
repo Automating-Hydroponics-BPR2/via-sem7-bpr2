@@ -13,10 +13,6 @@
     },
     "categories": {
       "function": {
-        "viabpr2": {
-          "deploymentBucketName": "amplify-viasem7bpr2client-dev-172334-deployment",
-          "s3Key": "amplify-builds/viabpr2-65335a53486d7774636c-build.zip"
-        },
         "devicesTriggere97ebce0": {
           "deploymentBucketName": "amplify-viasem7bpr2client-dev-172334-deployment",
           "s3Key": "amplify-builds/devicesTriggere97ebce0-326f6449347376473633-build.zip"
