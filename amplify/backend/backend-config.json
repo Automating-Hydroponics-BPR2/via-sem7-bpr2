@@ -8,48 +8,15 @@
             "Arn"
           ],
           "category": "function",
-          "resourceName": "devicesTriggere97ebce0"
+          "resourceName": "bpr2lambda1"
         }
       ],
       "providerPlugin": "awscloudformation",
       "service": "API Gateway"
     }
   },
-  "auth": {
-    "viasem7bpr2client": {
-      "customAuth": false,
-      "dependsOn": [],
-      "frontendAuthConfig": {
-        "mfaConfiguration": "OFF",
-        "mfaTypes": [
-          "SMS"
-        ],
-        "passwordProtectionSettings": {
-          "passwordPolicyCharacters": [
-            "REQUIRES_LOWERCASE",
-            "REQUIRES_NUMBERS",
-            "REQUIRES_SYMBOLS",
-            "REQUIRES_UPPERCASE"
-          ],
-          "passwordPolicyMinLength": 6
-        },
-        "signupAttributes": [
-          "GIVEN_NAME",
-          "FAMILY_NAME",
-          "EMAIL"
-        ],
-        "socialProviders": [],
-        "usernameAttributes": [],
-        "verificationMechanisms": [
-          "EMAIL"
-        ]
-      },
-      "providerPlugin": "awscloudformation",
-      "service": "Cognito"
-    }
-  },
   "function": {
-    "devicesTriggere97ebce0": {
+    "bpr2lambda1": {
       "build": true,
       "dependsOn": [
         {
@@ -59,7 +26,7 @@
             "StreamArn"
           ],
           "category": "storage",
-          "resourceName": "devices"
+          "resourceName": "bpr2storage"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -68,28 +35,12 @@
   },
   "hosting": {
     "amplifyhosting": {
-      "lastPushTimeStamp": "2023-09-27T07:57:59.986Z",
+      "lastPushTimeStamp": "2023-09-27T12:10:38.804Z",
       "service": "amplifyhosting",
       "type": "cicd"
     }
   },
   "parameters": {
-    "AMPLIFY_function_devicesTriggere97ebce0_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "devicesTriggere97ebce0"
-        }
-      ]
-    },
-    "AMPLIFY_function_devicesTriggere97ebce0_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "devicesTriggere97ebce0"
-        }
-      ]
-    },
     "AMPLIFY_hosting_amplifyhosting_appId": {
       "usedBy": [
         {
@@ -108,7 +59,7 @@
     }
   },
   "storage": {
-    "devices": {
+    "bpr2storage": {
       "providerPlugin": "awscloudformation",
       "service": "DynamoDB"
     }

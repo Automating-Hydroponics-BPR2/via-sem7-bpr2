@@ -2,26 +2,31 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "{\"createdOn\":\"Windows\",\"createdBy\":\"Amplify\",\"createdWith\":\"12.5.0\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
-    "env": {
-      "Type": "String"
-    },
-    "storagedevicesName": {
+    "CloudWatchRule": {
       "Type": "String",
-      "Default": "storagedevicesName"
-    },
-    "storagedevicesArn": {
-      "Type": "String",
-      "Default": "storagedevicesArn"
-    },
-    "storagedevicesStreamArn": {
-      "Type": "String",
-      "Default": "storagedevicesArn"
+      "Default": "NONE",
+      "Description": " Schedule Expression"
     },
     "deploymentBucketName": {
       "Type": "String"
     },
+    "env": {
+      "Type": "String"
+    },
     "s3Key": {
       "Type": "String"
+    },
+    "storagebpr2storageName": {
+      "Type": "String",
+      "Default": "storagebpr2storageName"
+    },
+    "storagebpr2storageArn": {
+      "Type": "String",
+      "Default": "storagebpr2storageArn"
+    },
+    "storagebpr2storageStreamArn": {
+      "Type": "String",
+      "Default": "storagebpr2storageArn"
     }
   },
   "Conditions": {
@@ -42,16 +47,24 @@
         "aws:asset:property": "Code"
       },
       "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": {
+            "Ref": "s3Key"
+          }
+        },
         "Handler": "index.handler",
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "devicesTriggere97ebce0",
+            "bpr2lambda1",
             {
               "Fn::Join": [
                 "",
                 [
-                  "devicesTriggere97ebce0",
+                  "bpr2lambda1",
                   "-",
                   {
                     "Ref": "env"
@@ -65,6 +78,9 @@
           "Variables": {
             "ENV": {
               "Ref": "env"
+            },
+            "REGION": {
+              "Ref": "AWS::Region"
             }
           }
         },
@@ -75,15 +91,8 @@
           ]
         },
         "Runtime": "nodejs18.x",
-        "Timeout": 25,
-        "Code": {
-          "S3Bucket": {
-            "Ref": "deploymentBucketName"
-          },
-          "S3Key": {
-            "Ref": "s3Key"
-          }
-        }
+        "Layers": [],
+        "Timeout": 25
       }
     },
     "LambdaExecutionRole": {
@@ -92,12 +101,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "devicesLambdaRolee97ebce0",
+            "viasem7bpr2LambdaRole84aafb7d",
             {
               "Fn::Join": [
                 "",
                 [
-                  "devicesLambdaRolee97ebce0",
+                  "viasem7bpr2LambdaRole84aafb7d",
                   "-",
                   {
                     "Ref": "env"
@@ -168,13 +177,13 @@
         }
       }
     },
-    "devicesTriggerPolicy": {
+    "bpr2storageTriggerPolicy": {
       "DependsOn": [
         "LambdaExecutionRole"
       ],
       "Type": "AWS::IAM::Policy",
       "Properties": {
-        "PolicyName": "lambda-trigger-policy-devices",
+        "PolicyName": "lambda-trigger-policy-bpr2storage",
         "Roles": [
           {
             "Ref": "LambdaExecutionRole"
@@ -193,7 +202,7 @@
               ],
               "Resource": [
                 {
-                  "Ref": "storagedevicesStreamArn"
+                  "Ref": "storagebpr2storageStreamArn"
                 }
               ]
             }
@@ -201,16 +210,16 @@
         }
       }
     },
-    "devicesTrigger": {
+    "bpr2storageTrigger": {
       "Type": "AWS::Lambda::EventSourceMapping",
       "DependsOn": [
-        "devicesTriggerPolicy"
+        "bpr2storageTriggerPolicy"
       ],
       "Properties": {
         "BatchSize": 100,
         "Enabled": true,
         "EventSourceArn": {
-          "Ref": "storagedevicesStreamArn"
+          "Ref": "storagebpr2storageStreamArn"
         },
         "FunctionName": {
           "Fn::GetAtt": [

@@ -6,19 +6,8 @@ export type AmplifyDependentResourcesAttributes = {
       "RootUrl": "string"
     }
   },
-  "auth": {
-    "viasem7bpr2client": {
-      "AppClientID": "string",
-      "AppClientIDWeb": "string",
-      "IdentityPoolId": "string",
-      "IdentityPoolName": "string",
-      "UserPoolArn": "string",
-      "UserPoolId": "string",
-      "UserPoolName": "string"
-    }
-  },
   "function": {
-    "devicesTriggere97ebce0": {
+    "bpr2lambda1": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",
@@ -27,7 +16,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
-    "devices": {
+    "bpr2storage": {
       "Arn": "string",
       "Name": "string",
       "PartitionKeyName": "string",

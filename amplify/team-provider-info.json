@@ -1,37 +1,25 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-viasem7bpr2client-dev-172334-authRole",
-      "UnauthRoleArn": "arn:aws:iam::479471548163:role/amplify-viasem7bpr2client-dev-172334-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::479471548163:role/amplify-viasem7bpr2client-dev-172334-authRole",
+      "AuthRoleName": "amplify-viasem7bpr2-dev-140637-authRole",
+      "UnauthRoleArn": "arn:aws:iam::479471548163:role/amplify-viasem7bpr2-dev-140637-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::479471548163:role/amplify-viasem7bpr2-dev-140637-authRole",
       "Region": "eu-central-1",
-      "DeploymentBucketName": "amplify-viasem7bpr2client-dev-172334-deployment",
-      "UnauthRoleName": "amplify-viasem7bpr2client-dev-172334-unauthRole",
-      "StackName": "amplify-viasem7bpr2client-dev-172334",
-      "StackId": "arn:aws:cloudformation:eu-central-1:479471548163:stack/amplify-viasem7bpr2client-dev-172334/297ece10-5a25-11ee-bd7a-02a64c19d24f",
-      "AmplifyAppId": "d3a82aapyyhwng"
+      "DeploymentBucketName": "amplify-viasem7bpr2-dev-140637-deployment",
+      "UnauthRoleName": "amplify-viasem7bpr2-dev-140637-unauthRole",
+      "StackName": "amplify-viasem7bpr2-dev-140637",
+      "StackId": "arn:aws:cloudformation:eu-central-1:479471548163:stack/amplify-viasem7bpr2-dev-140637/4f4206b0-5d2e-11ee-88f6-063a008fe346",
+      "AmplifyAppId": "d36cs0wh270jpt"
     },
     "categories": {
       "function": {
-        "devicesTriggere97ebce0": {
-          "deploymentBucketName": "amplify-viasem7bpr2client-dev-172334-deployment",
-          "s3Key": "amplify-builds/devicesTriggere97ebce0-326f6449347376473633-build.zip"
-        }
-      },
-      "storage": {
-        "devices": {}
-      },
-      "api": {
-        "bpr2api": {}
+        "bpr2lambda1": {}
       },
       "hosting": {
         "amplifyhosting": {
-          "appId": "d3a82aapyyhwng",
+          "appId": "d36cs0wh270jpt",
           "type": "cicd"
         }
-      },
-      "auth": {
-        "viasem7bpr2client": {}
       }
     }
   }

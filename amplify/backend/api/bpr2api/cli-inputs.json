@@ -3,7 +3,7 @@
   "paths": {
     "/devices": {
       "name": "/devices",
-      "lambdaFunction": "devicesTriggere97ebce0",
+      "lambdaFunction": "bpr2lambda1",
       "permissions": {
         "setting": "open"
       }
