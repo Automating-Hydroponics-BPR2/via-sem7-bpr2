@@ -1,0 +1,16 @@
+{
+  "resourceName": "bpr2storage",
+  "tableName": "devices",
+  "partitionKey": {
+    "fieldName": "name",
+    "fieldType": "string"
+  },
+  "sortKey": {
+    "fieldName": "type",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": [
+    "bpr2lambda1"
+  ]
+}
