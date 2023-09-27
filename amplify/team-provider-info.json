@@ -27,6 +27,12 @@
       },
       "api": {
         "bpr2api": {}
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d3a82aapyyhwng",
+          "type": "cicd"
+        }
       }
     }
   }
