@@ -29,6 +29,9 @@
           "appId": "d3a82aapyyhwng",
           "type": "cicd"
         }
+      },
+      "auth": {
+        "viasem7bpr2client": {}
       }
     }
   }
