@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/devices": {
+      "name": "/devices",
+      "lambdaFunction": "viabpr2",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

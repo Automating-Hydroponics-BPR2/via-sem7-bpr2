@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
+import { Amplify } from 'aws-amplify';
+import awsExports from './aws-exports';
 import reportWebVitals from './reportWebVitals';
 import App from './App';
 import { StyledEngineProvider } from '@mui/material';
 import { Provider } from 'react-redux';
 import { configureAppStore } from './shared/store/configure-store';
 import './index.css';
+Amplify.configure(awsExports);
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(

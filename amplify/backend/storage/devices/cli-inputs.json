@@ -1,0 +1,24 @@
+{
+  "resourceName": "devices",
+  "tableName": "devices",
+  "partitionKey": {
+    "fieldName": "name",
+    "fieldType": "string"
+  },
+  "sortKey": {
+    "fieldName": "type",
+    "fieldType": "string"
+  },
+  "gsi": [
+    {
+      "name": "readingIndex",
+      "partitionKey": {
+        "fieldName": "reading",
+        "fieldType": "string"
+      }
+    }
+  ],
+  "triggerFunctions": [
+    "devicesTriggere97ebce0"
+  ]
+}
