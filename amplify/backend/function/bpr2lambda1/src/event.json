@@ -1,7 +1,7 @@
 {
   "httpMethod": "GET",
   "path": "/devices/:id",
-  "queryStringParameters": {
+  "pathParameters": {
     "id": "1234"
   },
   "headers": {
