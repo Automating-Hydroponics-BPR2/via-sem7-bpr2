@@ -23,8 +23,8 @@ export const createDevice = async (req, res, next) => {
 
 export const getDeviceById = async (req, res, next) => {
   try {
-    console.log('getDeviceById');
     const { deviceId } = req.params;
+    console.log('getDeviceById', deviceId);
     const device = await deviceServices.findById(deviceId);
     res.status(200).json(device);
     next();
