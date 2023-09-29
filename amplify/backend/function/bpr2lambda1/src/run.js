@@ -1,19 +1,10 @@
 import { handler } from './index.js';
 
-const event = {
-    httpMethod: 'GET',
-    path: '/devices/{deviceId}',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: null,
-    pathParameters: {
-        deviceId: '1234',
-    }
-}
+// get contents from file named event.json
+const event = require('./event.json');
 
 const main = async () => {
-  const response = await handler(event);
+  const response = await handler(event, null);
   console.log(response);
 };
 
