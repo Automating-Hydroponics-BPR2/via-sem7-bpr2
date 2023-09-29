@@ -1,3 +1,7 @@
 {"level":"debug","message":"Logging initialized at debug level"}
 {"level":"debug","message":"Logging initialized at debug level"}
 {"level":"debug","message":"Logging initialized at debug level"}
+{"level":"debug","message":"Logging initialized at debug level"}
+{"level":"error","message":"Internal Server Error, CredentialsProviderError: Could not load credentials from any providers <--- 😠 ---> src/controllers/deviceController.js - getDeviceById"}
+{"level":"debug","message":"Logging initialized at debug level"}
+{"level":"error","message":"Internal Server Error, CredentialsProviderError: Could not load credentials from any providers ----->  src/controllers/deviceController.js - getDeviceById"}

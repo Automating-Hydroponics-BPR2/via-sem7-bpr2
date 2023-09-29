@@ -27,7 +27,7 @@ const getDeviceById = async (deviceId) => {
   );
 
   if (!deviceToFetch) {
-    throw new NotFoundError(`Device with id ${deviceId} not found`);
+    throw new NotFoundError(`Device with id ${deviceId} not found`, "src/services/deviceService.js - getDeviceById");
   }
 
   return deviceToFetch;
