@@ -1,9 +1,11 @@
 import { Router } from 'express';
-import { createDevice, getDeviceById } from '../controllers/deviceController.js';
+import { createDevice, getDeviceById, deleteDeviceById, updateDeviceById } from '../controllers/deviceController.js';
 
 const deviceRouter = Router();
 
 deviceRouter.get('/:deviceId', getDeviceById);
 deviceRouter.post('/', createDevice);
+deviceRouter.patch('/:deviceId', updateDeviceById);
+deviceRouter.delete('/:deviceId', deleteDeviceById);
 
 export default deviceRouter;
