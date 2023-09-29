@@ -2,10 +2,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { DynamoDBClient, ListTablesCommand, GetItemCommand, PutItemCommand } from '@aws-sdk/client-dynamodb';
 const dynamoDb = new DynamoDBClient({ region: 'eu-central-1' });
 
-const TableParams = {
-  TableName: 'devices-dev',
-};
-
 const createDevice = async (device) => {
   try {
     const deviceToCreate = {
@@ -18,7 +14,7 @@ const createDevice = async (device) => {
 
     const deviceCreated = await dynamoDb.send(
       new PutItemCommand({
-        TableParams,
+        TableName: 'devices-dev',
         Item: {
           id: { S: deviceToCreate.id },
           name: { S: deviceToCreate.name },
@@ -38,7 +34,9 @@ const createDevice = async (device) => {
 const getDeviceById = async (deviceId) => {
   try {
     console.log('Device findById: ', deviceId);
-    const deviceToFetch = await dynamoDb.send(new GetItemCommand({ TableParams, Key: { id: { S: deviceId } } }));
+    const deviceToFetch = await dynamoDb.send(
+      new GetItemCommand({ TableName: 'devices-dev', Key: { id: { S: deviceId } } }),
+    );
     const deviceToReturn = {
       id: deviceId,
       name: 'Device 1',
@@ -55,7 +53,11 @@ const getDeviceById = async (deviceId) => {
 
 const getAllDevices = async () => {
   try {
-    const devices = await dynamoDb.send(new ListTablesCommand({}));
+    const devices = await dynamoDb.send(
+      new ListTablesCommand({
+        TableName: 'devices-dev',
+      }),
+    );
     return devices;
   } catch (error) {
     console.log('getAllDevices error: ', error);
