@@ -19,8 +19,16 @@ const createDevice = async (device) => {
   return device;
 };
 
-const findById = async (deviceId) => {
+const getDeviceById = async (deviceId) => {
   console.log('Device findById: ', deviceId);
+  const deviceToFetch = await dynamoDb
+    .get({
+      TableName: 'Devices',
+      Key: {
+        id: deviceId,
+      },
+    })
+    .promise();
   const deviceToReturn = {
     id: deviceId,
     name: 'Device 1',
@@ -28,7 +36,7 @@ const findById = async (deviceId) => {
     reading: 'Device Reading 1',
     dateTime: 'Device DateTime 1',
   };
-  return deviceToReturn;
+  return JSON.stringify(deviceToFetch.Item) ?? JSON.stringify(deviceToReturn) ?? 'No device found';
 };
 
 const getAllDevices = async () => {
@@ -64,6 +72,6 @@ const getAllDevices = async () => {
 
 export const deviceServices = {
   createDevice,
-  findById,
+  findById: getDeviceById,
   getAllDevices,
 };
