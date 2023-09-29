@@ -1,51 +1,28 @@
 {
-  "resource": "/device/{deviceId}",
-  "path": "/device/1234",
-  "httpMethod": "GET",
-  "headers": {
-    "content-type": "application/json"
-  },
-  "multiValueHeaders": {
-    "content-type": ["application/json"]
-  },
-  "queryStringParameters": null,
-  "multiValueQueryStringParameters": null,
-  "pathParameters": {
-    "deviceId": "1234"
-  },
-  "stageVariables": null,
-  "requestContext": {
-    "resourceId": "6t9ko2",
-    "resourcePath": "/device/{deviceId}",
-    "httpMethod": "GET",
-    "extendedRequestId": "MA1oPFuLliAFYeg=",
-    "requestTime": "29/Sep/2023:09:44:58 +0000",
-    "path": "/device/{deviceId}",
-    "accountId": "479471548163",
-    "protocol": "HTTP/1.1",
-    "stage": "test-invoke-stage",
-    "domainPrefix": "testPrefix",
-    "requestTimeEpoch": 1695980698886,
-    "requestId": "bec4f2fc-2f66-4b2b-8da7-4548c5d7a5d8",
-    "identity": {
-      "cognitoIdentityPoolId": null,
-      "cognitoIdentityId": null,
-      "apiKey": "test-invoke-api-key",
-      "principalOrgId": null,
-      "cognitoAuthenticationType": null,
-      "userArn": "arn:aws:iam::479471548163:user/useradmin",
-      "apiKeyId": "test-invoke-api-key-id",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36",
-      "accountId": "479471548163",
-      "caller": "AIDAW7IV3G4B7H5MIV7B5",
-      "sourceIp": "test-invoke-source-ip",
-      "accessKey": "ASIAW7IV3G4BSFUDFPOA",
-      "cognitoAuthenticationProvider": null,
-      "user": "AIDAW7IV3G4B7H5MIV7B5"
-    },
-    "domainName": "testPrefix.testDomainName",
-    "apiId": "p8hb9lbwxc"
-  },
-  "body": null,
-  "isBase64Encoded": false
-}
+      "resource": "/device/{deviceId}",
+      "path": "/device/1234",
+      "httpMethod": "GET",
+      "headers": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+          "accept-encoding": "gzip, deflate, br",
+          "Host": "70ixmpl4fl.execute-api.us-east-2.amazonaws.com",
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36",
+          "X-Amzn-Trace-Id": "Root=1-5e66d96f-7491f09xmpl79d18acf3d050"
+      },
+      "multiValueHeaders": {
+          "accept": [
+              "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+          ],
+          "accept-encoding": [
+              "gzip, deflate, br"
+          ]
+      },
+      "queryStringParameters": null,
+      "multiValueQueryStringParameters": null,
+      "pathParameters": {
+        "deviceId": "1234"
+      },
+      "stageVariables": null,
+      "body": null,
+      "isBase64Encoded": false
+  }

@@ -1,9 +1,7 @@
-import express from 'express';
+import { Router } from 'express';
 import { getAllDevices } from '../controllers/deviceController.js';
 
-const devicesRouter = express.Router({
-  mergeParams: true,
-});
+const devicesRouter = Router();
 
 devicesRouter.get('/', getAllDevices);
 

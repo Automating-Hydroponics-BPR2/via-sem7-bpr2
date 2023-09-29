@@ -1,22 +1,27 @@
-import AWS from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
+import { DynamoDBClient, ListTablesCommand } from '@aws-sdk/client-dynamodb';
+const dynamoDb = new DynamoDBClient({ region: 'eu-central-1' });
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const TableParams = {
+  TableName: 'devices-dev',
+};
 
 const createDevice = async (device) => {
-  const params = {
-    TableName: 'Devices',
-    Item: {
+  try {
+    const deviceToCreate = {
       id: uuidv4(),
       name: device.name,
       type: device.type,
       reading: device.reading,
       dateTime: device.dateTime,
-    },
-  };
-  await dynamoDb.put(params).promise();
+    };
 
-  return device;
+    const deviceCreated = await dynamoDb.put(Object.assign(TableParams, deviceToCreate)).promise();
+
+    return deviceCreated;
+  } catch (error) {
+    return error;
+  }
 };
 
 const getDeviceById = async (deviceId) => {
@@ -36,7 +41,8 @@ const getDeviceById = async (deviceId) => {
     reading: 'Device Reading 1',
     dateTime: 'Device DateTime 1',
   };
-  return JSON.stringify(deviceToFetch.Item) ?? JSON.stringify(deviceToReturn) ?? 'No device found';
+
+  return deviceToFetch ?? deviceToReturn;
 };
 
 const getAllDevices = async () => {
@@ -63,11 +69,9 @@ const getAllDevices = async () => {
       dateTime: 'Device DateTime 3',
     },
   ];
-  //   const params = {
-  //     TableName: 'Devices',
-  //   };
-  //   const devices = await dynamoDb.scan(params).promise();
-  return devices;
+  
+  const tables = await dynamoDb.send(new ListTablesCommand({}));
+  return tables ?? devices;
 };
 
 export const deviceServices = {

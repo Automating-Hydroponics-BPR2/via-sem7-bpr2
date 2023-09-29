@@ -1,12 +1,9 @@
-import express from 'express';
+import { Router } from 'express';
 import { createDevice, getDeviceById } from '../controllers/deviceController.js';
 
-const deviceRouter = express.Router({
-  mergeParams: true,
-});
-
-deviceRouter.post('/', createDevice);
+const deviceRouter = Router();
 
 deviceRouter.get('/:deviceId', getDeviceById);
+deviceRouter.post('/', createDevice);
 
 export default deviceRouter;

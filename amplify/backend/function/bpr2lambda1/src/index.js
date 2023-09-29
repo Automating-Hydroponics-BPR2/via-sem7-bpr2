@@ -3,7 +3,7 @@ import app from './app.js';
 
 const server = createServer(app);
 
-export function handler(event, context) {
-  console.log(`EVENT: ${JSON.stringify(event)}`);
-  return proxy(server, event, context, 'PROMISE').promise;
+export async function handler(event, context) {
+  console.log('Request event: ', event);
+  return await proxy(server, event, context, 'PROMISE').promise;
 }
