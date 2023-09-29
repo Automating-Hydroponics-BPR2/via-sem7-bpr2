@@ -1,5 +1,5 @@
 import { deviceServices } from '../services/deviceService.js';
-import { BadRequestError } from '../helpers/apiError.js';
+import { ApiError, BadRequestError } from '../helpers/apiError.js';
 
 export const getAllDevices = async (req, res, next) => {
   try {
@@ -9,7 +9,7 @@ export const getAllDevices = async (req, res, next) => {
     if (error instanceof Error && error.name === 'ValidationError') {
       next(new BadRequestError('Invalid Request', error));
     } else {
-      next(error);
+      next(new ApiError(500, `Internal Server Error, ${error}`, 'src/controllers/deviceController.js - getAllDevices'));
     }
   }
 };
@@ -23,7 +23,7 @@ export const createDevice = async (req, res, next) => {
     if (error instanceof Error && error.name === 'ValidationError') {
       next(new BadRequestError('Invalid Request', error));
     } else {
-      next(error);
+      next(new ApiError(500, `Internal Server Error, ${error}`, 'src/controllers/deviceController.js - createDevice'));
     }
   }
 };
@@ -38,7 +38,7 @@ export const getDeviceById = async (req, res, next) => {
     if (error instanceof Error && error.name === 'ValidationError') {
       next(new BadRequestError('Invalid Request', error));
     } else {
-      next(error);
+      next(new ApiError(500, `Internal Server Error, ${error}`, 'src/controllers/deviceController.js - getDeviceById'));
     }
   }
 };

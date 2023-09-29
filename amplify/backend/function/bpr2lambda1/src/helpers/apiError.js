@@ -3,7 +3,7 @@ class ApiError extends Error {
     super();
     this.statusCode = statusCode || 500;
     this.message = message;
-    this.source = source;
+    this.source = source || 'Unknown';
   }
 }
 
