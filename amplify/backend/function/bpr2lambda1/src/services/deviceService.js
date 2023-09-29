@@ -28,7 +28,7 @@ const getDeviceById = async (deviceId) => {
   console.log('Device findById: ', deviceId);
   const deviceToFetch = await dynamoDb
     .get({
-      TableName: 'Devices',
+      TableParams,
       Key: {
         id: deviceId,
       },
@@ -69,7 +69,7 @@ const getAllDevices = async () => {
       dateTime: 'Device DateTime 3',
     },
   ];
-  
+
   const tables = await dynamoDb.send(new ListTablesCommand({}));
   return tables ?? devices;
 };
