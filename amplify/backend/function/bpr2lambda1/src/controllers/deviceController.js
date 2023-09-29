@@ -1,23 +1,22 @@
-// deviceController.js
 import { deviceServices } from '../services/deviceService.js';
 
-export const getAllDevices = async (event, req, res, next) => {
+export const getAllDevices = async (req, res, next) => {
   const devices = await deviceServices.getAllDevices();
   res.status(200).json(devices);
   next();
 };
 
-export const createDevice = async (event, req, res, next) => {
-  const device = JSON.parse(event.body);
+export const createDevice = async (req, res, next) => {
+  const { body: device } = req;
   const createdDevice = await deviceServices.createDevice(device);
   res.status(201).json(createdDevice);
   next();
 };
 
-export const getDeviceById = async (event, req, res, next) => {
+export const getDeviceById = async (req, res, next) => {
   try {
-    console.log(event, req, res, next);
-    const { deviceId } = event.pathParameters;
+    console.log('getDeviceById');
+    const { deviceId } = req.params;
     const device = await deviceServices.findById(deviceId);
     res.status(200).json(device);
     next();
