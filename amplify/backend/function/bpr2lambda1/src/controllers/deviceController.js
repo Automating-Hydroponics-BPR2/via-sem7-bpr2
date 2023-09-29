@@ -1,16 +1,24 @@
 import { deviceServices } from '../services/deviceService.js';
 
 export const getAllDevices = async (req, res, next) => {
-  const devices = await deviceServices.getAllDevices();
-  res.status(200).json(devices);
-  next();
+  try {
+    const devices = await deviceServices.getAllDevices();
+    res.status(200).json(devices);
+    next();
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
 };
 
 export const createDevice = async (req, res, next) => {
-  const { body: device } = req;
-  const createdDevice = await deviceServices.createDevice(device);
-  res.status(201).json(createdDevice);
-  next();
+  try {
+    const { body: device } = req;
+    const createdDevice = await deviceServices.createDevice(device);
+    res.status(201).json(createdDevice);
+    next();
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
 
 export const getDeviceById = async (req, res, next) => {
@@ -21,13 +29,6 @@ export const getDeviceById = async (req, res, next) => {
     res.status(200).json(device);
     next();
   } catch (error) {
-    return {
-      statusCode: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'test-header': 'test',
-      },
-      body: JSON.stringify(error),
-    };
+    res.status(404).json({ message: error.message });
   }
 };
