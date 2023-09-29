@@ -1,67 +1,46 @@
 import { v4 as uuidv4 } from 'uuid';
 import { DynamoDBClient, ListTablesCommand, GetItemCommand, PutItemCommand } from '@aws-sdk/client-dynamodb';
+import { NotFoundError } from '../helpers/apiError.js';
 const dynamoDb = new DynamoDBClient({ region: 'eu-central-1' });
 
 const createDevice = async (device) => {
-  try {
-    const deviceToCreate = {
-      id: uuidv4(),
-      name: device.name,
-      type: device.type,
-      reading: device.reading,
-      dateTime: device.dateTime,
-    };
+  const deviceCreated = await dynamoDb.send(
+    new PutItemCommand({
+      TableName: 'devices-dev',
+      Item: {
+        id: { S: uuidv4() },
+        name: { S: device.name },
+        type: { S: device.type },
+        reading: { S: device.reading },
+        dateTime: { S: device.dateTime },
+      },
+    }),
+  );
 
-    const deviceCreated = await dynamoDb.send(
-      new PutItemCommand({
-        TableName: 'devices-dev',
-        Item: {
-          id: { S: deviceToCreate.id },
-          name: { S: deviceToCreate.name },
-          type: { S: deviceToCreate.type },
-          reading: { S: deviceToCreate.reading },
-          dateTime: { S: deviceToCreate.dateTime },
-        },
-      }),
-    );
-
-    return deviceCreated;
-  } catch (error) {
-    console.log('Device creation error: ', error);
-  }
+  return deviceCreated;
 };
 
 const getDeviceById = async (deviceId) => {
-  try {
-    console.log('Device findById: ', deviceId);
-    const deviceToFetch = await dynamoDb.send(
-      new GetItemCommand({ TableName: 'devices-dev', Key: { id: { S: deviceId } } }),
-    );
-    const deviceToReturn = {
-      id: deviceId,
-      name: 'Device 1',
-      type: 'Device Type 1',
-      reading: 'Device Reading 1',
-      dateTime: 'Device DateTime 1',
-    };
+  console.log('Device findById: ', deviceId);
+  const deviceToFetch = await dynamoDb.send(
+    new GetItemCommand({ TableName: 'devices-dev', Key: { id: { S: deviceId } } }),
+  );
 
-    return deviceToFetch ?? deviceToReturn;
-  } catch (error) {
-    console.log('Device findById error: ', error);
+  if (!deviceToFetch) {
+    throw new NotFoundError(`Device with id ${deviceId} not found`);
   }
+
+  return deviceToFetch;
 };
 
 const getAllDevices = async () => {
-  try {
-    const devices = await dynamoDb.send(
-      new ListTablesCommand({
-        TableName: 'devices-dev',
-      }),
-    );
-    return devices;
-  } catch (error) {
-    console.log('getAllDevices error: ', error);
-  }
+  const devices = await dynamoDb.send(
+    new ListTablesCommand({
+      TableName: 'devices-dev',
+    }),
+  );
+
+  return devices ?? [];
 };
 
 export const deviceServices = {
