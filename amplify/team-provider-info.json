@@ -15,7 +15,7 @@
       "function": {
         "bpr2lambda1": {
           "deploymentBucketName": "amplify-viasem7bpr2-dev-140637-deployment",
-          "s3Key": "amplify-builds/bpr2lambda1-6c5a7477594c41696877-build.zip"
+          "s3Key": "amplify-builds/bpr2lambda1-57664f665544704f4b63-build.zip"
         }
       },
       "hosting": {

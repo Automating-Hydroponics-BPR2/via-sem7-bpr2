@@ -1,6 +1,7 @@
 import express from 'express';
 import { eventContext } from 'aws-serverless-express/middleware.js';
 
+import devicesRouter from './routers/devicesRouter.js';
 import deviceRouter from './routers/deviceRouter.js';
 
 const app = express()
@@ -15,7 +16,8 @@ app.use(function(req, res, next) {
   next()
 });
 
-app.use('/devices', deviceRouter);
+app.use('/devices', devicesRouter);
+app.use('/device', deviceRouter);
 
 app.listen(3000, function() {
     console.log("App started 🔥")
