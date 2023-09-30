@@ -8,7 +8,7 @@ import {
   ScanCommand,
 } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { NotFoundError, DynamoDbError } from '../helpers/apiError.js';
+import { NotFoundError, DynamoDBError } from '../helpers/apiError.js';
 const dynamoDb = new DynamoDBClient({ region: 'eu-central-1' });
 
 const createDevice = async (device) => {
@@ -30,7 +30,7 @@ const createDevice = async (device) => {
 
     return deviceToCreate;
   } catch (error) {
-    throw new DynamoDbError(error, 'src/services/deviceService.js - createDevice');
+    throw new DynamoDBError(error, 'src/services/deviceService.js - createDevice');
   }
 };
 
@@ -53,7 +53,7 @@ const getDeviceById = async (deviceId) => {
     return unmarshall(Item);
   } catch (error) {
     if (error instanceof NotFoundError) throw error;
-    else throw new DynamoDbError(error, 'src/services/deviceService.js - getDeviceById');
+    else throw new DynamoDBError(error, 'src/services/deviceService.js - getDeviceById');
   }
 };
 
@@ -81,7 +81,7 @@ const deleteDeviceById = async (deviceId) => {
     );
   } catch (error) {
     if (error instanceof NotFoundError) throw error;
-    else throw new DynamoDbError(error, 'src/services/deviceService.js - deleteDeviceById');
+    else throw new DynamoDBError(error, 'src/services/deviceService.js - deleteDeviceById');
   }
 };
 
@@ -129,7 +129,7 @@ const updateDeviceById = async (deviceId, device) => {
     return unmarshall(updatedItem);
   } catch (error) {
     if (error instanceof NotFoundError) throw error;
-    else throw new DynamoDbError(error, 'src/services/deviceService.js - updateDeviceById');
+    else throw new DynamoDBError(error, 'src/services/deviceService.js - updateDeviceById');
   }
 };
 
@@ -158,7 +158,7 @@ const getAllDevices = async (start, limit) => {
 
     return devicesToReturn;
   } catch (error) {
-    throw new DynamoDbError(error, 'src/services/deviceService.js - getAllDevices');
+    throw new DynamoDBError(error, 'src/services/deviceService.js - getAllDevices');
   }
 };
 
