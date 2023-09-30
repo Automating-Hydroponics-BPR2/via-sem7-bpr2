@@ -9,32 +9,46 @@ class ApiError extends Error {
 
 class NotFoundError extends ApiError {
   constructor(message = 'Not Found', source) {
-    super(404, message, source);
+    super(message, source, 404);
+  }
+}
+
+class DynamoDBError extends ApiError {
+  constructor(message = 'DynamoDB Error', source) {
+    super(message, source, 500);
   }
 }
 
 class ForbiddenError extends ApiError {
   constructor(message = 'Forbidden', source) {
-    super(403, message, source);
+    super(message, source, 403);
   }
 }
 
 class InternalServerError extends ApiError {
   constructor(message = 'Internal Server Error', source) {
-    super(500, message, source);
+    super(message, source, 500);
   }
 }
 
 class UnauthorizedError extends ApiError {
   constructor(message = 'Unauthorized Request', source) {
-    super(401, message, source);
+    super(message, source, 401);
   }
 }
 
 class BadRequestError extends ApiError {
   constructor(message = 'Bad Request', source) {
-    super(400, message, source);
+    super(message, source, 400);
   }
 }
 
-export { ApiError, NotFoundError, ForbiddenError, InternalServerError, UnauthorizedError, BadRequestError };
+export {
+  ApiError,
+  NotFoundError,
+  ForbiddenError,
+  InternalServerError,
+  UnauthorizedError,
+  BadRequestError,
+  DynamoDBError,
+};

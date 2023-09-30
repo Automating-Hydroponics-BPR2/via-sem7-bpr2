@@ -1,16 +1,18 @@
 import { deviceServices } from '../services/deviceService.js';
-import { ApiError, BadRequestError, NotFoundError } from '../helpers/apiError.js';
+import { InternalServerError, BadRequestError, NotFoundError, DynamoDBError } from '../helpers/apiError.js';
 
 export const getAllDevices = async (req, res, next) => {
   try {
-    const { limit, take } = req.query;
-    const devices = await deviceServices.getAllDevices(limit, take);
+    const { limit } = req.query;
+    const { start } = req.body;
+    const devices = await deviceServices.getAllDevices(start, limit);
     res.status(200).json(devices);
   } catch (error) {
     if (error instanceof Error && error.name === 'ValidationException') {
       next(new BadRequestError('Invalid Request', error, 'src/controllers/deviceController.js - getAllDevices'));
-    } else {
-      next(new ApiError(error, 'src/controllers/deviceController.js - getAllDevices', 500));
+    } else if (error instanceof DynamoDBError) next(error);
+    else {
+      next(new InternalServerError(error, 'src/controllers/deviceController.js - getAllDevices'));
     }
   }
 };
@@ -23,8 +25,9 @@ export const createDevice = async (req, res, next) => {
   } catch (error) {
     if (error instanceof Error && error.name === 'ValidationException') {
       next(new BadRequestError('Invalid Request', error));
-    } else {
-      next(new ApiError(error, 'src/controllers/deviceController.js - createDevice', 500));
+    } else if (error instanceof DynamoDBError) next(error);
+    else {
+      next(new InternalServerError(error, 'src/controllers/deviceController.js - createDevice'));
     }
   }
 };
@@ -38,9 +41,9 @@ export const updateDeviceById = async (req, res, next) => {
   } catch (error) {
     if (error instanceof Error && error.name === 'ValidationException') {
       next(new BadRequestError('Invalid Request', error));
-    } else if (error instanceof NotFoundError) next(error);
+    } else if (error instanceof NotFoundError || error instanceof DynamoDBError) next(error);
     else {
-      next(new ApiError(error, 'src/controllers/deviceController.js - updateDeviceById', 500));
+      next(new InternalServerError(error, 'src/controllers/deviceController.js - updateDeviceById'));
     }
   }
 };
@@ -55,9 +58,9 @@ export const deleteDeviceById = async (req, res, next) => {
   } catch (error) {
     if (error instanceof Error && error.name === 'ValidationException') {
       next(new BadRequestError('Invalid Request', error));
-    } else if (error instanceof NotFoundError) next(error);
+    } else if (error instanceof NotFoundError || error instanceof DynamoDBError) next(error);
     else {
-      next(new ApiError(error, 'src/controllers/deviceController.js - deleteDeviceById', 500));
+      next(new InternalServerError(error, 'src/controllers/deviceController.js - deleteDeviceById'));
     }
   }
 };
@@ -70,9 +73,9 @@ export const getDeviceById = async (req, res, next) => {
   } catch (error) {
     if (error instanceof Error && error.name === 'ValidationException') {
       next(new BadRequestError('Invalid Request', error));
-    } else if (error instanceof NotFoundError) next(error);
+    } else if (error instanceof NotFoundError || error instanceof DynamoDBError) next(error);
     else {
-      next(new ApiError(error, 'src/controllers/deviceController.js - getDeviceById', 500));
+      next(new InternalServerError(error, 'src/controllers/deviceController.js - getDeviceById'));
     }
   }
 };
