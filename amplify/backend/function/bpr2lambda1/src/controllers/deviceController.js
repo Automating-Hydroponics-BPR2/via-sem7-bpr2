@@ -1,5 +1,5 @@
 import { deviceServices } from '../services/deviceService.js';
-import { ApiError, BadRequestError } from '../helpers/apiError.js';
+import { ApiError, BadRequestError, NotFoundError } from '../helpers/apiError.js';
 
 export const getAllDevices = async (req, res, next) => {
   try {
@@ -7,9 +7,9 @@ export const getAllDevices = async (req, res, next) => {
     res.status(200).json(devices);
   } catch (error) {
     if (error instanceof Error && error.name === 'ValidationError') {
-      next(new BadRequestError('Invalid Request', error));
+      next(new BadRequestError('Invalid Request', error, 'src/controllers/deviceController.js - getAllDevices'));
     } else {
-      next(new ApiError(500, `Internal Server Error, ${error}`, 'src/controllers/deviceController.js - getAllDevices'));
+      next(new ApiError(error, 'src/controllers/deviceController.js - getAllDevices', 500));
     }
   }
 };
@@ -23,7 +23,7 @@ export const createDevice = async (req, res, next) => {
     if (error instanceof Error && error.name === 'ValidationError') {
       next(new BadRequestError('Invalid Request', error));
     } else {
-      next(new ApiError(500, `Internal Server Error, ${error}`, 'src/controllers/deviceController.js - createDevice'));
+      next(new ApiError(error, 'src/controllers/deviceController.js - createDevice', 500));
     }
   }
 };
@@ -37,37 +37,39 @@ export const updateDeviceById = async (req, res, next) => {
   } catch (error) {
     if (error instanceof Error && error.name === 'ValidationError') {
       next(new BadRequestError('Invalid Request', error));
-    } else {
-      next(new ApiError(500, `Internal Server Error, ${error}`, 'src/controllers/deviceController.js - updateDeviceById'));
+    } else if (error instanceof NotFoundError) next(error);
+    else {
+      next(new ApiError(error, 'src/controllers/deviceController.js - updateDeviceById', 500));
     }
   }
-}
+};
 
 export const deleteDeviceById = async (req, res, next) => {
   try {
     const { deviceId } = req.params;
     await deviceServices.deleteDeviceById(deviceId);
-    res.status(204).json();
+    res.status(204).end();
   } catch (error) {
     if (error instanceof Error && error.name === 'ValidationError') {
       next(new BadRequestError('Invalid Request', error));
-    } else {
-      next(new ApiError(500, `Internal Server Error, ${error}`, 'src/controllers/deviceController.js - deleteDeviceById'));
+    } else if (error instanceof NotFoundError) next(error);
+    else {
+      next(new ApiError(error, 'src/controllers/deviceController.js - deleteDeviceById', 500));
     }
   }
-}
+};
 
 export const getDeviceById = async (req, res, next) => {
   try {
     const { deviceId } = req.params;
-    console.log('getDeviceById', deviceId);
     const device = await deviceServices.getDeviceById(deviceId);
     res.status(200).json(device);
   } catch (error) {
     if (error instanceof Error && error.name === 'ValidationError') {
       next(new BadRequestError('Invalid Request', error));
-    } else {
-      next(new ApiError(500, `Internal Server Error, ${error}`, 'src/controllers/deviceController.js - getDeviceById'));
+    } else if (error instanceof NotFoundError) next(error);
+    else {
+      next(new ApiError(error, 'src/controllers/deviceController.js - getDeviceById', 500));
     }
   }
 };

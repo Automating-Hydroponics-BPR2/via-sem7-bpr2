@@ -7,20 +7,21 @@ import {
   UpdateItemCommand,
   ScanCommand,
 } from '@aws-sdk/client-dynamodb';
+import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { NotFoundError } from '../helpers/apiError.js';
 const dynamoDb = new DynamoDBClient({ region: 'eu-central-1' });
 
 const createDevice = async (device) => {
   const deviceCreated = await dynamoDb.send(
     new PutItemCommand({
-      TableName: 'devices-dev',
-      Item: {
-        id: { S: uuidv4() },
-        name: { S: device.name },
-        type: { S: device.type },
-        reading: { S: device.reading },
-        dateTime: { S: device.dateTime },
-      },
+      TableName: process.env.DYNAMODB_TABLE_NAME,
+      Item: marshall({
+        id: uuidv4(),
+        name: device.name,
+        type: device.type,
+        reading: device.reading,
+        dateTime: device.dateTime,
+      }),
     }),
   );
 
@@ -28,64 +29,66 @@ const createDevice = async (device) => {
 };
 
 const getDeviceById = async (deviceId) => {
-  console.log('Device findById: ', deviceId);
-  const deviceToFetch = await dynamoDb.send(
-    new GetItemCommand({ TableName: 'devices-dev', Key: { id: { S: deviceId } } }),
+  const { Item } = await dynamoDb.send(
+    new GetItemCommand({
+      TableName: process.env.DYNAMODB_TABLE_NAME,
+      Key: marshall({ id: deviceId }),
+    }),
   );
 
-  if (!deviceToFetch) {
-    throw new NotFoundError(`Device with id ${deviceId} not found`, 'src/services/deviceService.js - getDeviceById');
+  if (!Item) {
+    throw new NotFoundError(`Could not get device with id ${deviceId}, device not found`, 'src/services/deviceService.js - getDeviceById');
   }
 
-  return deviceToFetch;
+  return unmarshall(Item);
 };
 
 const deleteDeviceById = async (deviceId) => {
-  const deviceToDelete = await dynamoDb.send(
-    new GetItemCommand({ TableName: 'devices-dev', Key: { id: { S: deviceId } } }),
+  const { Item } = await dynamoDb.send(
+    new GetItemCommand({ TableName: process.env.DYNAMODB_TABLE_NAME, Key: marshall({ id: deviceId }) }),
   );
 
-  if (!deviceToDelete) {
-    throw new NotFoundError(`Device with id ${deviceId} not found`, 'src/services/deviceService.js - deleteDeviceById');
+  if (!Item) {
+    throw new NotFoundError(`Could not delete device with id ${deviceId}, device not found`, 'src/services/deviceService.js - deleteDeviceById');
   }
 
-  await dynamoDb.send(new DeleteItemCommand({ TableName: 'devices-dev', Key: { id: { S: deviceId } } }));
+  await dynamoDb.send(
+    new DeleteItemCommand({ TableName: process.env.DYNAMODB_TABLE_NAME, Key: marshall({ id: deviceId }) }),
+  );
 };
 
 const updateDeviceById = async (deviceId, device) => {
   const deviceToUpdate = await dynamoDb.send(
-    new GetItemCommand({ TableName: 'devices-dev', Key: { id: { S: deviceId } } }),
+    new GetItemCommand({ TableName: process.env.DYNAMODB_TABLE_NAME, Key: marshall({ id: deviceId }) }),
   );
 
   if (!deviceToUpdate) {
-    throw new NotFoundError(`Device with id ${deviceId} not found`, 'src/services/deviceService.js - updateDeviceById');
+    throw new NotFoundError(`Could not update device with id ${deviceId}, device not found`, 'src/services/deviceService.js - updateDeviceById');
   }
+
+  const deviceToUpdateKeys = Object.keys(unmarshall(deviceToUpdate.Item));
 
   await dynamoDb.send(
     new UpdateItemCommand({
-      TableName: 'devices-dev',
-      Key: { id: { S: deviceId } },
-      UpdateExpression: 'set name = :n, type = :t, reading = :r, dateTime = :d',
-      ExpressionAttributeValues: {
-        ':n': { S: device.name },
-        ':t': { S: device.type },
-        ':r': { S: device.reading },
-        ':d': { S: device.dateTime },
-      },
+      TableName: process.env.DYNAMODB_TABLE_NAME,
+      Key: marshall({ id: deviceId }),
+      UpdateExpression: `SET ${deviceToUpdateKeys.map((key) => `#${key} = :${key}`).join(', ')}`,
+      ExpressionAttributeNames: deviceToUpdateKeys.reduce((acc, key) => ({ ...acc, [`#${key}`]: key }), {}),
+      ExpressionAttributeValues: marshall(device),
     }),
   );
 
-  const deviceUpdated = await dynamoDb.send(
-    new GetItemCommand({ TableName: 'devices-dev', Key: { id: { S: deviceId } } }),
-  );
+  const { Item } = await dynamoDb.send(new GetItemCommand({ TableName: 'devices-dev', Key: { id: { S: deviceId } } }));
 
-  return deviceUpdated;
+  return unmarshall(Item);
 };
 
 const getAllDevices = async (take, limit) => {
-  const devices = await dynamoDb.send(new ScanCommand({ TableName: 'devices-dev', Limit: limit, TotalSegments: take }));
+  const devices = await dynamoDb.send(
+    new ScanCommand({ TableName: process.env.DYNAMODB_TABLE_NAME, Limit: limit, TotalSegments: take }),
+  );
 
-  return devices;
+  return devices.Items.map((device) => unmarshall(device));
 };
 
 export const deviceServices = {

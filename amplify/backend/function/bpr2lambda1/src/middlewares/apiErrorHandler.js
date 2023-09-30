@@ -7,8 +7,8 @@ const apiErrorHandler = function (error, req, res, next) {
 
   res.status(error.statusCode).json({
     status: 'error',
-    statusCode: error.statusCode,
-    message: `${error.message} ----->  ${error.source}`,
+    statusCode: `${error.statusCode}`,
+    stack: error.stack,
   });
 };
 
