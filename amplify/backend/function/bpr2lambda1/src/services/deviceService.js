@@ -139,7 +139,7 @@ const getAllDevices = async (start, limit) => {
     const data = await dynamoDb.send(
       new ScanCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME,
-        Limit: limit,
+        Limit: (limit && parseInt(limit)) || 10,
         ExclusiveStartKey: start && marshall({ id: start }),
       }),
     );
