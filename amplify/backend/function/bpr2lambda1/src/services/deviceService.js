@@ -12,7 +12,7 @@ import { NotFoundError } from '../helpers/apiError.js';
 const dynamoDb = new DynamoDBClient({ region: 'eu-central-1' });
 
 const createDevice = async (device) => {
-  const deviceCreated = await dynamoDb.send(
+  const { Attributes } = await dynamoDb.send(
     new PutItemCommand({
       TableName: process.env.DYNAMODB_TABLE_NAME,
       Item: marshall({
@@ -22,10 +22,11 @@ const createDevice = async (device) => {
         reading: device.reading,
         dateTime: device.dateTime,
       }),
+      ReturnValues: 'ALL_OLD',
     }),
   );
 
-  return deviceCreated;
+  return unmarshall(Attributes);
 };
 
 const getDeviceById = async (deviceId) => {
@@ -37,7 +38,10 @@ const getDeviceById = async (deviceId) => {
   );
 
   if (!Item) {
-    throw new NotFoundError(`Could not get device with id ${deviceId}, device not found`, 'src/services/deviceService.js - getDeviceById');
+    throw new NotFoundError(
+      `Could not get device with id ${deviceId}, device not found`,
+      'src/services/deviceService.js - getDeviceById',
+    );
   }
 
   return unmarshall(Item);
@@ -49,7 +53,10 @@ const deleteDeviceById = async (deviceId) => {
   );
 
   if (!Item) {
-    throw new NotFoundError(`Could not delete device with id ${deviceId}, device not found`, 'src/services/deviceService.js - deleteDeviceById');
+    throw new NotFoundError(
+      `Could not delete device with id ${deviceId}, device not found`,
+      'src/services/deviceService.js - deleteDeviceById',
+    );
   }
 
   await dynamoDb.send(
@@ -58,32 +65,49 @@ const deleteDeviceById = async (deviceId) => {
 };
 
 const updateDeviceById = async (deviceId, device) => {
-  const deviceToUpdate = await dynamoDb.send(
+  const { Item } = await dynamoDb.send(
     new GetItemCommand({ TableName: process.env.DYNAMODB_TABLE_NAME, Key: marshall({ id: deviceId }) }),
   );
 
-  if (!deviceToUpdate) {
-    throw new NotFoundError(`Could not update device with id ${deviceId}, device not found`, 'src/services/deviceService.js - updateDeviceById');
+  if (!Item) {
+    throw new NotFoundError(
+      `Could not update device with id ${deviceId}, device not found`,
+      'src/services/deviceService.js - updateDeviceById',
+    );
   }
 
-  const deviceToUpdateKeys = Object.keys(unmarshall(deviceToUpdate.Item));
+  const deviceToUpdateKeys = Object.keys(unmarshall(Item));
+
+  // Filter out keys that don't exist in the DynamoDB table
+  const validDeviceAttributes = Object.keys(device).filter((key) => deviceToUpdateKeys.includes(key));
+
+  const updateExpression = `SET ${validDeviceAttributes.map((key) => `#${key} = :${key}`).join(', ')}`;
+  const expressionAttributeNames = validDeviceAttributes.reduce((acc, key) => ({ ...acc, [`#${key}`]: key }), {});
+  const expressionAttributeValues = marshall(
+    validDeviceAttributes.reduce((acc, key) => ({ ...acc, [`:${key}`]: device[key] }), {}),
+  );
 
   await dynamoDb.send(
     new UpdateItemCommand({
       TableName: process.env.DYNAMODB_TABLE_NAME,
       Key: marshall({ id: deviceId }),
-      UpdateExpression: `SET ${deviceToUpdateKeys.map((key) => `#${key} = :${key}`).join(', ')}`,
-      ExpressionAttributeNames: deviceToUpdateKeys.reduce((acc, key) => ({ ...acc, [`#${key}`]: key }), {}),
-      ExpressionAttributeValues: marshall(device),
+      UpdateExpression: updateExpression,
+      ExpressionAttributeNames: expressionAttributeNames,
+      ExpressionAttributeValues: expressionAttributeValues,
     }),
   );
 
-  const { Item } = await dynamoDb.send(new GetItemCommand({ TableName: 'devices-dev', Key: { id: { S: deviceId } } }));
+  const { Item: updatedItem } = await dynamoDb.send(
+    new GetItemCommand({
+      TableName: process.env.DYNAMODB_TABLE_NAME,
+      Key: marshall({ id: deviceId }),
+    }),
+  );
 
-  return unmarshall(Item);
+  return unmarshall(updatedItem);
 };
 
-const getAllDevices = async (take, limit) => {
+const getAllDevices = async (limit, take) => {
   const devices = await dynamoDb.send(
     new ScanCommand({ TableName: process.env.DYNAMODB_TABLE_NAME, Limit: limit, TotalSegments: take }),
   );
