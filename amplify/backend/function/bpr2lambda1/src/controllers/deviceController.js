@@ -3,8 +3,7 @@ import { InternalServerError, BadRequestError, NotFoundError, DynamoDBError } fr
 
 export const getAllDevices = async (req, res, next) => {
   try {
-    const { limit } = req.query;
-    const { start } = req.body;
+    const { start, limit } = req.query;
     const devices = await deviceServices.getAllDevices(start, limit);
     res.status(200).json(devices);
   } catch (error) {
