@@ -56,6 +56,16 @@ jobs:
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-${{ env.NODE_VERSION }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Configure Amplify
+        uses: ambientlight/amplify-cli-action@0.3.0
+        with:
+          amplify_command: configure
+          amplify_env: production
+          amplify_cli_version: 12.5.1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: eu-central-1 
       - name: Build
         run: yarn build
       - name: Release
