@@ -50,12 +50,12 @@
     "eject": "react-scripts eject",
     "lint": "eslint ./src/**/*.ts ./src/**/*.tsx ./src/*.ts ./src/*.tsx",
     "lint:fix": "eslint ./src/**/*.ts ./src/**/*.tsx ./src/*.ts ./src/*.tsx --fix",
-    "pretty": "prettier --write \"src/*.ts\" \"src/**/*.ts*\"",
+    "pretty": "prettier --write \"src/*.tsx\" \"src/**/*.ts*\" \"src/**/*.tsx*\"",
     "test:watch": "jest --passWithNoTests --watch",
     "tsc": "tsc",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "husky-init": "npx husky install && npx husky add .husky/pre-commit \"npx prettier --write \"\"src/*.ts\"\" \"\"src/**/*.ts*\"\"\" & npx husky add .husky/pre-push \"npx tsc && yarn run lint\" & npx husky add .husky/prepare-commit-msg \"exec < /dev/tty && npx cz --hook || true\"",
+    "husky-init": "npx husky install && npx husky add .husky/pre-commit \"npx prettier --write \"\"src/*.tsx\"\" \"\"src/**/*.ts*\"\"\" \"\"src/**/*.tsx*\"\"\" & npx husky add .husky/pre-push \"npx tsc && yarn run lint\" & npx husky add .husky/prepare-commit-msg \"exec < /dev/tty && npx cz --hook || true\"",
     "push": "git add . && git commit && git push"
   },
   "eslintConfig": {

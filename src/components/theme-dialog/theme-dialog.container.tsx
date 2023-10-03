@@ -14,9 +14,18 @@ import { useGetDeviceType } from '../../shared/utils/hooks/useGetDeviceType';
 import { DeviceTypes } from '../../shared/utils/enums/deviceTypes';
 
 export const _ThemeDialog = (props: ThemeDialogProps) => {
-  const { primary, background, text } = props.theme;
+  const {
+    primary: { main },
+    text: { primary },
+    background,
+  } = props.theme;
   const handleThemeSave = () => {
+    props.setTheme();
+  };
+
+  const handleThemeDialogClose = () => {
     props.onClose();
+    props.resetTheme();
   };
 
   return (
@@ -30,9 +39,9 @@ export const _ThemeDialog = (props: ThemeDialogProps) => {
       </StyledThemeDialogHeader>
       <StyledThemeDialogBody>
         <StyledThemeDialogBodyRow>
-          <ColorPicker title="Primary color" color={primary.main} onColorChange={props.setPrimaryThemeMain} />
-          <ColorPicker title="Background color" color={background} onColorChange={props.setBackgroundColor} />
-          <ColorPicker title="Text color" color={text.primary} onColorChange={props.setTextThemePrimary} />
+          <ColorPicker title="Main color" color={main} onColorChange={props.setThemeMain} />
+          <ColorPicker title="Background color" color={background} onColorChange={props.setThemeBackground} />
+          <ColorPicker title="Text color" color={primary} onColorChange={props.setThemeText} />
         </StyledThemeDialogBodyRow>
       </StyledThemeDialogBody>
       <StyledThemeDialogFooter>
@@ -42,7 +51,7 @@ export const _ThemeDialog = (props: ThemeDialogProps) => {
           color={'primary'}
           disabled={false}
           text={'Save'}
-          onClick={props.onClose}
+          onClick={handleThemeSave}
         />
         <Button
           size={'small'}
@@ -50,7 +59,7 @@ export const _ThemeDialog = (props: ThemeDialogProps) => {
           color={'primary'}
           disabled={false}
           text={'Close'}
-          onClick={handleThemeSave}
+          onClick={handleThemeDialogClose}
         />
       </StyledThemeDialogFooter>
     </StyledThemeDialog>
