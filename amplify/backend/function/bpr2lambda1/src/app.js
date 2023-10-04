@@ -4,7 +4,7 @@ import cors from 'cors';
 import { eventContext } from 'aws-serverless-express/middleware.js';
 import apiErrorHandler from './middlewares/apiErrorHandler.js';
 
-import devicesRouter from './routers/devicesRouter.js';
+import userRouter from './routers/userRouter.js';
 import deviceRouter from './routers/deviceRouter.js';
 
 dotenv.config({ path: '.env' });
@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 app.use(eventContext());
 
-app.use('/devices', devicesRouter);
+app.use('/user', userRouter);
 app.use('/device', deviceRouter);
 
 // Custom API error handler

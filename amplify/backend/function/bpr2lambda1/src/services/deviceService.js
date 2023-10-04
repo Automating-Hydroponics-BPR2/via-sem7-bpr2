@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import {
   DynamoDBClient,
   GetItemCommand,
@@ -7,23 +6,70 @@ import {
   UpdateItemCommand,
   ScanCommand,
 } from '@aws-sdk/client-dynamodb';
+import jwt from 'jsonwebtoken';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { NotFoundError, DynamoDBError } from '../helpers/apiError.js';
+import { NotFoundError, DynamoDBError, BadRequestError, InternalServerError } from '../helpers/apiError.js';
 const dynamoDb = new DynamoDBClient({ region: 'eu-central-1' });
 
-const createDevice = async (device) => {
+const checkIfDeviceBelongsToUser = async (deviceId, token, isReturnSpecified) => {
   try {
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const { Item } = await dynamoDb.send(
+      new GetItemCommand({
+        TableName: process.env.DYNAMODB_TABLE_NAME_DEVICES,
+        Key: marshall({ id: deviceId }),
+      }),
+    );
+
+    if (!Item) {
+      throw new NotFoundError(
+        `Could not get device with id ${deviceId}, device not found`,
+        'src/services/deviceService.js - checkIfDeviceBelongsToUser',
+      );
+    }
+
+    const device = unmarshall(Item);
+
+    if (device.userId !== userId) {
+      throw new BadRequestError(
+        `Device with id ${deviceId} does not belong to user`,
+        'src/services/deviceService.js - checkIfDeviceBelongsToUser',
+      );
+    }
+
+    return isReturnSpecified ? unmarshall(Item) : null;
+  } catch (error) {
+    if (error instanceof NotFoundError || error instanceof BadRequestError) throw error;
+    else throw new DynamoDBError(error, 'src/services/deviceService.js - checkIfDeviceBelongsToUser');
+  }
+};
+
+const createDevice = async (device, token) => {
+  try {
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const { Item } = await dynamoDb.send(
+      new GetItemCommand({
+        TableName: process.env.DYNAMODB_TABLE_NAME_DEVICES,
+        Key: marshall({ id: device.id }),
+      }),
+    );
+
+    if (Item) {
+      throw new BadRequestError(
+        `Could not create device with id ${device.id}, device already exists`,
+        'src/services/deviceService.js - createDevice',
+      );
+    }
+
     const deviceToCreate = {
-      id: uuidv4(),
-      name: device.name,
-      type: device.type,
-      reading: device.reading,
-      dateTime: device.dateTime,
+      id: device.id,
+      name: device.name ? device.name : 'Unnamed Device',
+      userId,
     };
 
     await dynamoDb.send(
       new PutItemCommand({
-        TableName: process.env.DYNAMODB_TABLE_NAME,
+        TableName: process.env.DYNAMODB_TABLE_NAME_DEVICES,
         Item: marshall(deviceToCreate),
       }),
     );
@@ -34,69 +80,26 @@ const createDevice = async (device) => {
   }
 };
 
-const getDeviceById = async (deviceId) => {
+const deleteDeviceById = async (deviceId, token) => {
   try {
-    const { Item } = await dynamoDb.send(
-      new GetItemCommand({
-        TableName: process.env.DYNAMODB_TABLE_NAME,
-        Key: marshall({ id: deviceId }),
-      }),
-    );
-
-    if (!Item) {
-      throw new NotFoundError(
-        `Could not get device with id ${deviceId}, device not found`,
-        'src/services/deviceService.js - getDeviceById',
-      );
-    }
-
-    return unmarshall(Item);
-  } catch (error) {
-    if (error instanceof NotFoundError) throw error;
-    else throw new DynamoDBError(error, 'src/services/deviceService.js - getDeviceById');
-  }
-};
-
-const deleteDeviceById = async (deviceId) => {
-  try {
-    const { Item } = await dynamoDb.send(
-      new GetItemCommand({
-        TableName: process.env.DYNAMODB_TABLE_NAME,
-        Key: marshall({ id: deviceId }),
-      }),
-    );
-
-    if (!Item) {
-      throw new NotFoundError(
-        `Could not delete device with id ${deviceId}, device not found`,
-        'src/services/deviceService.js - deleteDeviceById',
-      );
-    }
+    await checkIfDeviceBelongsToUser(deviceId, token);
 
     await dynamoDb.send(
       new DeleteItemCommand({
-        TableName: process.env.DYNAMODB_TABLE_NAME,
+        TableName: process.env.DYNAMODB_TABLE_NAME_DEVICES,
         Key: marshall({ id: deviceId }),
       }),
     );
   } catch (error) {
-    if (error instanceof NotFoundError) throw error;
-    else throw new DynamoDBError(error, 'src/services/deviceService.js - deleteDeviceById');
+    if (error instanceof NotFoundError || error instanceof BadRequestError || error instanceof DynamoDBError)
+      throw error;
+    else throw new InternalServerError(error, 'src/services/deviceService.js - deleteDeviceById');
   }
 };
 
-const updateDeviceById = async (deviceId, device) => {
+const updateDeviceById = async (deviceId, userId, device) => {
   try {
-    const { Item } = await dynamoDb.send(
-      new GetItemCommand({ TableName: process.env.DYNAMODB_TABLE_NAME, Key: marshall({ id: deviceId }) }),
-    );
-
-    if (!Item) {
-      throw new NotFoundError(
-        `Could not update device with id ${deviceId}, device not found`,
-        'src/services/deviceService.js - updateDeviceById',
-      );
-    }
+    const { Item } = await checkIfDeviceBelongsToUser(deviceId, userId, true);
 
     const deviceToUpdateKeys = Object.keys(unmarshall(Item));
 
@@ -111,7 +114,7 @@ const updateDeviceById = async (deviceId, device) => {
 
     await dynamoDb.send(
       new UpdateItemCommand({
-        TableName: process.env.DYNAMODB_TABLE_NAME,
+        TableName: process.env.DYNAMODB_TABLE_NAME_DEVICES,
         Key: marshall({ id: deviceId }),
         UpdateExpression: updateExpression,
         ExpressionAttributeNames: expressionAttributeNames,
@@ -121,7 +124,7 @@ const updateDeviceById = async (deviceId, device) => {
 
     const { Item: updatedItem } = await dynamoDb.send(
       new GetItemCommand({
-        TableName: process.env.DYNAMODB_TABLE_NAME,
+        TableName: process.env.DYNAMODB_TABLE_NAME_DEVICES,
         Key: marshall({ id: deviceId }),
       }),
     );
@@ -133,14 +136,23 @@ const updateDeviceById = async (deviceId, device) => {
   }
 };
 
-const getAllDevices = async (start, limit) => {
+const getHistoricalReadings = async (deviceId, token, type, start, end) => {
   try {
-    // start can be undefined, so we need to check if it exists
+    await checkIfDeviceBelongsToUser(deviceId, token);
+
     const data = await dynamoDb.send(
       new ScanCommand({
-        TableName: process.env.DYNAMODB_TABLE_NAME,
-        Limit: (limit && parseInt(limit)) || 10,
-        ExclusiveStartKey: start && marshall({ id: start }),
+        TableName: process.env.DYNAMODB_TABLE_NAME_READINGS,
+        FilterExpression: !type
+          ? '#timestamp BETWEEN :start AND :end'
+          : '#timestamp BETWEEN :start AND :end AND #type = :type',
+        ExpressionAttributeNames: {
+          '#timestamp': 'timestamp',
+        },
+        ExpressionAttributeValues: marshall({
+          ':start': start,
+          ':end': end,
+        }),
       }),
     );
 
@@ -162,10 +174,41 @@ const getAllDevices = async (start, limit) => {
   }
 };
 
+const getCurrentReadings = async (deviceId, token) => {
+  try {
+    // Check if the device belongs to the user
+    await checkIfDeviceBelongsToUser(deviceId, token);
+
+    // Retrieve the item with the latest timestamp from TABMEL_NAME_READINGS
+    const data = await dynamoDb.send(
+      new ScanCommand({
+        TableName: process.env.DYNAMODB_TABLE_NAME_READINGS,
+        KeyConditionExpression: 'deviceId = :deviceId',
+        ExpressionAttributeValues: marshall({
+          ':deviceId': deviceId,
+        }),
+        ScanIndexForward: false, // Sort in descending order to get the latest reading first
+        Limit: 1, // Limit to one result
+      }),
+    );
+
+    if (!data || !data.Items || data.Items.length === 0) {
+      throw new NotFoundError(
+        `Could not get current readings for device with id ${deviceId}, no readings found`,
+        'src/services/deviceService.js - getCurrentReadings',
+      );
+    }
+
+    return unmarshall(data.Items[0]);
+  } catch (error) {
+    throw new DynamoDBError(error, 'src/services/deviceService.js - getCurrentReadings');
+  }
+};
+
 export const deviceServices = {
   createDevice,
-  getDeviceById,
-  deleteDeviceById,
   updateDeviceById,
-  getAllDevices,
+  deleteDeviceById,
+  getHistoricalReadings,
+  getCurrentReadings,
 };
