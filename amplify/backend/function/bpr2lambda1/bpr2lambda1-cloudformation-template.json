@@ -1,397 +1,397 @@
 {
-    "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "{\"createdOn\":\"Linux\",\"createdBy\":\"Amplify\",\"createdWith\":\"12.4.0\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
-    "Parameters": {
-        "CloudWatchRule": {
-            "Type": "String",
-            "Default": "NONE",
-            "Description": " Schedule Expression"
-        },
-        "deploymentBucketName": {
-            "Type": "String"
-        },
-        "env": {
-            "Type": "String"
-        },
-        "s3Key": {
-            "Type": "String"
-        },
-        "storagebpr2storageName": {
-            "Type": "String",
-            "Default": "storagebpr2storageName"
-        },
-        "storagebpr2storageArn": {
-            "Type": "String",
-            "Default": "storagebpr2storageArn"
-        },
-        "storagebpr2storageStreamArn": {
-            "Type": "String",
-            "Default": "storagebpr2storageArn"
-        },
-        "storagebpr2storage2Name": {
-            "Type": "String",
-            "Default": "storagebpr2storage2Name"
-        },
-        "storagebpr2storage2Arn": {
-            "Type": "String",
-            "Default": "storagebpr2storage2Arn"
-        },
-        "storagebpr2storage2StreamArn": {
-            "Type": "String",
-            "Default": "storagebpr2storage2Arn"
-        },
-        "storagebpr2storage3Name": {
-            "Type": "String",
-            "Default": "storagebpr2storage3Name"
-        },
-        "storagebpr2storage3Arn": {
-            "Type": "String",
-            "Default": "storagebpr2storage3Arn"
-        },
-        "storagebpr2storage3StreamArn": {
-            "Type": "String",
-            "Default": "storagebpr2storage3Arn"
-        }
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "{\"createdOn\":\"Linux\",\"createdBy\":\"Amplify\",\"createdWith\":\"12.4.0\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
+  "Parameters": {
+    "CloudWatchRule": {
+      "Type": "String",
+      "Default": "NONE",
+      "Description": " Schedule Expression"
     },
-    "Conditions": {
-        "ShouldNotCreateEnvResources": {
-            "Fn::Equals": [
-                {
-                    "Ref": "env"
-                },
-                "NONE"
-            ]
-        }
+    "deploymentBucketName": {
+      "Type": "String"
     },
-    "Resources": {
-        "LambdaFunction": {
-            "Type": "AWS::Lambda::Function",
-            "Metadata": {
-                "aws:asset:path": "./src",
-                "aws:asset:property": "Code"
-            },
-            "Properties": {
-                "Code": {
-                    "S3Bucket": {
-                        "Ref": "deploymentBucketName"
-                    },
-                    "S3Key": {
-                        "Ref": "s3Key"
-                    }
-                },
-                "Handler": "index.handler",
-                "FunctionName": {
-                    "Fn::If": [
-                        "ShouldNotCreateEnvResources",
-                        "bpr2lambda1",
-                        {
-                            "Fn::Join": [
-                                "",
-                                [
-                                    "bpr2lambda1",
-                                    "-",
-                                    {
-                                        "Ref": "env"
-                                    }
-                                ]
-                            ]
-                        }
-                    ]
-                },
-                "Environment": {
-                    "Variables": {
-                        "ENV": {
-                            "Ref": "env"
-                        },
-                        "REGION": {
-                            "Ref": "AWS::Region"
-                        }
-                    }
-                },
-                "Role": {
-                    "Fn::GetAtt": [
-                        "LambdaExecutionRole",
-                        "Arn"
-                    ]
-                },
-                "Runtime": "nodejs18.x",
-                "Layers": [],
-                "Timeout": 25
-            }
-        },
-        "LambdaExecutionRole": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-                "RoleName": {
-                    "Fn::If": [
-                        "ShouldNotCreateEnvResources",
-                        "viasem7bpr2LambdaRole84aafb7d",
-                        {
-                            "Fn::Join": [
-                                "",
-                                [
-                                    "viasem7bpr2LambdaRole84aafb7d",
-                                    "-",
-                                    {
-                                        "Ref": "env"
-                                    }
-                                ]
-                            ]
-                        }
-                    ]
-                },
-                "AssumeRolePolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": [
-                                    "lambda.amazonaws.com"
-                                ]
-                            },
-                            "Action": [
-                                "sts:AssumeRole"
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        "lambdaexecutionpolicy": {
-            "DependsOn": [
-                "LambdaExecutionRole"
-            ],
-            "Type": "AWS::IAM::Policy",
-            "Properties": {
-                "PolicyName": "lambda-execution-policy",
-                "Roles": [
-                    {
-                        "Ref": "LambdaExecutionRole"
-                    }
-                ],
-                "PolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Effect": "Allow",
-                            "Action": [
-                                "logs:CreateLogGroup",
-                                "logs:CreateLogStream",
-                                "logs:PutLogEvents"
-                            ],
-                            "Resource": {
-                                "Fn::Sub": [
-                                    "arn:aws:logs:${region}:${account}:log-group:/aws/lambda/${lambda}:log-stream:*",
-                                    {
-                                        "region": {
-                                            "Ref": "AWS::Region"
-                                        },
-                                        "account": {
-                                            "Ref": "AWS::AccountId"
-                                        },
-                                        "lambda": {
-                                            "Ref": "LambdaFunction"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-        "bpr2storageTriggerPolicy": {
-            "DependsOn": [
-                "LambdaExecutionRole"
-            ],
-            "Type": "AWS::IAM::Policy",
-            "Properties": {
-                "PolicyName": "lambda-trigger-policy-bpr2storage",
-                "Roles": [
-                    {
-                        "Ref": "LambdaExecutionRole"
-                    }
-                ],
-                "PolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Effect": "Allow",
-                            "Action": [
-                                "dynamodb:DescribeStream",
-                                "dynamodb:GetRecords",
-                                "dynamodb:GetShardIterator",
-                                "dynamodb:ListStreams"
-                            ],
-                            "Resource": [
-                                {
-                                    "Ref": "storagebpr2storageStreamArn"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        "bpr2storageTrigger": {
-            "Type": "AWS::Lambda::EventSourceMapping",
-            "DependsOn": [
-                "bpr2storageTriggerPolicy"
-            ],
-            "Properties": {
-                "BatchSize": 100,
-                "Enabled": true,
-                "EventSourceArn": {
-                    "Ref": "storagebpr2storageStreamArn"
-                },
-                "FunctionName": {
-                    "Fn::GetAtt": [
-                        "LambdaFunction",
-                        "Arn"
-                    ]
-                },
-                "StartingPosition": "LATEST"
-            }
-        },
-        "bpr2storage2TriggerPolicy": {
-            "DependsOn": [
-                "LambdaExecutionRole"
-            ],
-            "Type": "AWS::IAM::Policy",
-            "Properties": {
-                "PolicyName": "lambda-trigger-policy-bpr2storage2",
-                "Roles": [
-                    {
-                        "Ref": "LambdaExecutionRole"
-                    }
-                ],
-                "PolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Effect": "Allow",
-                            "Action": [
-                                "dynamodb:DescribeStream",
-                                "dynamodb:GetRecords",
-                                "dynamodb:GetShardIterator",
-                                "dynamodb:ListStreams"
-                            ],
-                            "Resource": [
-                                {
-                                    "Ref": "storagebpr2storage2StreamArn"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        "bpr2storage2Trigger": {
-            "Type": "AWS::Lambda::EventSourceMapping",
-            "DependsOn": [
-                "bpr2storage2TriggerPolicy"
-            ],
-            "Properties": {
-                "BatchSize": 100,
-                "Enabled": true,
-                "EventSourceArn": {
-                    "Ref": "storagebpr2storage2StreamArn"
-                },
-                "FunctionName": {
-                    "Fn::GetAtt": [
-                        "LambdaFunction",
-                        "Arn"
-                    ]
-                },
-                "StartingPosition": "LATEST"
-            }
-        },
-        "bpr2storage3TriggerPolicy": {
-            "DependsOn": [
-                "LambdaExecutionRole"
-            ],
-            "Type": "AWS::IAM::Policy",
-            "Properties": {
-                "PolicyName": "lambda-trigger-policy-bpr2storage3",
-                "Roles": [
-                    {
-                        "Ref": "LambdaExecutionRole"
-                    }
-                ],
-                "PolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Effect": "Allow",
-                            "Action": [
-                                "dynamodb:DescribeStream",
-                                "dynamodb:GetRecords",
-                                "dynamodb:GetShardIterator",
-                                "dynamodb:ListStreams"
-                            ],
-                            "Resource": [
-                                {
-                                    "Ref": "storagebpr2storage3StreamArn"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        "bpr2storage3Trigger": {
-            "Type": "AWS::Lambda::EventSourceMapping",
-            "DependsOn": [
-                "bpr2storage3TriggerPolicy"
-            ],
-            "Properties": {
-                "BatchSize": 100,
-                "Enabled": true,
-                "EventSourceArn": {
-                    "Ref": "storagebpr2storage3StreamArn"
-                },
-                "FunctionName": {
-                    "Fn::GetAtt": [
-                        "LambdaFunction",
-                        "Arn"
-                    ]
-                },
-                "StartingPosition": "LATEST"
-            }
-        }
+    "env": {
+      "Type": "String"
     },
-    "Outputs": {
-        "Name": {
-            "Value": {
-                "Ref": "LambdaFunction"
-            }
-        },
-        "Arn": {
-            "Value": {
-                "Fn::GetAtt": [
-                    "LambdaFunction",
-                    "Arn"
-                ]
-            }
-        },
-        "Region": {
-            "Value": {
-                "Ref": "AWS::Region"
-            }
-        },
-        "LambdaExecutionRole": {
-            "Value": {
-                "Ref": "LambdaExecutionRole"
-            }
-        },
-        "LambdaExecutionRoleArn": {
-            "Value": {
-                "Fn::GetAtt": [
-                    "LambdaExecutionRole",
-                    "Arn"
-                ]
-            }
-        }
+    "s3Key": {
+      "Type": "String"
+    },
+    "storagebpr2storageName": {
+      "Type": "String",
+      "Default": "storagebpr2storageName"
+    },
+    "storagebpr2storageArn": {
+      "Type": "String",
+      "Default": "storagebpr2storageArn"
+    },
+    "storagebpr2storageStreamArn": {
+      "Type": "String",
+      "Default": "storagebpr2storageArn"
+    },
+    "storagebpr2storage2Name": {
+      "Type": "String",
+      "Default": "storagebpr2storage2Name"
+    },
+    "storagebpr2storage2Arn": {
+      "Type": "String",
+      "Default": "storagebpr2storage2Arn"
+    },
+    "storagebpr2storage2StreamArn": {
+      "Type": "String",
+      "Default": "storagebpr2storage2Arn"
+    },
+    "storagebpr2storage3Name": {
+      "Type": "String",
+      "Default": "storagebpr2storage3Name"
+    },
+    "storagebpr2storage3Arn": {
+      "Type": "String",
+      "Default": "storagebpr2storage3Arn"
+    },
+    "storagebpr2storage3StreamArn": {
+      "Type": "String",
+      "Default": "storagebpr2storage3Arn"
     }
+  },
+  "Conditions": {
+    "ShouldNotCreateEnvResources": {
+      "Fn::Equals": [
+        {
+          "Ref": "env"
+        },
+        "NONE"
+      ]
+    }
+  },
+  "Resources": {
+    "LambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Metadata": {
+        "aws:asset:path": "./src",
+        "aws:asset:property": "Code"
+      },
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": {
+            "Ref": "s3Key"
+          }
+        },
+        "Handler": "index.handler",
+        "FunctionName": {
+          "Fn::If": [
+            "ShouldNotCreateEnvResources",
+            "bpr2lambda1",
+            {
+              "Fn::Join": [
+                "",
+                [
+                  "bpr2lambda1",
+                  "-",
+                  {
+                    "Ref": "env"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "ENV": {
+              "Ref": "env"
+            },
+            "REGION": {
+              "Ref": "AWS::Region"
+            }
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaExecutionRole",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs18.x",
+        "Layers": [],
+        "Timeout": 25
+      }
+    },
+    "LambdaExecutionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "RoleName": {
+          "Fn::If": [
+            "ShouldNotCreateEnvResources",
+            "viasem7bpr2LambdaRole84aafb7d",
+            {
+              "Fn::Join": [
+                "",
+                [
+                  "viasem7bpr2LambdaRole84aafb7d",
+                  "-",
+                  {
+                    "Ref": "env"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "lambda.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "lambdaexecutionpolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "lambda-execution-policy",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Resource": {
+                "Fn::Sub": [
+                  "arn:aws:logs:${region}:${account}:log-group:/aws/lambda/${lambda}:log-stream:*",
+                  {
+                    "region": {
+                      "Ref": "AWS::Region"
+                    },
+                    "account": {
+                      "Ref": "AWS::AccountId"
+                    },
+                    "lambda": {
+                      "Ref": "LambdaFunction"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "bpr2storageTriggerPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "lambda-trigger-policy-bpr2storage",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:DescribeStream",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:ListStreams"
+              ],
+              "Resource": [
+                {
+                  "Ref": "storagebpr2storageStreamArn"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "bpr2storageTrigger": {
+      "Type": "AWS::Lambda::EventSourceMapping",
+      "DependsOn": [
+        "bpr2storageTriggerPolicy"
+      ],
+      "Properties": {
+        "BatchSize": 100,
+        "Enabled": true,
+        "EventSourceArn": {
+          "Ref": "storagebpr2storageStreamArn"
+        },
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "LambdaFunction",
+            "Arn"
+          ]
+        },
+        "StartingPosition": "LATEST"
+      }
+    },
+    "bpr2storage2TriggerPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "lambda-trigger-policy-bpr2storage2",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:DescribeStream",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:ListStreams"
+              ],
+              "Resource": [
+                {
+                  "Ref": "storagebpr2storage2StreamArn"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "bpr2storage2Trigger": {
+      "Type": "AWS::Lambda::EventSourceMapping",
+      "DependsOn": [
+        "bpr2storage2TriggerPolicy"
+      ],
+      "Properties": {
+        "BatchSize": 100,
+        "Enabled": true,
+        "EventSourceArn": {
+          "Ref": "storagebpr2storage2StreamArn"
+        },
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "LambdaFunction",
+            "Arn"
+          ]
+        },
+        "StartingPosition": "LATEST"
+      }
+    },
+    "bpr2storage3TriggerPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "lambda-trigger-policy-bpr2storage3",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:DescribeStream",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:ListStreams"
+              ],
+              "Resource": [
+                {
+                  "Ref": "storagebpr2storage3StreamArn"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "bpr2storage3Trigger": {
+      "Type": "AWS::Lambda::EventSourceMapping",
+      "DependsOn": [
+        "bpr2storage3TriggerPolicy"
+      ],
+      "Properties": {
+        "BatchSize": 100,
+        "Enabled": true,
+        "EventSourceArn": {
+          "Ref": "storagebpr2storage3StreamArn"
+        },
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "LambdaFunction",
+            "Arn"
+          ]
+        },
+        "StartingPosition": "LATEST"
+      }
+    }
+  },
+  "Outputs": {
+    "Name": {
+      "Value": {
+        "Ref": "LambdaFunction"
+      }
+    },
+    "Arn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "LambdaFunction",
+          "Arn"
+        ]
+      }
+    },
+    "Region": {
+      "Value": {
+        "Ref": "AWS::Region"
+      }
+    },
+    "LambdaExecutionRole": {
+      "Value": {
+        "Ref": "LambdaExecutionRole"
+      }
+    },
+    "LambdaExecutionRoleArn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "LambdaExecutionRole",
+          "Arn"
+        ]
+      }
+    }
+  }
 }
