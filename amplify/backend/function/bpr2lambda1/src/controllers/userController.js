@@ -1,4 +1,4 @@
-import { userServices } from '../services/userService';
+import { userServices } from '../services/userService.js';
 import { InternalServerError, BadRequestError, ApiError } from '../helpers/apiError.js';
 
 export const registerUser = async (req, res, next) => {
