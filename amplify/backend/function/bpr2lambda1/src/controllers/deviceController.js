@@ -1,20 +1,5 @@
 import { deviceServices } from '../services/deviceService.js';
-import { InternalServerError, BadRequestError, NotFoundError, DynamoDBError } from '../helpers/apiError.js';
-
-export const getAllDevices = async (req, res, next) => {
-  try {
-    const { start, limit } = req.query;
-    const devices = await deviceServices.getAllDevices(start, limit);
-    res.status(200).json(devices);
-  } catch (error) {
-    if (error instanceof Error && error.name === 'ValidationException') {
-      next(new BadRequestError('Invalid Request', error, 'src/controllers/deviceController.js - getAllDevices'));
-    } else if (error instanceof DynamoDBError) next(error);
-    else {
-      next(new InternalServerError(error, 'src/controllers/deviceController.js - getAllDevices'));
-    }
-  }
-};
+import { InternalServerError, BadRequestError, ApiError } from '../helpers/apiError.js';
 
 export const createDevice = async (req, res, next) => {
   try {
@@ -24,7 +9,7 @@ export const createDevice = async (req, res, next) => {
   } catch (error) {
     if (error instanceof Error && error.name === 'ValidationException') {
       next(new BadRequestError('Invalid Request', error));
-    } else if (error instanceof DynamoDBError) next(error);
+    } else if (error instanceof ApiError) next(error);
     else {
       next(new InternalServerError(error, 'src/controllers/deviceController.js - createDevice'));
     }
@@ -33,14 +18,13 @@ export const createDevice = async (req, res, next) => {
 
 export const updateDeviceById = async (req, res, next) => {
   try {
-    const { body: device } = req;
-    const { deviceId } = req.params;
-    const updatedDevice = await deviceServices.updateDeviceById(deviceId, device);
+    const { body: device, query: deviceId, headers: token } = req;
+    const updatedDevice = await deviceServices.updateDeviceById(deviceId, token, device);
     res.status(200).json(updatedDevice);
   } catch (error) {
     if (error instanceof Error && error.name === 'ValidationException') {
       next(new BadRequestError('Invalid Request', error));
-    } else if (error instanceof NotFoundError || error instanceof DynamoDBError) next(error);
+    } else if (error instanceof ApiError) next(error);
     else {
       next(new InternalServerError(error, 'src/controllers/deviceController.js - updateDeviceById'));
     }
@@ -49,32 +33,50 @@ export const updateDeviceById = async (req, res, next) => {
 
 export const deleteDeviceById = async (req, res, next) => {
   try {
-    const { deviceId } = req.params;
-    await deviceServices.deleteDeviceById(deviceId);
+    const { query: deviceId, headers: token } = req;
+    await deviceServices.deleteDeviceById(deviceId, token);
     res.status(204).json({
       message: `Device with id ${deviceId} deleted`,
     });
   } catch (error) {
     if (error instanceof Error && error.name === 'ValidationException') {
       next(new BadRequestError('Invalid Request', error));
-    } else if (error instanceof NotFoundError || error instanceof DynamoDBError) next(error);
+    } else if (error instanceof ApiError) next(error);
     else {
       next(new InternalServerError(error, 'src/controllers/deviceController.js - deleteDeviceById'));
     }
   }
 };
 
-export const getDeviceById = async (req, res, next) => {
+export const getCurrentReadings = async (req, res, next) => {
   try {
-    const { deviceId } = req.params;
-    const device = await deviceServices.getDeviceById(deviceId);
-    res.status(200).json(device);
+    const { query: deviceId, headers: token } = req;
+    const currentReadings = await deviceServices.getCurrentReadings(deviceId, token);
+    res.status(200).json(currentReadings);
   } catch (error) {
     if (error instanceof Error && error.name === 'ValidationException') {
       next(new BadRequestError('Invalid Request', error));
-    } else if (error instanceof NotFoundError || error instanceof DynamoDBError) next(error);
+    } else if (error instanceof ApiError) next(error);
     else {
-      next(new InternalServerError(error, 'src/controllers/deviceController.js - getDeviceById'));
+      next(new InternalServerError(error, 'src/controllers/deviceController.js - getCurrentReadings'));
+    }
+  }
+};
+
+export const getHistoricalReadings = async (req, res, next) => {
+  try {
+    const {
+      query: { deviceId, type, start, end },
+      headers: token,
+    } = req;
+    const historicalReadings = await deviceServices.getHistoricalReadings(deviceId, token, type, start, end);
+    res.status(200).json(historicalReadings);
+  } catch (error) {
+    if (error instanceof Error && error.name === 'ValidationException') {
+      next(new BadRequestError('Invalid Request', error));
+    } else if (error instanceof ApiError) next(error);
+    else {
+      next(new InternalServerError(error, 'src/controllers/deviceController.js - getHistoricalReadings'));
     }
   }
 };
