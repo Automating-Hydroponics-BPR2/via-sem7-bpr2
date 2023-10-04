@@ -13,12 +13,15 @@ import { NotFoundError, DynamoDBError } from '../helpers/apiError.js';
 const dynamoDb = new DynamoDBClient({ region: 'eu-central-1' });
 
 const registerUser = async (user) => {
+
+  const hashedPassword = await bcrypt.hash(user.password, bcrypt.genSaltSync(10));
+
   try {
     const userToCreate = {
       id: uuidv4(),
       username: user.username,
       email: user.email,
-      password: await bcrypt.hash(user.password, bcrypt.genSaltSync(10)),
+      password: hashedPassword,
       firstName: user.firstName,
       lastName: user.lastName,
     };
