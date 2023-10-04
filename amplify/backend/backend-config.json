@@ -27,6 +27,24 @@
           ],
           "category": "storage",
           "resourceName": "bpr2storage"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "bpr2storage2"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "bpr2storage3"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -75,6 +93,14 @@
   },
   "storage": {
     "bpr2storage": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    },
+    "bpr2storage2": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    },
+    "bpr2storage3": {
       "providerPlugin": "awscloudformation",
       "service": "DynamoDB"
     }

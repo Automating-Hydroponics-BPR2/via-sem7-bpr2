@@ -1,0 +1,12 @@
+{
+  "resourceName": "bpr2storage2",
+  "tableName": "users",
+  "partitionKey": {
+    "fieldName": "id",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": [
+    "bpr2lambda1"
+  ]
+}

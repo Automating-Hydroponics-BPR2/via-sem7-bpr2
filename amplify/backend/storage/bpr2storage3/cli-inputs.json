@@ -1,0 +1,16 @@
+{
+  "resourceName": "bpr2storage3",
+  "tableName": "readings",
+  "partitionKey": {
+    "fieldName": "id",
+    "fieldType": "string"
+  },
+  "sortKey": {
+    "fieldName": "timestamp",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": [
+    "bpr2lambda1"
+  ]
+}
