@@ -40,7 +40,7 @@ const checkIfUsernameExists = async (username, isReturnSpecified) => {
 
     if (userWithUsername) {
       if (isReturnSpecified) {
-        return userWithUsername;
+        return unmarshall(userWithUsername);
       } else {
         throw new BadRequestError(
           `User with username ${username}, already exists. Please choose another username`,
@@ -85,7 +85,7 @@ const registerUser = async (user) => {
 
     // return the userToCreate object without the password
     const { password, ...userToReturn } = userToCreate;
-    return userToReturn;
+    return unmarshall(userToReturn);
   } catch (error) {
     if (error instanceof ApiError) throw error;
     throw new DynamoDBError(error, 'src/services/userService.js - createUser');
