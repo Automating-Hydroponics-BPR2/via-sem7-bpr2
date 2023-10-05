@@ -7,14 +7,43 @@ import {
   PutItemCommand,
   DeleteItemCommand,
   UpdateItemCommand,
+  QueryCommand,
 } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { NotFoundError, DynamoDBError } from '../helpers/apiError.js';
+import { NotFoundError, DynamoDBError, BadRequestError, UnauthorizedError, ApiError } from '../helpers/apiError.js';
 const dynamoDb = new DynamoDBClient({ region: 'eu-central-1' });
 
-const registerUser = async (user) => {
+const checkIfUsernameExists = async (username, isReturnSpecified) => {
+  try {
+    const { Items } = await dynamoDb.send(
+      new QueryCommand({
+        TableName: process.env.DYNAMODB_TABLE_NAME_USERS,
+        IndexName: 'username-index',
+      }),
+    );
 
+    const userWithUsername = Items.find((item) => unmarshall(item).username === username);
+
+    if (userWithUsername) {
+      if (isReturnSpecified) {
+        return userWithUsername;
+      } else {
+        throw new BadRequestError(
+          `User with username ${username}, username already exists`,
+          'src/services/userService.js - checkIfUsernameExists',
+        );
+      }
+    }
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    else throw new DynamoDBError(error, 'src/services/userService.js - checkIfUsernameExists');
+  }
+};
+
+const registerUser = async (user) => {
   const hashedPassword = await bcrypt.hash(user.password, bcrypt.genSaltSync(10));
+
+  await checkIfUsernameExists(user.username);
 
   try {
     const userToCreate = {
@@ -37,34 +66,17 @@ const registerUser = async (user) => {
     const { password, ...userToReturn } = userToCreate;
     return userToReturn;
   } catch (error) {
+    if (error instanceof ApiError) throw error;
     throw new DynamoDBError(error, 'src/services/userService.js - createUser');
   }
 };
 
 const loginUser = async (user) => {
   try {
-    const userToLogin = {
-      username: user.username,
-      password: user.password,
-    };
+    const userToReturn = await checkIfUsernameExists(user.username, true);
+    const isPasswordCorrect = bcrypt.compareSync(user.password, userToReturn.password);
 
-    const { Item } = await dynamoDb.send(
-      new GetItemCommand({
-        TableName: process.env.DYNAMODB_TABLE_NAME_USERS,
-        Key: marshall({ username: userToLogin.username }),
-      }),
-    );
-
-    if (!Item) {
-      throw new NotFoundError(
-        `Could not get user with username ${userToLogin.username}, user not found`,
-        'src/services/userService.js - loginUser',
-      );
-    }
-
-    const userToReturn = unmarshall(Item);
-
-    if (await bcrypt.compare(userToLogin.password, userToReturn.password)) {
+    if (isPasswordCorrect) {
       const token = jwt.sign(
         {
           id: userToReturn.id,
@@ -79,13 +91,13 @@ const loginUser = async (user) => {
 
       return { token };
     } else {
-      throw new NotFoundError(
-        `Could not login user with username ${userToLogin.username}, wrong password`,
+      throw new UnauthorizedError(
+        `Could not login user with username ${user.username}, wrong password`,
         'src/services/userService.js - loginUser',
       );
     }
   } catch (error) {
-    if (error instanceof NotFoundError) throw error;
+    if (error instanceof ApiError) throw error;
     else throw new DynamoDBError(error, 'src/services/userService.js - loginUser');
   }
 };
@@ -114,7 +126,7 @@ const deleteUserById = async (token) => {
       }),
     );
   } catch (error) {
-    if (error instanceof NotFoundError) throw error;
+    if (error instanceof ApiError) throw error;
     else throw new DynamoDBError(error, 'src/services/userService.js - deleteUserById');
   }
 };
@@ -163,7 +175,7 @@ const updateUserById = async (token, user) => {
 
     return unmarshall(updatedItem);
   } catch (error) {
-    if (error instanceof NotFoundError) throw error;
+    if (error instanceof ApiError) throw error;
     else throw new DynamoDBError(error, 'src/services/userService.js - updateUserById');
   }
 };

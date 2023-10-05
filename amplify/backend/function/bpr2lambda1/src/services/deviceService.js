@@ -8,7 +8,7 @@ import {
 } from '@aws-sdk/client-dynamodb';
 import jwt from 'jsonwebtoken';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { NotFoundError, DynamoDBError, BadRequestError, InternalServerError } from '../helpers/apiError.js';
+import { NotFoundError, DynamoDBError, BadRequestError, InternalServerError, ApiError } from '../helpers/apiError.js';
 const dynamoDb = new DynamoDBClient({ region: 'eu-central-1' });
 
 const checkIfDeviceBelongsToUser = async (deviceId, token, isReturnSpecified) => {
@@ -39,7 +39,7 @@ const checkIfDeviceBelongsToUser = async (deviceId, token, isReturnSpecified) =>
 
     return isReturnSpecified ? unmarshall(Item) : null;
   } catch (error) {
-    if (error instanceof NotFoundError || error instanceof BadRequestError) throw error;
+    if (error instanceof ApiError) throw error;
     else throw new DynamoDBError(error, 'src/services/deviceService.js - checkIfDeviceBelongsToUser');
   }
 };
@@ -91,8 +91,7 @@ const deleteDeviceById = async (deviceId, token) => {
       }),
     );
   } catch (error) {
-    if (error instanceof NotFoundError || error instanceof BadRequestError || error instanceof DynamoDBError)
-      throw error;
+    if (error instanceof ApiError) throw error;
     else throw new InternalServerError(error, 'src/services/deviceService.js - deleteDeviceById');
   }
 };
@@ -131,7 +130,7 @@ const updateDeviceById = async (deviceId, userId, device) => {
 
     return unmarshall(updatedItem);
   } catch (error) {
-    if (error instanceof NotFoundError) throw error;
+    if (error instanceof ApiError) throw error;
     else throw new DynamoDBError(error, 'src/services/deviceService.js - updateDeviceById');
   }
 };
@@ -170,6 +169,7 @@ const getHistoricalReadings = async (deviceId, token, type, start, end) => {
 
     return devicesToReturn;
   } catch (error) {
+    if (error instanceof ApiError) throw error;
     throw new DynamoDBError(error, 'src/services/deviceService.js - getAllDevices');
   }
 };
@@ -201,6 +201,7 @@ const getCurrentReadings = async (deviceId, token) => {
 
     return unmarshall(data.Items[0]);
   } catch (error) {
+    if (error instanceof ApiError) throw error;
     throw new DynamoDBError(error, 'src/services/deviceService.js - getCurrentReadings');
   }
 };
