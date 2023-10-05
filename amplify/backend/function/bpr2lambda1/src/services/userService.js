@@ -19,15 +19,20 @@ const checkIfUsernameExists = async (username, isReturnSpecified) => {
       new QueryCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_USERS,
         IndexName: 'username-index',
-        KeyConditionExpression: '#username = v_username',
-        ExpressionAttributeNames: {
-          '#username': 'username',
-        },
+        KeyConditionExpression: '#username = username',
         ExpressionAttributeValues: marshall({
-          v_username: username,
+          // eslint-disable-next-line object-shorthand
+          username: username,
         }),
       }),
     );
+
+    if (Items.length === 0) {
+      throw new NotFoundError(
+        `User with username ${username}, not found. No items returned from DynamoDB query`,
+        'src/services/userService.js - checkIfUsernameExists',
+      );
+    }
 
     const userWithUsername = Items.find((item) => unmarshall(item).username === username);
 
@@ -36,7 +41,14 @@ const checkIfUsernameExists = async (username, isReturnSpecified) => {
         return userWithUsername;
       } else {
         throw new BadRequestError(
-          `User with username ${username}, username already exists`,
+          `User with username ${username}, already exists. Please choose another username`,
+          'src/services/userService.js - checkIfUsernameExists',
+        );
+      }
+    } else {
+      if (isReturnSpecified) {
+        throw new NotFoundError(
+          `User with username ${username}, user not found. No items matched the username`,
           'src/services/userService.js - checkIfUsernameExists',
         );
       }
@@ -49,7 +61,7 @@ const checkIfUsernameExists = async (username, isReturnSpecified) => {
 
 const registerUser = async (user) => {
   await checkIfUsernameExists(user.username);
-  
+
   const hashedPassword = await bcrypt.hash(user.password, bcrypt.genSaltSync(10));
 
   try {
@@ -99,7 +111,7 @@ const loginUser = async (user) => {
       return { token };
     } else {
       throw new UnauthorizedError(
-        `Could not login user with username ${user.username}, wrong password`,
+        `Could not login user with username ${user.username}, wrong password. Please try again`,
         'src/services/userService.js - loginUser',
       );
     }
@@ -121,7 +133,7 @@ const deleteUserById = async (token) => {
 
     if (!Item) {
       throw new NotFoundError(
-        `Could not delete user with id ${userId}, user not found`,
+        `Could not delete user with id ${userId}, user not found. No items returned from DynamoDB GetItemCommand`,
         'src/services/userService.js - deleteUserById',
       );
     }
@@ -147,7 +159,7 @@ const updateUserById = async (token, user) => {
 
     if (!Item) {
       throw new NotFoundError(
-        `Could not update user with id ${userId}, user not found`,
+        `Could not update user with id ${userId}, user not found. No items returned from DynamoDB GetItemCommand`,
         'src/services/userService.js - updateUserById',
       );
     }
