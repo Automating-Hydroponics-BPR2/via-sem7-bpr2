@@ -29,28 +29,19 @@ const checkIfUsernameExists = async (username, isReturnSpecified) => {
       }),
     );
 
-    if (Items.length === 0) {
-      throw new NotFoundError(
-        `User with username ${username}, not found. No items returned from DynamoDB query`,
-        'src/services/userService.js - checkIfUsernameExists',
-      );
-    }
-
-    const userWithUsername = Items.find((item) => unmarshall(item).username === username);
-
-    if (userWithUsername) {
-      if (isReturnSpecified) {
-        return unmarshall(userWithUsername);
-      } else {
-        throw new BadRequestError(
-          `User with username ${username}, already exists. Please choose another username`,
+    if (isReturnSpecified) {
+      if (Items.length === 0) {
+        throw new NotFoundError(
+          `User with username ${username} is not registered. No items returned from DynamoDB query`,
           'src/services/userService.js - checkIfUsernameExists',
         );
+      } else {
+        return unmarshall(Items[0]);
       }
     } else {
-      if (isReturnSpecified) {
-        throw new NotFoundError(
-          `User with username ${username}, user not found. No items matched the username`,
+      if (Items.length !== 0) {
+        throw new BadRequestError(
+          `User with username ${username} already exists. Try another username`,
           'src/services/userService.js - checkIfUsernameExists',
         );
       }
@@ -95,8 +86,6 @@ const registerUser = async (user) => {
 const loginUser = async (user) => {
   try {
     const userToReturn = await checkIfUsernameExists(user.username, true);
-    console.log("userToReturn: ", userToReturn);
-    console.log("user: ", user);
     const isPasswordCorrect = bcrypt.compareSync(user.password, userToReturn.password);
 
     if (isPasswordCorrect) {

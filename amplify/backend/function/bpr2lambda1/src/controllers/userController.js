@@ -1,5 +1,5 @@
 import { userServices } from '../services/userService.js';
-import { InternalServerError, BadRequestError, ApiError } from '../helpers/apiError.js';
+import { InternalServerError, ApiError } from '../helpers/apiError.js';
 
 export const registerUser = async (req, res, next) => {
   try {
@@ -7,9 +7,7 @@ export const registerUser = async (req, res, next) => {
     const createdUser = await userServices.registerUser(user);
     res.status(201).json(createdUser);
   } catch (error) {
-    if (error instanceof Error && error.name === 'ValidationException') {
-      next(new BadRequestError('Invalid Request', error));
-    } else if (error instanceof ApiError) next(error);
+    if (error instanceof ApiError) next(error);
     else {
       next(new InternalServerError(error, 'src/controllers/userController.js - registerUser'));
     }
@@ -22,9 +20,7 @@ export const loginUser = async (req, res, next) => {
     const token = await userServices.loginUser(user);
     res.status(200).json(token);
   } catch (error) {
-    if (error instanceof Error && error.name === 'ValidationException') {
-      next(new BadRequestError('Invalid Request', error));
-    } else if (error instanceof ApiError) next(error);
+    if (error instanceof ApiError) next(error);
     else {
       next(new InternalServerError(error, 'src/controllers/userController.js - loginUser'));
     }
@@ -33,15 +29,11 @@ export const loginUser = async (req, res, next) => {
 
 export const updateUserById = async (req, res, next) => {
   try {
-    // body from req.body and userId is stored in the headers
-    const { body: user } = req;
-    const { userId } = req.headers;
-    const updatedUser = await userServices.updateUserById(userId, user);
+    const { body: user, headers: token } = req;
+    const updatedUser = await userServices.updateUserById(token, user);
     res.status(200).json(updatedUser);
   } catch (error) {
-    if (error instanceof Error && error.name === 'ValidationException') {
-      next(new BadRequestError('Invalid Request', error));
-    } else if (error instanceof ApiError) next(error);
+    if (error instanceof ApiError) next(error);
     else {
       next(new InternalServerError(error, 'src/controllers/userController.js - loginUser'));
     }
@@ -50,15 +42,13 @@ export const updateUserById = async (req, res, next) => {
 
 export const deleteUserById = async (req, res, next) => {
   try {
-    const { userId } = req.headers;
-    await userServices.deleteUserById(userId);
+    const { headers: token } = req;
+    await userServices.deleteUserById(token);
     res.status(204).json({
-      message: `User with id ${userId} deleted`,
+      message: `User successfully deleted`,
     });
   } catch (error) {
-    if (error instanceof Error && error.name === 'ValidationException') {
-      next(new BadRequestError('Invalid Request', error));
-    } else if (error instanceof ApiError) next(error);
+    if (error instanceof ApiError) next(error);
     else {
       next(new InternalServerError(error, 'src/controllers/userController.js - deleteUserById'));
     }
