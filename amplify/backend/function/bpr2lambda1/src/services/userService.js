@@ -23,9 +23,9 @@ const checkIfUsernameExists = async (username, isReturnSpecified) => {
         ExpressionAttributeNames: {
           '#username': 'username',
         },
-        ExpressionAttributeValues: {
-          ':v_username': username,
-        },
+        ExpressionAttributeValues: marshall({
+          v_username: username,
+        }),
       }),
     );
 
@@ -48,9 +48,9 @@ const checkIfUsernameExists = async (username, isReturnSpecified) => {
 };
 
 const registerUser = async (user) => {
-  const hashedPassword = await bcrypt.hash(user.password, bcrypt.genSaltSync(10));
-
   await checkIfUsernameExists(user.username);
+  
+  const hashedPassword = await bcrypt.hash(user.password, bcrypt.genSaltSync(10));
 
   try {
     const userToCreate = {
