@@ -95,6 +95,8 @@ const registerUser = async (user) => {
 const loginUser = async (user) => {
   try {
     const userToReturn = await checkIfUsernameExists(user.username, true);
+    console.log("userToReturn: ", userToReturn);
+    console.log("user: ", user);
     const isPasswordCorrect = bcrypt.compareSync(user.password, userToReturn.password);
 
     if (isPasswordCorrect) {
