@@ -3,8 +3,8 @@ import { InternalServerError, ApiError } from '../helpers/apiError.js';
 
 export const createDevice = async (req, res, next) => {
   try {
-    const { body: device } = req;
-    const createdDevice = await deviceServices.createDevice(device);
+    const { body: device, user: id } = req;
+    const createdDevice = await deviceServices.createDevice(device, id);
     res.status(201).json(createdDevice);
   } catch (error) {
     if (error instanceof ApiError) next(error);
@@ -16,8 +16,8 @@ export const createDevice = async (req, res, next) => {
 
 export const updateDeviceById = async (req, res, next) => {
   try {
-    const { body: device, query: deviceId, headers: token } = req;
-    const updatedDevice = await deviceServices.updateDeviceById(deviceId, token, device);
+    const { body: device, query: deviceId, user: id } = req;
+    const updatedDevice = await deviceServices.updateDeviceById(deviceId, id, device);
     res.status(200).json(updatedDevice);
   } catch (error) {
     if (error instanceof ApiError) next(error);
@@ -29,8 +29,8 @@ export const updateDeviceById = async (req, res, next) => {
 
 export const deleteDeviceById = async (req, res, next) => {
   try {
-    const { query: deviceId, headers: token } = req;
-    await deviceServices.deleteDeviceById(deviceId, token);
+    const { query: deviceId, user: id } = req;
+    await deviceServices.deleteDeviceById(deviceId, id);
     res.status(204).end();
   } catch (error) {
     if (error instanceof ApiError) next(error);
@@ -42,8 +42,8 @@ export const deleteDeviceById = async (req, res, next) => {
 
 export const getCurrentReadings = async (req, res, next) => {
   try {
-    const { query: deviceId, headers: token } = req;
-    const currentReadings = await deviceServices.getCurrentReadings(deviceId, token);
+    const { query: deviceId, user: id } = req;
+    const currentReadings = await deviceServices.getCurrentReadings(deviceId, id);
     res.status(200).json(currentReadings);
   } catch (error) {
     if (error instanceof ApiError) next(error);
@@ -57,9 +57,9 @@ export const getHistoricalReadings = async (req, res, next) => {
   try {
     const {
       query: { deviceId, type, start, end },
-      headers: token,
+      user: id,
     } = req;
-    const historicalReadings = await deviceServices.getHistoricalReadings(deviceId, token, type, start, end);
+    const historicalReadings = await deviceServices.getHistoricalReadings(deviceId, id, type, start, end);
     res.status(200).json(historicalReadings);
   } catch (error) {
     if (error instanceof ApiError) next(error);
