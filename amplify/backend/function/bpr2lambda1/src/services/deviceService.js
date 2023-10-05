@@ -37,7 +37,7 @@ const checkIfDeviceBelongsToUser = async (deviceId, token, isReturnSpecified) =>
       );
     }
 
-    return isReturnSpecified ? unmarshall(Item) : null;
+    return isReturnSpecified ? device : null;
   } catch (error) {
     if (error instanceof ApiError) throw error;
     else throw new DynamoDBError(error, 'src/services/deviceService.js - checkIfDeviceBelongsToUser');
