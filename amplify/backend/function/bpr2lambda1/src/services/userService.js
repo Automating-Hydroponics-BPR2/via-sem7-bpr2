@@ -19,11 +19,13 @@ const checkIfUsernameExists = async (username, isReturnSpecified) => {
       new QueryCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_USERS,
         IndexName: 'username-index',
-        KeyConditionExpression: '#username = username',
+        KeyConditionExpression: '#username = :username', // Use :username as a placeholder
         ExpressionAttributeValues: marshall({
-          // eslint-disable-next-line object-shorthand
-          username: username,
+          ':username': username, // Use :username as a placeholder with a colon
         }),
+        ExpressionAttributeNames: {
+          '#username': 'username', // Map the placeholder to the actual attribute name
+        },
       }),
     );
 
