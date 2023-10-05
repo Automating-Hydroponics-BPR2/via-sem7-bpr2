@@ -42,8 +42,8 @@ export const updateUserById = async (req, res, next) => {
 
 export const deleteUserById = async (req, res, next) => {
   try {
-    const { headers: token } = req;
-    await userServices.deleteUserById(token);
+    const { user: id } = req;
+    await userServices.deleteUserById(id);
     res.status(204).end();
   } catch (error) {
     if (error instanceof ApiError) next(error);
