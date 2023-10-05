@@ -19,6 +19,7 @@ const checkIfUsernameExists = async (username, isReturnSpecified) => {
       new QueryCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_USERS,
         IndexName: 'username-index',
+        KeyConditionExpression: '#username = :username',
       }),
     );
 
