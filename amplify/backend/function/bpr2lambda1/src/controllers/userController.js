@@ -29,8 +29,8 @@ export const loginUser = async (req, res, next) => {
 
 export const updateUserById = async (req, res, next) => {
   try {
-    const { body: user, headers: token } = req;
-    const updatedUser = await userServices.updateUserById(token, user);
+    const { body: user, user: id } = req;
+    const updatedUser = await userServices.updateUserById(user, id);
     res.status(200).json(updatedUser);
   } catch (error) {
     if (error instanceof ApiError) next(error);

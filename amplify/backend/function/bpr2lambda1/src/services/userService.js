@@ -143,11 +143,10 @@ const deleteUserById = async (userId) => {
   }
 };
 
-const updateUserById = async (token, user) => {
+const updateUserById = async (user, userId) => {
   try {
-    const { id: userId } = jwt.verify(token, process.env.SECRETS_JWT);
     const { Item } = await dynamoDb.send(
-      new GetItemCommand({ TableName: process.env.DYNAMODB_TABLE_NAME_USERS, Key: marshall({ id: userId }) }),
+      new GetItemCommand({ TableName: process.env.DYNAMODB_TABLE_NAME_USERS, Key: marshall({ id: user.id }) }),
     );
 
     if (!Item) {
@@ -193,6 +192,7 @@ const updateUserById = async (token, user) => {
 };
 
 export const userServices = {
+  checkIfUsernameExists,
   registerUser,
   loginUser,
   deleteUserById,

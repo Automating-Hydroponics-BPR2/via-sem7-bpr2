@@ -5,9 +5,9 @@ const apiErrorHandler = function (error, req, res, next) {
     logger.error(`${error.message} ----->  ${error.source}`);
   }
 
-  res.status(error.statusCode).json({
+  res.status(error.statusCode ?? 500).json({
     status: 'error',
-    statusCode: `${error.statusCode}`,
+    statusCode: `${error.statusCode}` ?? 500,
     stack: error.stack,
   });
 };

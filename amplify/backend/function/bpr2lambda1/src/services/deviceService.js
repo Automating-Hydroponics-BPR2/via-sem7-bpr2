@@ -6,14 +6,12 @@ import {
   UpdateItemCommand,
   ScanCommand,
 } from '@aws-sdk/client-dynamodb';
-import jwt from 'jsonwebtoken';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { NotFoundError, DynamoDBError, BadRequestError, InternalServerError, ApiError } from '../helpers/apiError.js';
 const dynamoDb = new DynamoDBClient({ region: 'eu-central-1' });
 
-const checkIfDeviceBelongsToUser = async (deviceId, token, isReturnSpecified) => {
+const checkIfDeviceBelongsToUser = async (deviceId, userId, isReturnSpecified) => {
   try {
-    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const { Item } = await dynamoDb.send(
       new GetItemCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_DEVICES,
@@ -44,9 +42,8 @@ const checkIfDeviceBelongsToUser = async (deviceId, token, isReturnSpecified) =>
   }
 };
 
-const createDevice = async (device, token) => {
+const createDevice = async (device, userId) => {
   try {
-    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const { Item } = await dynamoDb.send(
       new GetItemCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_DEVICES,
@@ -80,9 +77,9 @@ const createDevice = async (device, token) => {
   }
 };
 
-const deleteDeviceById = async (deviceId, token) => {
+const deleteDeviceById = async (deviceId, userId) => {
   try {
-    await checkIfDeviceBelongsToUser(deviceId, token);
+    await checkIfDeviceBelongsToUser(deviceId, userId);
 
     await dynamoDb.send(
       new DeleteItemCommand({
@@ -135,9 +132,9 @@ const updateDeviceById = async (deviceId, userId, device) => {
   }
 };
 
-const getHistoricalReadings = async (deviceId, token, type, start, end) => {
+const getHistoricalReadings = async (deviceId, userId, type, start, end) => {
   try {
-    await checkIfDeviceBelongsToUser(deviceId, token);
+    await checkIfDeviceBelongsToUser(deviceId, userId);
 
     const data = await dynamoDb.send(
       new ScanCommand({
@@ -174,10 +171,10 @@ const getHistoricalReadings = async (deviceId, token, type, start, end) => {
   }
 };
 
-const getCurrentReadings = async (deviceId, token) => {
+const getCurrentReadings = async (deviceId, userId) => {
   try {
     // Check if the device belongs to the user
-    await checkIfDeviceBelongsToUser(deviceId, token);
+    await checkIfDeviceBelongsToUser(deviceId, userId);
 
     // Retrieve the item with the latest timestamp from TABMEL_NAME_READINGS
     const data = await dynamoDb.send(
