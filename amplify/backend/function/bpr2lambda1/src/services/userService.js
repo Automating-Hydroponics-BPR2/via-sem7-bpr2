@@ -19,9 +19,9 @@ const checkIfUsernameExists = async (username, isReturnSpecified) => {
       new QueryCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_USERS,
         IndexName: 'username-index',
+        ExpressionAttributeNames: { '#username': ':username' },
+        ExpressionAttributeValues: marshall({ ':username': username }),
         KeyConditionExpression: '#username = :username',
-        ExpressionAttributeNames: { '#username': 'username' },
-        
       }),
     );
 
