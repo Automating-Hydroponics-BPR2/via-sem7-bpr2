@@ -117,6 +117,7 @@ const loginUser = async (user) => {
 const deleteUserById = async (token) => {
   try {
     const { id: userId } = jwt.verify(token, process.env.SECRETS_JWT);
+    console.log(userId)
     const { Item } = await dynamoDb.send(
       new GetItemCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_USERS,
