@@ -44,9 +44,7 @@ export const deleteUserById = async (req, res, next) => {
   try {
     const { headers: token } = req;
     await userServices.deleteUserById(token);
-    res.status(204).json({
-      message: `User successfully deleted`,
-    });
+    res.status(204).end();
   } catch (error) {
     if (error instanceof ApiError) next(error);
     else {

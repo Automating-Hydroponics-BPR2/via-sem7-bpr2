@@ -31,9 +31,7 @@ export const deleteDeviceById = async (req, res, next) => {
   try {
     const { query: deviceId, headers: token } = req;
     await deviceServices.deleteDeviceById(deviceId, token);
-    res.status(204).json({
-      message: `Device with id ${deviceId} deleted`,
-    });
+    res.status(204).end();
   } catch (error) {
     if (error instanceof ApiError) next(error);
     else {
