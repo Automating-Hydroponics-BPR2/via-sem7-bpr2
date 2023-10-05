@@ -19,8 +19,13 @@ const checkIfUsernameExists = async (username, isReturnSpecified) => {
       new QueryCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_USERS,
         IndexName: 'username-index',
-        ExpressionAttributeValues: marshall({ ':username': username }),
-        KeyConditionExpression: 'username = :username',
+        KeyConditionExpression: '#username = v_username',
+        ExpressionAttributeNames: {
+          '#username': 'username',
+        },
+        ExpressionAttributeValues: {
+          ':v_username': username,
+        },
       }),
     );
 
@@ -38,7 +43,7 @@ const checkIfUsernameExists = async (username, isReturnSpecified) => {
     }
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    else throw new DynamoDBError(error, 'src/services/userService.js - checkIfUsernameExists');
+    else throw new DynamoDBError(error, `src/services/userService.js - ${username} - checkIfUsernameExists`);
   }
 };
 
