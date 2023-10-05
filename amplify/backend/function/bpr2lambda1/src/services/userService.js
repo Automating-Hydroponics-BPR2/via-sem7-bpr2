@@ -116,7 +116,6 @@ const loginUser = async (user) => {
 
 const deleteUserById = async (userId) => {
   try {
-    console.log(userId)
     const { Item } = await dynamoDb.send(
       new GetItemCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_USERS,
