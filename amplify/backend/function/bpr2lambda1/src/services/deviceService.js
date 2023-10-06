@@ -142,10 +142,16 @@ const getHistoricalReadings = async (deviceId, userId, start, end, type) => {
         ExpressionAttributeNames: {
           '#timestamp': 'timestamp',
         },
-        ExpressionAttributeValues: marshall({
-          ':start': start,
-          ':end': end,
-        }),
+        ExpressionAttributeValues: marshall(
+          {
+            ':start': start,
+            ':end': end,
+            ':type': type,
+          },
+          {
+            removeUndefinedValues: true,
+          },
+        ),
       }),
     );
 
@@ -181,7 +187,7 @@ const getCurrentReadings = async (deviceId, userId) => {
     const data = await dynamoDb.send(
       new ScanCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_READINGS,
-        KeyConditionExpression: 'deviceId = :deviceId',
+        FilterExpression: 'deviceId = :deviceId',
         ExpressionAttributeValues: marshall({
           ':deviceId': deviceId,
         }),
