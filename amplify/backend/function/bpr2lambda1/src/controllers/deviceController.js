@@ -21,7 +21,7 @@ export const updateDeviceById = async (req, res, next) => {
   try {
     const {
       body: device,
-      query: deviceId,
+      query: { id: deviceId },
       user: { id: userId },
     } = req;
     const updatedDevice = await deviceServices.updateDeviceById(deviceId, userId, device);
@@ -37,7 +37,7 @@ export const updateDeviceById = async (req, res, next) => {
 export const deleteDeviceById = async (req, res, next) => {
   try {
     const {
-      query: deviceId,
+      query: { id: deviceId },
       user: { id: userId },
     } = req;
     await deviceServices.deleteDeviceById(deviceId, userId);
@@ -53,7 +53,7 @@ export const deleteDeviceById = async (req, res, next) => {
 export const getCurrentReadings = async (req, res, next) => {
   try {
     const {
-      query: deviceId,
+      query: { id: deviceId },
       user: { id: userId },
     } = req;
     const currentReadings = await deviceServices.getCurrentReadings(deviceId, userId);
@@ -69,10 +69,10 @@ export const getCurrentReadings = async (req, res, next) => {
 export const getHistoricalReadings = async (req, res, next) => {
   try {
     const {
-      query: { deviceId, type, start, end },
+      query: { id, type, start, end },
       user: { id: userId },
     } = req;
-    const historicalReadings = await deviceServices.getHistoricalReadings(deviceId, userId, start, end, type);
+    const historicalReadings = await deviceServices.getHistoricalReadings(id, userId, start, end, type);
     res.status(200).json(historicalReadings);
   } catch (error) {
     if (error instanceof ApiError) next(error);

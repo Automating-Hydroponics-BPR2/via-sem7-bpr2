@@ -94,6 +94,8 @@ const deleteDeviceById = async (deviceId, userId) => {
 const updateDeviceById = async (deviceId, userId, device) => {
   try {
     // Check if the device belongs to the user
+    console.log('point of debug 1', deviceId);
+    console.log('point of debug 2', userId);
     await checkIfDeviceExistsAndBelongsToUser(deviceId, userId, true);
 
     const deviceToUpdateKeys = Object.keys(device);
@@ -111,13 +113,14 @@ const updateDeviceById = async (deviceId, userId, device) => {
         UpdateExpression: updateExpression,
         ExpressionAttributeNames: expressionAttributeNames,
         ExpressionAttributeValues: expressionAttributeValues,
-        ReturnValues: 'UPDATED_NEW',
+        ReturnValues: 'ALL_NEW',
         ConditionExpression: 'attribute_exists(id)',
       }),
     );
 
     // include the attributes that were not updated
-    const deviceToReturn = { ...unmarshall(updatedDevice), ...device };
+    const deviceToReturn = unmarshall(updatedDevice);
+    console.log('point of debug 3', deviceToReturn);
 
     return deviceToReturn;
   } catch (error) {
@@ -146,6 +149,10 @@ const getHistoricalReadings = async (deviceId, userId, start, end, type) => {
       }),
     );
 
+    console.log(start, end, type);
+
+    console.log(data);
+
     if (!data)
       throw new NotFoundError(
         `Could not get data. No readings found for device with id ${deviceId} between ${start} and ${end}`,
@@ -168,9 +175,9 @@ const getHistoricalReadings = async (deviceId, userId, start, end, type) => {
 const getCurrentReadings = async (deviceId, userId) => {
   try {
     // Check if the device belongs to the user
-    await checkIfDeviceExistsAndBelongsToUser(deviceId, userId);
+    await checkIfDeviceExistsAndBelongsToUser(deviceId, userId, true);
 
-    // Retrieve the item with the latest timestamp from TABMEL_NAME_READINGS
+    // Retrieve the item with the latest timestamp from TABEL_NAME_READINGS
     const data = await dynamoDb.send(
       new ScanCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_READINGS,
@@ -182,6 +189,8 @@ const getCurrentReadings = async (deviceId, userId) => {
         Limit: 1, // Limit to one result
       }),
     );
+
+    console.log(data);
 
     if (!data || !data.Items || data.Items.length === 0) {
       throw new NotFoundError(
