@@ -191,7 +191,6 @@ const getCurrentReadings = async (deviceId, userId) => {
         ExpressionAttributeValues: marshall({
           ':deviceId': deviceId,
         }),
-        ScanIndexForward: false, // Sort in descending order to get the latest reading first
         Limit: 1, // Limit to one result
       }),
     );
