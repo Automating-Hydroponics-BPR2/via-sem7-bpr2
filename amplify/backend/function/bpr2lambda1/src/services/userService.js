@@ -3,7 +3,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {
   DynamoDBClient,
-  GetItemCommand,
   PutItemCommand,
   DeleteItemCommand,
   UpdateItemCommand,
@@ -117,27 +116,16 @@ const loginUser = async (user) => {
 
 const deleteUserById = async (userId) => {
   try {
-    const { Item } = await dynamoDb.send(
-      new GetItemCommand({
-        TableName: process.env.DYNAMODB_TABLE_NAME_USERS,
-        Key: marshall({ id: userId }),
-      }),
-    );
-
-    if (!Item) {
-      throw new NotFoundError(
-        `Could not delete user with id ${userId}, user not found. No items returned from DynamoDB GetItemCommand`,
-        'src/services/userService.js - deleteUserById',
-      );
-    }
-
     await dynamoDb.send(
       new DeleteItemCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_USERS,
         Key: marshall({ id: userId }),
+        ConditionExpression: 'attribute_exists(id)',
       }),
     );
   } catch (error) {
+    if (error.name === 'ConditionalCheckFailedException')
+      throw new NotFoundError(error.message, 'src/services/userService.js - deleteUserById');
     if (error instanceof ApiError) throw error;
     else throw new DynamoDBError(error, 'src/services/userService.js - deleteUserById');
   }
@@ -158,7 +146,7 @@ const updateUserById = async (user, userId) => {
       },
     );
 
-    const { Item: updatedUser } = await dynamoDb.send(
+    const { Attributes: updatedUser } = await dynamoDb.send(
       new UpdateItemCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_USERS,
         Key: marshall({ id: userId }),
@@ -180,7 +168,7 @@ const updateUserById = async (user, userId) => {
     return userToReturn;
   } catch (error) {
     if (error.name === 'ConditionalCheckFailedException')
-      throw new BadRequestError(error.message, 'src/services/userService.js - updateUserById');
+      throw new NotFoundError(error.message, 'src/services/userService.js - updateUserById');
     if (error instanceof ApiError) throw error;
     else throw new DynamoDBError(error, 'src/services/userService.js - updateUserById');
   }
