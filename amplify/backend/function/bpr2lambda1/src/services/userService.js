@@ -12,7 +12,7 @@ import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { NotFoundError, DynamoDBError, BadRequestError, UnauthorizedError, ApiError } from '../helpers/apiError.js';
 const dynamoDb = new DynamoDBClient({ region: 'eu-central-1' });
 
-const checkIfUsernameExists = async (username, isReturnSpecified) => {
+const checkIfUserWithUsernameExists = async (username, shouldUserExist, isReturnSpecified) => {
   try {
     const { Items } = await dynamoDb.send(
       new QueryCommand({
@@ -28,19 +28,19 @@ const checkIfUsernameExists = async (username, isReturnSpecified) => {
       }),
     );
 
-    if (isReturnSpecified) {
+    if (shouldUserExist) {
       if (Items.length === 0) {
         throw new NotFoundError(
-          `User with username ${username} is not registered. No items returned from DynamoDB query`,
+          `User with username ${username} does not exist or not yet registered. Please register first.`,
           'src/services/userService.js - checkIfUsernameExists',
         );
-      } else {
+      } else if (isReturnSpecified) {
         return unmarshall(Items[0]);
       }
     } else {
       if (Items.length !== 0) {
         throw new BadRequestError(
-          `User with username ${username} already exists. Try another username`,
+          `User with username ${username} already exists. Try another username.`,
           'src/services/userService.js - checkIfUsernameExists',
         );
       }
@@ -52,7 +52,7 @@ const checkIfUsernameExists = async (username, isReturnSpecified) => {
 };
 
 const registerUser = async (user) => {
-  await checkIfUsernameExists(user.username);
+  await checkIfUserWithUsernameExists(user.username);
 
   const hashedPassword = await bcrypt.hash(user.password, bcrypt.genSaltSync(10));
 
@@ -85,7 +85,7 @@ const registerUser = async (user) => {
 
 const loginUser = async (user) => {
   try {
-    const userToReturn = await checkIfUsernameExists(user.username, true);
+    const userToReturn = await checkIfUserWithUsernameExists(user.username, true, true);
     const isPasswordCorrect = bcrypt.compareSync(user.password, userToReturn.password);
 
     if (isPasswordCorrect) {
@@ -115,6 +115,7 @@ const loginUser = async (user) => {
 };
 
 const deleteUserById = async (userId) => {
+  await checkIfUserWithUsernameExists(userId, true);
   try {
     await dynamoDb.send(
       new DeleteItemCommand({
@@ -133,7 +134,8 @@ const deleteUserById = async (userId) => {
 
 const updateUserById = async (user, userId) => {
   try {
-    console.log('user', user);
+    await checkIfUserWithUsernameExists(userId, true);
+
     // more information > https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/dynamodb/command/UpdateItemCommand/
     const userAttributes = Object.keys(user);
 
@@ -158,12 +160,8 @@ const updateUserById = async (user, userId) => {
       }),
     );
 
-    console.log('updatedUser', updatedUser);
-
     // include the attributes that were not updated except the password if it existed in the request body
     const { password, ...userToReturn } = { ...unmarshall(updatedUser), ...user };
-
-    console.log('userToReturn', userToReturn);
 
     return userToReturn;
   } catch (error) {
@@ -175,7 +173,7 @@ const updateUserById = async (user, userId) => {
 };
 
 export const userServices = {
-  checkIfUsernameExists,
+  checkIfUsernameExists: checkIfUserWithUsernameExists,
   registerUser,
   loginUser,
   deleteUserById,
