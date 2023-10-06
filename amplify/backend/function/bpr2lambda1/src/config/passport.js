@@ -8,7 +8,7 @@ export const jwtStrategy = new JwtStrategy(
   },
   async (payload, done) => {
     try {
-      const user = await userServices.checkIfUsernameExists(payload.username, true);
+      const user = await userServices.checkIfUsernameExists(payload.username, true, true);
       done(null, user);
     } catch (error) {
       if (error instanceof ApiError) done(error, false);
