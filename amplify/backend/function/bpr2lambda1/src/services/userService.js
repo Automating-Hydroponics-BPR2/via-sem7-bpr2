@@ -76,6 +76,7 @@ const registerUser = async (user) => {
 
     // return the userToCreate object without the password
     const { password, ...userToReturn } = userToCreate;
+
     return unmarshall(userToReturn);
   } catch (error) {
     if (error instanceof ApiError) throw error;
@@ -144,47 +145,42 @@ const deleteUserById = async (userId) => {
 
 const updateUserById = async (user, userId) => {
   try {
-    const { Item } = await dynamoDb.send(
-      new GetItemCommand({ TableName: process.env.DYNAMODB_TABLE_NAME_USERS, Key: marshall({ id: user.id }) }),
-    );
+    console.log('user', user);
+    // more information > https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/dynamodb/command/UpdateItemCommand/
+    const userAttributes = Object.keys(user);
 
-    if (!Item) {
-      throw new NotFoundError(
-        `Could not update user with id ${userId}, user not found. No items returned from DynamoDB GetItemCommand`,
-        'src/services/userService.js - updateUserById',
-      );
-    }
-
-    const userToUpdateKeys = Object.keys(unmarshall(Item));
-
-    // Filter out keys that don't exist in the DynamoDB table
-    const validUserAttributes = Object.keys(user).filter((key) => userToUpdateKeys.includes(key));
-
-    const updateExpression = `SET ${validUserAttributes.map((key) => `#${key} = :${key}`).join(', ')}`;
-    const expressionAttributeNames = validUserAttributes.reduce((acc, key) => ({ ...acc, [`#${key}`]: key }), {});
+    const updateExpression = `SET ${userAttributes.map((key) => `#${key} = :${key}`).join(', ')}`;
+    const expressionAttributeNames = userAttributes.reduce((acc, key) => ({ ...acc, [`#${key}`]: key }), {});
     const expressionAttributeValues = marshall(
-      validUserAttributes.reduce((acc, key) => ({ ...acc, [`:${key}`]: user[key] }), {}),
+      userAttributes.reduce((acc, key) => ({ ...acc, [`:${key}`]: user[key] }), {}),
+      {
+        removeUndefinedValues: true,
+      },
     );
 
-    await dynamoDb.send(
+    const { Item: updatedUser } = await dynamoDb.send(
       new UpdateItemCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_USERS,
         Key: marshall({ id: userId }),
         UpdateExpression: updateExpression,
         ExpressionAttributeNames: expressionAttributeNames,
         ExpressionAttributeValues: expressionAttributeValues,
+        ReturnValues: 'UPDATED_NEW',
+        ConditionExpression: 'attribute_exists(id)',
       }),
     );
 
-    const { Item: updatedItem } = await dynamoDb.send(
-      new GetItemCommand({
-        TableName: process.env.DYNAMODB_TABLE_NAME_USERS,
-        Key: marshall({ id: userId }),
-      }),
-    );
+    console.log('updatedUser', updatedUser);
 
-    return unmarshall(updatedItem);
+    // include the attributes that were not updated except the password if it existed in the request body
+    const { password, ...userToReturn } = { ...unmarshall(updatedUser), ...user };
+
+    console.log('userToReturn', userToReturn);
+
+    return userToReturn;
   } catch (error) {
+    if (error.name === 'ConditionalCheckFailedException')
+      throw new BadRequestError(error.message, 'src/services/userService.js - updateUserById');
     if (error instanceof ApiError) throw error;
     else throw new DynamoDBError(error, 'src/services/userService.js - updateUserById');
   }
