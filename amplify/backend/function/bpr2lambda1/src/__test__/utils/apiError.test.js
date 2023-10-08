@@ -6,7 +6,7 @@ import {
   InternalServerError,
   ForbiddenError,
   ApiError,
-} from '../../src/helpers/apiError';
+} from '../../code/helpers/apiError';
 
 describe('apiError', () => {
   it('should create a new BadRequestError', () => {
