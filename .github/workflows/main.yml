@@ -78,6 +78,8 @@ jobs:
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-${{ env.NODE_VERSION }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Install dependencies for lambda function
+        run: cd amplify/backend/function/bpr2lambda1 && yarn install && cd -    
       - name: Test
         run: yarn test
         env:
