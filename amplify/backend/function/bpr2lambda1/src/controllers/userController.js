@@ -4,8 +4,8 @@ import { InternalServerError, ApiError } from '../helpers/apiError.js';
 export const registerUser = async (req, res, next) => {
   try {
     const { body: user } = req;
-    const createdUser = await userServices.registerUser(user);
-    res.status(201).json(createdUser);
+    const token = await userServices.registerUser(user);
+    res.status(201).json(token);
   } catch (error) {
     if (error instanceof ApiError) next(error);
     else {

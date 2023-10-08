@@ -71,9 +71,19 @@ const registerUser = async (user) => {
       }),
     );
 
-    // return the userToCreate object without the password
-    const { password, ...userToReturn } = userToCreate;
-    return userToReturn;
+    const token = jwt.sign(
+      {
+        id: userToCreate.id,
+        username: userToCreate.username,
+        email: userToCreate.email,
+        firstName: userToCreate.firstName,
+        lastName: userToCreate.lastName,
+      },
+      process.env.SECRETS_JWT,
+      { expiresIn: '1h' },
+    );
+
+    return { token };
   } catch (error) {
     if (error instanceof ApiError) throw error;
     throw new DynamoDBError(error, 'src/services/userService.js - createUser');
