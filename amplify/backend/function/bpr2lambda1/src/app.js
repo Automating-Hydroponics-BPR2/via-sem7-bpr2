@@ -23,7 +23,7 @@ app.use('/user', userRouter);
 app.use('/device', deviceRouter);
 
 // Custom API error handler
-app.use(apiErrorHandler)
+app.use(apiErrorHandler);
 
 app.listen(3000, function () {
   console.log('App started! 🔥');

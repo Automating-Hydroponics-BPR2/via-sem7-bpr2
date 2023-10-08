@@ -2,7 +2,7 @@ class ApiError extends Error {
   constructor(message, source, statusCode) {
     super();
     this.statusCode = statusCode || 500;
-    this.message = message;
+    this.message = message || 'Internal Server Error';
     this.source = source || 'Unknown';
   }
 }
