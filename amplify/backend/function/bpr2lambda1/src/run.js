@@ -1,5 +1,5 @@
 import { handler } from './index.js';
-import event from './event.json' assert { type: "json" };
+import event from '../event.json' assert { type: "json" };
 
 // get contents from file named event.json
 

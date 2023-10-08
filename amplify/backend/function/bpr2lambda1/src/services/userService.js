@@ -52,11 +52,9 @@ const checkIfUserWithUsernameExists = async (username, shouldUserExist, isReturn
 };
 
 const registerUser = async (user) => {
-  await checkIfUserWithUsernameExists(user.username);
-
-  const hashedPassword = await bcrypt.hash(user.password, bcrypt.genSaltSync(10));
-
   try {
+    await checkIfUserWithUsernameExists(user.username);
+    const hashedPassword = await bcrypt.hash(user.password, bcrypt.genSaltSync(10));
     const userToCreate = {
       id: uuidv4(),
       username: user.username,
@@ -75,8 +73,7 @@ const registerUser = async (user) => {
 
     // return the userToCreate object without the password
     const { password, ...userToReturn } = userToCreate;
-
-    return unmarshall(userToReturn);
+    return userToReturn;
   } catch (error) {
     if (error instanceof ApiError) throw error;
     throw new DynamoDBError(error, 'src/services/userService.js - createUser');
