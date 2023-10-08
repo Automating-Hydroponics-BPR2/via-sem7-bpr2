@@ -36,10 +36,12 @@ jobs:
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-${{ env.NODE_VERSION }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - name: Install dependencies for backend
-        run: cd amplify/backend/function/bpr2lambda1 && yarn install && cd -
       - name: Install dependencies for frontend
         run: yarn install
+        env:
+          CI: true
+      - name: Install dependencies for backend
+        run: cd amplify/backend/function/bpr2lambda1 && yarn install
         env:
           CI: true
 
@@ -69,7 +71,11 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-${{ env.NODE_VERSION }}-modules-${{ hashFiles('**/yarn.lock') }}  
+          key: ${{ runner.os }}-${{ env.NODE_VERSION }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Install dependencies for backend
+        run: cd amplify/backend/function/bpr2lambda1 && yarn install && cd -
+        env:
+          CI: true
       - name: Test
         run: yarn test
         env:
