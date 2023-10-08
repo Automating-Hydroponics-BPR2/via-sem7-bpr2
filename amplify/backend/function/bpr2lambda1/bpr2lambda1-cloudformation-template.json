@@ -87,7 +87,7 @@
             "Ref": "s3Key"
           }
         },
-        "Handler": "code/index.handler",
+        "Handler": "index.handler",
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
