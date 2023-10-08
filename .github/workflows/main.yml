@@ -2,9 +2,21 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [releases/**, main]
+    tags:
+      - '*'
+    paths:
+      - '.github/workflows/**'
+      - 'amplify/backend/**'
+      - 'src/**'
+      - 'package.json'
   pull_request:
     branches: [main]
+    paths:
+      - '.github/workflows/**'
+      - 'amplify/backend/**'
+      - 'src/**'
+      - 'package.json'
 
 env:
   NODE_VERSION: 18.x
@@ -24,7 +36,9 @@ jobs:
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-${{ env.NODE_VERSION }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - name: Install dependencies
+      - name: Install dependencies for backend
+        run: cd amplify/backend/function/bpr2lambda1 && yarn install && cd -
+      - name: Install dependencies for frontend
         run: yarn install
         env:
           CI: true
@@ -45,18 +59,34 @@ jobs:
         env:
           CI: true
 
-  amplify:
+  test:
     runs-on: ubuntu-latest
     needs: [install, lint]
 
     steps:
-      - name: Running amplify
+      - name: Running tests
+        uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-${{ env.NODE_VERSION }}-modules-${{ hashFiles('**/yarn.lock') }}  
+      - name: Test
+        run: yarn test
+        env:
+          CI: true
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [install, lint, test]
+
+    steps:
+      - name: Build
         uses: actions/checkout@v3
       - uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-${{ env.NODE_VERSION }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - name: Amplify
+      - name: Configure Amplify
         uses: ambientlight/amplify-cli-action@0.3.0
         with:
           amplify_command: configure
@@ -65,37 +95,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: eu-central-1
-
-  test:
-    runs-on: ubuntu-latest
-    needs: [install, lint, amplify]
-
-    steps:
-      - name: Running tests
-        uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-${{ env.NODE_VERSION }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - name: Install dependencies for lambda function
-        run: cd amplify/backend/function/bpr2lambda1 && yarn install && cd -    
-      - name: Test
-        run: yarn test
-        env:
-          CI: true
-
-  build:
-    runs-on: ubuntu-latest
-    needs: [install, lint, amplify, test]
-
-    steps:
-      - name: Build
-        uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-${{ env.NODE_VERSION }}-modules-${{ hashFiles('**/yarn.lock') }} 
+          AWS_REGION: eu-central-1 
       - name: Build
         run: yarn build
       - name: Release
