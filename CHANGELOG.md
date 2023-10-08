@@ -1,3 +1,51 @@
+# [4.0.0](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/compare/v3.0.0...v4.0.0) (2023-10-08)
+
+
+### Bug Fixes
+
+* **backend > lambda > controllers:** fixing delete an user or device. Now just returning 204 ([34fc658](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/34fc6581ea3f795580ee883d6d020cd521d48e50))
+* **backend > lambda > passport.js:** fixing a mistyped import ([68c0357](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/68c035789d6ae1f5012fbb900f64702e2e0b3327))
+* **backend > lambda > passport.js:** fixing wrong import ([6293b10](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/6293b1065f98a217cdc3367586e292817fea0d30))
+* **backend > lambda > passport:** fixing wrong import in config/passport.js ([b6bf804](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/b6bf80496782eab328e94b128ea08cd1f7f09136))
+* **backend > lambda > services:** deviceService & userService method changes ([78ac5bf](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/78ac5bf1ba7d5d94d7c9c4c1a034fc698be87f8f))
+* **backend > lambda > userservice:** adding KeyConditionExpression to the QueryCommand ([dfb241c](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/dfb241c610b567275b58e4926e725bf47f0d62f8))
+* **backend > lambda > userservice:** fixing checkIfUsernameExists function. Specifically QueryComman ([5a6a4be](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/5a6a4be808f2d2374f9347d8b6395d07aff714b4))
+* **backend > lambda > userservice:** fixing checkIfUsernameExists method QueryCommand ([24e3d61](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/24e3d615075dd9f1172cf3333bff220c01d3f7da))
+* **backend > lambda > userservice:** fixing checkIfUsernameExists method QueryCommand ([64f1d8d](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/64f1d8d8c56be9631ac7ad01fead10becc5bc9e0))
+* **backend > lambda > userservice:** fixing checkIfUsernameExists method QueryCommand ([8f1434c](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/8f1434c6f7166488777af34e6244c310cbdc6e0c))
+* **backend > lambda > userservice:** fixing checkIfUsernameExists method QueryCommand fix ([abaf2b4](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/abaf2b4cc529d99e9f38e2027164be32305a4fc4))
+* **backend > lambda > userservice:** fixing checkIfUsernameExists QueryCommand ([deb7539](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/deb7539aaa94952be1d2982dcd70273fea71d428))
+* **backend > lambda > userservice:** fixing checkIfUsernamExists method QueryCommand ([a8a59b6](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/a8a59b6518881a63ef3f1b960b3e26d77d023af4))
+* **backend > lambda:** adding some devDeps to fix @mapbox/node-pre-gyp missing error in Amplify CI ([44c7420](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/44c742033ecbe4314905a3ee3cebd97c5850a0ce))
+* **backend > lambda:** changes to controllers, changes to userService service ([47365e1](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/47365e10df57628d93224e93ec7df0f19e6ed1cc))
+* **backend > lambda:** removing redundant packages. Fixing huge error with JS when there is no *.js ([b68c500](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/b68c500344a4ae1c9258303344bf5672fb957a00))
+* **bpr2lambda1:** fixing aws-asset-path to lambda funciton source code ([42642eb](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/42642ebe86b741e7528b9808b0e8b93bd0fcbc79))
+* fixing path to lambda function ([c2e63d9](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/c2e63d9aae7aed5277dbdb04cc1cdfd094aaf369))
+* fixing wrong pathing to lambda function in cloudformation-template ([85f5227](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/85f52275b8f8071ced336dca4da465fb2de78a7f))
+* **lambda\:** changes to services. Naming change in deviceController ([feafdbb](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/feafdbbd62e620346303f2920595e4bd1cc5f30a))
+* **lambda:** deviceService fixes in get current & historical readings ([5042a23](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/5042a2383f0629041e264aea9d07be27379aaf92))
+* **lambda:** deviceService fixing ht getCurrentReadings showing the latest instead of the newest ([e368df1](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/e368df192c22164ba604ba69e50c35bd040095b4))
+* **lambda:** fixing a wrong implementation of the authenticated user object ([80e546e](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/80e546e6f4fdf5b83d9897de696194849444d2f7))
+* **lambda:** fixing updateUserById function. Now utilizing the UpdateItemCommand ([dfed6d6](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/dfed6d6ef66040d300597efcca540dd597216178))
+* **lambda:** fixing wrong reference to queryParam in deviceController. Adding debug points ([9c91426](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/9c914262cea10d79db911cbf7077b262c485b1de))
+* **lambda:** passport.js now correctly calls the checkIfUsernameExists method ([ca5fb29](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/ca5fb297e2cee8aef18bbf80b3cf4ab2a23f56c8))
+* **lambda:** userService.js now does not need GetItemCommand ([c380b03](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/c380b03f4eef01f2e8a80ff913d5f5c09234b59f))
+* **lmabda > userservice:** fixing promise in userToCreate object ([6d638cd](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/6d638cdb7c81b092fd0e53cdbb42c7bf57b43e02))
+* **userservice:** fixing finally the checkIfUsernameExists method ([7bed480](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/7bed480e6a962844927c4b05da25aa19c5df0c67))
+
+
+### Features
+
+* **amplify > backend > lambda:** user path, Changes in Device path ([1e9a1ac](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/1e9a1ac85aad73b70fd5f92b95a5d523138c50f2))
+* **backend > lambda:** adding jwtStrategy. Adding authentication to router paths ([010bfa8](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/010bfa8a5b5a3a991788e110ce78dd60b3d2e923))
+* **lambda:** changes to controllers, services, apiErrorHandler, config/passport, event.json ([ac997d9](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/ac997d90f31c4b29282544cc4fa1b3a26cf80520))
+
+
+### BREAKING CHANGES
+
+* **lambda:** No longer token in headers. Now instead we are sending the JWT in the Authorization
+header.
+
 # [3.0.0](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/compare/v2.0.1...v3.0.0) (2023-10-08)
 
 
