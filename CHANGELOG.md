@@ -1,3 +1,11 @@
+## [2.0.1](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/compare/v2.0.0...v2.0.1) (2023-10-04)
+
+
+### Bug Fixes
+
+* **package.json & .husky hooks:** fixing an error indicating there are no src/*.ts files ([a7e9a60](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/a7e9a60a80cac55adaf593fba64d3ba0e3030881))
+* **theme:** fixing theme dialog, global theme ([bd124d0](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/bd124d0decffd1577083c45625456ed34f7ae2f9))
+
 # [2.0.0](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/compare/v1.0.0...v2.0.0) (2023-09-30)
 
 
