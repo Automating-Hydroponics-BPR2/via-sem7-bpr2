@@ -1,9 +1,7 @@
 module.exports = {
-  roots: ['<rootDir>/test'],
-
   testEnvironment: 'jsdom',
 
-  testMatch: ['**/__tests__/**/*.+(ts|tsx)', '**/?(*.)+(test).+(ts|tsx)'],
+  testMatch: ['**/__tests__/**/*.+(ts|tsx|js)', '**/?(*.)+(test).+(ts|tsx|js)'],
 
   transform: {
     '\\.[jt]sx?$': 'babel-jest',
@@ -18,6 +16,4 @@ module.exports = {
   moduleDirectories: ['node_modules', 'src'],
 
   moduleNameMapper: { '^uuid$': 'uuid' },
-
-  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
 };
