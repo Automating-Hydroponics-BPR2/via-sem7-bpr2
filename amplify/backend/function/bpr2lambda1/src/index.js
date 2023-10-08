@@ -1,5 +1,5 @@
 import { createServer, proxy } from 'aws-serverless-express';
-import app from './app.js';
+import app from './code/app.js';
 
 const server = createServer(app);
 

@@ -1,6 +1,8 @@
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { userServices } from '../services/userService.js';
+import dotenv from 'dotenv';
 import { ApiError, UnauthorizedError } from '../helpers/apiError.js';
+dotenv.config({ path: '.env' });
 export const jwtStrategy = new JwtStrategy(
   {
     secretOrKey: process.env.SECRETS_JWT,

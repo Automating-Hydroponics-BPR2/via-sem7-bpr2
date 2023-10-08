@@ -8,8 +8,8 @@ import {
 import { marshall } from '@aws-sdk/util-dynamodb';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { userServices } from '../../src/services/userService';
-import { BadRequestError, DynamoDBError, NotFoundError, UnauthorizedError } from '../../src/helpers/apiError';
+import { userServices } from '../../code/services/userService';
+import { BadRequestError, DynamoDBError, NotFoundError, UnauthorizedError } from '../../code/helpers/apiError';
 
 // Mock the v4 method to simulate a successful generation of a UUID
 jest.mock('uuid', () => ({
