@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "{\"createdOn\":\"Linux\",\"createdBy\":\"Amplify\",\"createdWith\":\"12.4.0\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
+  "Description": "{\"createdOn\":\"Linux\",\"createdBy\":\"Amplify\",\"createdWith\":\"12.6.0\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -67,7 +67,7 @@
     "LambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Metadata": {
-        "aws:asset:path": "./",
+        "aws:asset:path": "./*",
         "aws:asset:property": "Code"
       },
       "Properties": {
@@ -79,7 +79,7 @@
             "Ref": "s3Key"
           }
         },
-        "Handler": "index.handler",
+        "Handler": "src/index.handler",
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
