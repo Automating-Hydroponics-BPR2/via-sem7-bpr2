@@ -56,7 +56,7 @@ $ git push
 
 This bachelor project has been build and hosted on AWS Amplify which is a way to deploy Full-stack applications under one roof. [Learn more](https://docs.amplify.aws/)
 
-The application has been hosted on 👉 [link](https://stg-amplifyinit.d36cs0wh270jpt.amplifyapp.com/)
+The application has been hosted on 👉 [link](https://main.d2w95gfx7rgwd6.amplifyapp.com/)
 
 ![Image](https://techblog.nhn-techorus.com/wp-content/uploads/2022/11/AWSAmplify_OGP.png)
 
@@ -69,7 +69,7 @@ Text -->
 Text -->
 
 ## Backend section 👇
-The backend is a AWS Lambda fuction containing Serverless Express Backend and exposing a AWS APIGateway REST API 👉 [link](https://p8hb9lbwxc.execute-api.eu-central-1.amazonaws.com/dev/)
+The backend is a AWS Lambda fuction containing Serverless Express Backend and exposing a AWS APIGateway REST API 👉 [link](https://bvj938q4m0.execute-api.eu-central-1.amazonaws.com/dev)
 
 Current routes configured: [device, user]. Each endpoint except login and register is protected with JWT token.
 
