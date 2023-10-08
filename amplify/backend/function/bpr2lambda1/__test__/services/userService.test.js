@@ -100,19 +100,13 @@ describe('userServices', () => {
       bcrypt.hash.mockResolvedValueOnce('hashedpassword');
 
       // Call the registerUser function
-      const registeredUser = await userServices.registerUser(sampleUser);
+      const result = await userServices.registerUser(sampleUser);
 
       // Expect the DynamoDB client to have been called and PutItemCommand to have been called with any arguments
       expect(mockSend).toHaveBeenCalledWith(expect.any(PutItemCommand));
 
-      // Ensure that the registered user object is returned correctly without the password
-      expect(registeredUser).toEqual({
-        id: sampleUser.id,
-        username: sampleUser.username,
-        email: sampleUser.email,
-        firstName: sampleUser.firstName,
-        lastName: sampleUser.lastName,
-      });
+      // Expect the result to contain a token
+      expect(result).toHaveProperty('token');
     });
 
     it('should not register a user if username already exists', async () => {
