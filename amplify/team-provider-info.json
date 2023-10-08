@@ -28,6 +28,9 @@
         "bpr2storage": {},
         "bpr2storage2": {},
         "bpr2storage3": {}
+      },
+      "api": {
+        "bpr2api": {}
       }
     }
   }
