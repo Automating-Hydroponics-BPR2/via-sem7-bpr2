@@ -4,7 +4,7 @@
 [![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/main.yml)](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/actions/workflows/main.yml)
 [![github](https://img.shields.io/github/v/release/Automating-Hydroponics-BPR2/via-sem7-bpr2-client)](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/releases)
 
-The client of the BPR2 (Bachelor Project) for VIA.
+BPR2 (Bachelor Project) for VIA. Full-stack development with AWS Amplify.
 
 ![Image](https://upload.wikimedia.org/wikipedia/commons/5/5d/VIA_UC_logo.png)
 
