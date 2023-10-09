@@ -1,7 +1,7 @@
 import type { StoryObj } from '@storybook/react';
 import { useState } from 'react';
 
-import { _ThemeDialog as ThemeDialog } from './theme-dialog.container';
+import { ThemeDialog } from './theme-dialog';
 import { ThemeDialogProps } from './theme-dialog.props';
 
 export default {

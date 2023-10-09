@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { _Dialog as Dialog } from './dialog.container';
+import { Dialog as Dialog } from './dialog';
 import { DialogProps } from './dialog.props';
 import { StoryObj } from '@storybook/react';
 

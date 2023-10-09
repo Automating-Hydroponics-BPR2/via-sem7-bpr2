@@ -1,4 +1,4 @@
-import { RegisteredUser } from '../../shared/models/user';
+import { RegisteredUser } from '../../shared';
 
 export interface AuthenticationProps {
   isLoggedIn: boolean;

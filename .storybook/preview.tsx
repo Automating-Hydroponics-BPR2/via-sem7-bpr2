@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { ThemeProvider as ScThemeProvider } from 'styled-components';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material';
-import { lightTheme, darkTheme } from '../src/shared/utils/theme/themes';
+import { lightTheme, darkTheme } from '../src/shared';
 
 export const globalTypes = {
   theme: {

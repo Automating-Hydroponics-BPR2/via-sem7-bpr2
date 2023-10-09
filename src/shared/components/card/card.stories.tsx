@@ -1,5 +1,5 @@
 import { StoryObj } from '@storybook/react';
-import { Card } from './card.container';
+import { Card } from './card';
 
 export default {
   title: 'Card',

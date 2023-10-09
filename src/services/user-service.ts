@@ -1,13 +1,10 @@
 import axios from 'axios';
-import { setUser, setIsLoggedIn } from '../shared/store/user-store';
-import { setNotification } from '../shared/store/notification-store';
-import { authenticationController } from './controllers';
-import { RegisteredUser, User } from '../shared/models/user';
+import { RegisteredUser, User, setIsLoggedIn, setNotification, setUser, userEndpoints } from '../shared';
 
 // #region signIn
 export const signIn = (username: string, password: string) => (dispatch: any) => {
   axios
-    .post(authenticationController.signIn(), {
+    .post(userEndpoints.signIn(), {
       Username: username,
       Password: password,
       headers: {
@@ -43,7 +40,7 @@ export const signIn = (username: string, password: string) => (dispatch: any) =>
 // #region signUp
 export const signUp = (user: RegisteredUser) => (dispatch: any) => {
   axios
-    .post(authenticationController.signUp(), {
+    .post(userEndpoints.signUp(), {
       username: user.username,
       password: user.password,
       firstName: user.firstName,

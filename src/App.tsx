@@ -1,13 +1,17 @@
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import { ThemeProvider as ScThemeProvider } from 'styled-components';
-import { useCustomTheme } from './shared/utils/hooks/useCustomTheme';
+import {
+  useCustomTheme,
+  useGetDeviceType,
+  DeviceTypes,
+  useAppDispatch,
+  useAppSelector,
+  setNotificationVisibility,
+  Snackbar
+} from './shared';
 import { Home, Error, SignIn, SignUp } from './pages';
-import { Header, BottomNavigation, Snackbar } from './components';
-import { useGetDeviceType } from './shared/utils/hooks/useGetDeviceType';
-import { DeviceTypes } from './shared/utils/enums/deviceTypes';
-import { useAppDispatch, useAppSelector } from './shared/utils/typescript/redux-types';
-import { setNotificationVisibility } from './shared/store/notification-store';
+import { Header, BottomNavigation } from './components';
 
 function App() {
   const notification = useAppSelector((state) => state.notifications.notification);

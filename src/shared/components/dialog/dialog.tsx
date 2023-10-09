@@ -9,7 +9,7 @@ import {
 } from './dialog.styles';
 import { DialogProps } from './dialog.props';
 
-export const _Dialog = (props: DialogProps) => {
+export const Dialog = (props: DialogProps) => {
   const { open, onClose, title, children, options, onOptionClick } = props;
   const handleOptionClick = (option: string) => {
     if (onOptionClick) {

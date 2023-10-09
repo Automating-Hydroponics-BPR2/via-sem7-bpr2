@@ -1,8 +1,8 @@
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import type { StoryObj } from '@storybook/react';
 
-import { _SignIn as SignIn } from './sign-in/sign-in.container';
-import { _SignUp as SignUp } from './sign-up/sign-up.container';
+import { SignIn } from './sign-in/sign-in';
+import { SignUp } from './sign-up/sign-up';
 
 export default {
   title: 'Authentication',

@@ -1,7 +1,7 @@
 import * as React from 'react';
-
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {
   Typography,
   CssBaseline,
@@ -15,11 +15,11 @@ import {
   Box,
   Link,
 } from '@mui/material';
+
 import { SignInProps } from '../authentication.props';
-import { useNavigate } from 'react-router-dom';
 import { Copyright } from '../authentication.utils';
 
-export const _SignIn = (props: SignInProps) => {
+export const SignIn = (props: SignInProps) => {
   const navigate = useNavigate();
 
   const [formState, setFormState] = React.useState({

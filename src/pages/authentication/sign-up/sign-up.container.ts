@@ -1,9 +1,8 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from '@reduxjs/toolkit';
 
-import { type ApplicationState } from '../../../shared/store/app-state';
-import { type AppDispatch } from '../../../shared/store/app-thunk';
-import { _SignUp } from './sign-up.container';
+import { type AppDispatch, type ApplicationState } from '../../../shared';
+import { SignUp } from './sign-up';
 import { userService } from '../../../services';
 
 const mapStateToProps = (state: ApplicationState) => ({
@@ -19,4 +18,4 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
   );
 };
 
-export const SignUp = connect(mapStateToProps, mapDispatchToProps)(_SignUp);
+export const SignUpContainer = connect(mapStateToProps, mapDispatchToProps)(SignUp);

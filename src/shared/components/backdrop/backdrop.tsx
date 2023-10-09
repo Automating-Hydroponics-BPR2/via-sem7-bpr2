@@ -1,5 +1,5 @@
 import Backdrop from '@mui/material/Backdrop';
-import { StyledCircularProgress } from '../../../shared/styles';
+import { StyledCircularProgress } from '../../../shared';
 
 export const _Backdrop = () => {
   return (
