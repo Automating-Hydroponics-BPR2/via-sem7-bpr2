@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import styled from 'styled-components';
-import { hexWithAlpha, mediaUpTo } from '../../../shared/utils/helpers';
+import { hexWithAlpha, mediaUpTo } from '../../../shared';
 
 export const StyledDialog = styled.div`
   font-family: ${({ theme }) => theme.typography.fontFamily};

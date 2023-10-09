@@ -1,10 +1,11 @@
-import { Alert, Snackbar } from '@mui/material';
+import { Alert } from '@mui/material';
 
 import { type ISnackbar } from './snackbar.props';
+import { StyledSnackBar } from './snackbar.styles';
 
-export function _Snackbar(props: ISnackbar) {
+export function Snackbar(props: ISnackbar) {
   return (
-    <Snackbar
+    <StyledSnackBar
       anchorOrigin={props.anchorOrigin}
       open={props.open}
       onClose={props.onClose}
@@ -12,11 +13,11 @@ export function _Snackbar(props: ISnackbar) {
       <Alert onClose={props.onClose} severity={props.type} sx={{ width: '100%' }}>
         {props.message}
       </Alert>
-    </Snackbar>
+    </StyledSnackBar>
   );
 }
 
-_Snackbar.defaultProps = {
+Snackbar.defaultProps = {
   autoHideDuration: 2000,
 
   anchorOrigin: {
@@ -26,4 +27,4 @@ _Snackbar.defaultProps = {
   },
 };
 
-export default _Snackbar;
+export default Snackbar;

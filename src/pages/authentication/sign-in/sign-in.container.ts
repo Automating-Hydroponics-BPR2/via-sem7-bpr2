@@ -1,10 +1,9 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from '@reduxjs/toolkit';
 
-import { type ApplicationState } from '../../../shared/store/app-state';
-import { type AppDispatch } from '../../../shared/store/app-thunk';
-import { _SignIn } from './sign-in.container';
+import { SignIn } from './sign-in';
 import { userService } from '../../../services';
+import { type AppDispatch, type ApplicationState } from '../../../shared';
 
 const mapStateToProps = (state: ApplicationState) => ({
   isLoggedIn: state.user.isLoggedIn,
@@ -19,4 +18,4 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
   );
 };
 
-export const SignIn = connect(mapStateToProps, mapDispatchToProps)(_SignIn);
+export const SignInContainer = connect(mapStateToProps, mapDispatchToProps)(SignIn);

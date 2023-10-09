@@ -22,8 +22,8 @@ import { alpha, styled, useTheme } from '@mui/material/styles';
 import { Box } from '@mui/system';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { type NavItem } from '../../shared/utils/typescript/types';
-import { ThemeDialog } from '../theme-dialog/theme-dialog';
+import { type NavItem } from '../../shared';
+import { ThemeDialogContainer } from '../theme-dialog/theme-dialog.container';
 import { HeaderProps } from './header.props';
 import { Logo, StyledLink } from './header.styles';
 
@@ -82,7 +82,7 @@ function HideOnScroll(props: HeaderProps) {
   );
 }
 
-export const _Header = (props: HeaderProps) => {
+export const Header = (props: HeaderProps) => {
   const [openThemeDialog, setOpenThemeDialog] = React.useState(false);
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -182,7 +182,7 @@ export const _Header = (props: HeaderProps) => {
           </Toolbar>
         </AppBar>
       </HideOnScroll>
-      <ThemeDialog
+      <ThemeDialogContainer
         open={openThemeDialog}
         onClose={() => {
           setOpenThemeDialog(false);

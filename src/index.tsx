@@ -6,7 +6,7 @@ import awsExports from './aws-exports';
 import App from './App';
 import { StyledEngineProvider } from '@mui/material';
 import { Provider } from 'react-redux';
-import { configureAppStore } from './shared/store/configure-store';
+import { configureAppStore } from './shared';
 import './index.css';
 Amplify.configure(awsExports);
 

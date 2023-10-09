@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useTheme } from '@mui/material/styles';
 import {
@@ -15,12 +15,12 @@ import {
   Link,
   Box,
 } from '@mui/material';
+
 import { SignUpProps } from '../authentication.props';
 import { isEmailValid } from './sign-up.utils';
-import { useNavigate } from 'react-router-dom';
 import { Copyright } from '../authentication.utils';
 
-export const _SignUp = (props: SignUpProps) => {
+export const SignUp = (props: SignUpProps) => {
   const navigate = useNavigate();
 
   const [formState, setFormState] = React.useState({
