@@ -8,7 +8,7 @@ import {
   useAppDispatch,
   useAppSelector,
   setNotificationVisibility,
-  Snackbar
+  Snackbar,
 } from './shared';
 import { Home, Error, SignIn, SignUp } from './pages';
 import { Header, BottomNavigation } from './components';
