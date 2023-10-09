@@ -82,7 +82,6 @@ UserId is extracted from the JWT token and checked if it matches the userId of t
 Passing following device object body
 ```
 {
-    "id": "1234", // id is provided by the user and has to be unique. Optional.
     "name": "Device updated.", // name is provided by the user. Optional.
 }
 ```
@@ -160,7 +159,7 @@ The queryParamteres are for example:
 ```
 Returns the readings in the following format:
 ```
-[
+Items: [
     {
         "id": "1234",
         "deviceId": "1234",
@@ -172,7 +171,7 @@ Returns the readings in the following format:
         "waterTemp": "1234",
     },
     {
-        "id": "1234",
+        "id": "1235",
         "deviceId": "1234",
         "timestamp": "153234234", // Unix timestamp
         "light": "1234",
@@ -182,7 +181,9 @@ Returns the readings in the following format:
         "waterTemp": "1234",
     },
     ...
-]
+],
+Count: 2 <---- The total amount of items returned
+LastEvaluatedKey: 1235 <--- The key of the last returned item in the Items array. Useful for pagination.
 ```
 [More info about --> AWS Docs](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/preview/client/dynamodb/command/ScanCommand/)
 
@@ -221,12 +222,12 @@ This endpoint does not return anything. If successful it returns 204 **No Conten
 ### /user/login
 #### POST
 Endpoint for logging in a user. Example request path: `/user/login`
-Logs in a user with email and password provided in body. If successful returns a JWT token.
+Logs in a user with username and password provided in body. If successful returns a JWT token.
 An example of a user object body:
 ```
 {
-    "email": "Email updated.", // email is provided by the user. Mandatory.
-    "password": "Password updated.", // password is provided by the user. Mandatory.
+    "username": "Username", // username is provided by the user. Mandatory.
+    "password": "Password.", // password is provided by the user. Mandatory.
 }
 ```
 And the response is a JWT Token containing the user information that has an expiration time of 1hr
