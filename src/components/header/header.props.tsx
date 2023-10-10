@@ -1,4 +1,4 @@
-import { AuthenticatedUser } from "../../shared";
+import { AuthenticatedUser } from '../../shared';
 
 export interface HeaderProps {
   user?: AuthenticatedUser;

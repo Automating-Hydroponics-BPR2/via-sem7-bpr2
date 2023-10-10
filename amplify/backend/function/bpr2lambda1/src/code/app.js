@@ -14,7 +14,17 @@ import apiErrorHandler from './middlewares/apiErrorHandler.js';
 dotenv.config({ path: '.env' });
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      'http://localhost:3000',
+      'https://stg-amplifychanges-4-10-23.d2w95gfx7rgwd6.amplifyapp.com',
+      'https://main.d2w95gfx7rgwd6.amplifyapp.com',
+    ],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }),
+);
 app.use(express.json());
 app.use(eventContext());
 passport.use(jwtStrategy);
