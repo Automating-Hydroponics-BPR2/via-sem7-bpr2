@@ -1,21 +1,22 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from '@reduxjs/toolkit';
 
-import { SignIn } from './sign-in';
+import { Login } from './login';
 import { userService } from '../../../services';
 import { type AppDispatch, type ApplicationState } from '../../../shared';
 
 const mapStateToProps = (state: ApplicationState) => ({
-  isLoggedIn: state.user.isLoggedIn,
+  user: state.user.user,
+  isLoading: state.user.isLoading,
 });
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
   return bindActionCreators(
     {
-      signIn: userService.signIn,
+      login: userService.login,
     },
     dispatch,
   );
 };
 
-export const SignInContainer = connect(mapStateToProps, mapDispatchToProps)(SignIn);
+export const LoginContainer = connect(mapStateToProps, mapDispatchToProps)(Login);

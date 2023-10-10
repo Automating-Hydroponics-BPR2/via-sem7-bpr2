@@ -3,7 +3,7 @@ const baseUrl = process.env.REACT_APP_API_URL!;
 
 // #region userEndpoints
 export const userEndpoints = {
-  signIn: () => `${baseUrl}/user/login`,
-  signUp: () => `${baseUrl}/user/register`,
+  login: () => `${baseUrl}/user/login`,
+  register: () => `${baseUrl}/user/register`,
 };
 // #endregion

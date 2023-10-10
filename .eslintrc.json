@@ -5,8 +5,6 @@
     "jest": true
   },
   "extends": [
-    "react-app",
-    "react-app/jest",
     "standard-with-typescript",
     "plugin:import/typescript",
     "plugin:@typescript-eslint/eslint-recommended",
@@ -42,7 +40,8 @@
         "@typescript-eslint/no-unsafe-return": ["off"],
         "@typescript-eslint/no-explicit-any": ["off"],
         "@typescript-eslint/consistent-type-imports": ["off"],
-        "@typescript-eslint/no-unnecessary-type-assertion": ["off"]
+        "@typescript-eslint/no-unnecessary-type-assertion": ["off"],
+        "@typescript-eslint/no-non-null-assertion": ["off"]
       }
     }
   ]
