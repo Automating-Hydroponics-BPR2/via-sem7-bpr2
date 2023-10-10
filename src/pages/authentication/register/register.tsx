@@ -16,11 +16,11 @@ import {
   Box,
 } from '@mui/material';
 
-import { SignUpProps } from '../authentication.props';
-import { isEmailValid } from './sign-up.utils';
+import { RegisterProps } from '../authentication.props';
+import { isEmailValid } from './register.utils';
 import { Copyright } from '../authentication.utils';
 
-export const SignUp = (props: SignUpProps) => {
+export const Register = (props: RegisterProps) => {
   const navigate = useNavigate();
 
   const [formState, setFormState] = React.useState({
@@ -29,7 +29,6 @@ export const SignUp = (props: SignUpProps) => {
     firstName: '',
     lastName: '',
     password: '',
-    birthYear: undefined,
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +40,6 @@ export const SignUp = (props: SignUpProps) => {
   };
 
   const validateForm = () => {
-    formState.birthYear === '' ?? (formState.birthYear = undefined);
     return isEmailValid(formState.email) !== '' &&
       formState.email !== '' &&
       formState.username !== '' &&
@@ -55,17 +53,14 @@ export const SignUp = (props: SignUpProps) => {
       formState.lastName.length <= 21 &&
       formState.password !== '' &&
       formState.password.length >= 5 &&
-      formState.password.length <= 21 &&
-      formState.birthYear !== undefined
-      ? !!(formState.birthYear >= 1900 && formState.birthYear <= 2021)
-      : true;
+      formState.password.length <= 21
   };
 
   const redirectIfLoggedIn = React.useCallback(() => {
-    if (props.isLoggedIn) {
+    if (!props.isLoading && props.user) {
       navigate('/');
     }
-  }, [props.isLoggedIn, navigate]);
+  }, [props.isLoading, navigate]);
 
   React.useEffect(() => {
     redirectIfLoggedIn();
@@ -75,7 +70,7 @@ export const SignUp = (props: SignUpProps) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (validateForm()) {
-      props.signUp(formState);
+      props.register(formState);
     }
   };
 
@@ -197,29 +192,6 @@ export const SignUp = (props: SignUpProps) => {
                   formState.password !== ''
                     ? formState.password.length < 6 || formState.password.length > 20
                       ? 'Must be between 6 and 20 characters'
-                      : ''
-                    : ''
-                }
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                onChange={handleChange}
-                fullWidth
-                name="birthYear"
-                label="Year of birth"
-                type="number"
-                id="birthYear"
-                autoComplete="birthYear"
-                error={
-                  formState.birthYear !== '' && formState.birthYear !== undefined
-                    ? !!(formState.birthYear < 1900 || formState.birthYear > 2021)
-                    : false
-                }
-                helperText={
-                  formState.birthYear !== '' && formState.birthYear !== undefined
-                    ? formState.birthYear < 1900 || formState.birthYear > 2021
-                      ? 'Must be between 1900 and 2021'
                       : ''
                     : ''
                 }

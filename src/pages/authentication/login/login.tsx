@@ -16,10 +16,10 @@ import {
   Link,
 } from '@mui/material';
 
-import { SignInProps } from '../authentication.props';
+import { LoginProps } from '../authentication.props';
 import { Copyright } from '../authentication.utils';
 
-export const SignIn = (props: SignInProps) => {
+export const Login = (props: LoginProps) => {
   const navigate = useNavigate();
 
   const [formState, setFormState] = React.useState({
@@ -47,10 +47,10 @@ export const SignIn = (props: SignInProps) => {
   };
 
   const redirectIfLoggedIn = React.useCallback(() => {
-    if (props.isLoggedIn) {
+    if (!props.isLoading && props.user) {
       navigate('/');
     }
-  }, [props.isLoggedIn, navigate]);
+  }, [props.isLoading, navigate]);
 
   React.useEffect(() => {
     redirectIfLoggedIn();
@@ -60,7 +60,7 @@ export const SignIn = (props: SignInProps) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (validateForm()) {
-      props.signIn(formState.username, formState.password);
+      props.login(formState.username, formState.password);
     }
   };
 

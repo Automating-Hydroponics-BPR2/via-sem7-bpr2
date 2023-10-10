@@ -1,10 +1,12 @@
 import axios from 'axios';
-import { RegisteredUser, User, setIsLoggedIn, setNotification, setUser, userEndpoints } from '../shared';
+import jwtDecode from 'jwt-decode';
+import { AuthenticatedUser, User, setIsLoading, setNotification, setUser, userEndpoints } from '../shared';
 
 // #region signIn
-export const signIn = (username: string, password: string) => (dispatch: any) => {
+export const login = (username: string, password: string) => (dispatch: any) => {
+  dispatch(setIsLoading(true));
   axios
-    .post(userEndpoints.signIn(), {
+    .post(userEndpoints.login(), {
       Username: username,
       Password: password,
       headers: {
@@ -12,7 +14,9 @@ export const signIn = (username: string, password: string) => (dispatch: any) =>
       },
     })
     .then((res: any) => {
-      dispatch(setUser(res.data as User));
+      console.log(res.data);
+      localStorage.setItem('token', res.data as string);
+      dispatch(setUser(jwtDecode(res.data as string) as AuthenticatedUser));
       dispatch(
         setNotification({
           open: true,
@@ -32,27 +36,29 @@ export const signIn = (username: string, password: string) => (dispatch: any) =>
       console.error(err);
     })
     .finally(() => {
-      dispatch(setIsLoggedIn(true));
+      dispatch(setIsLoading(false));
     });
 };
 // #endregion
 
 // #region signUp
-export const signUp = (user: RegisteredUser) => (dispatch: any) => {
+export const register = (user: User) => (dispatch: any) => {
+  dispatch(setIsLoading(true));
   axios
-    .post(userEndpoints.signUp(), {
+    .post(userEndpoints.register(), {
       username: user.username,
       password: user.password,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      birthYear: user.birthYear,
       headers: {
         'Content-Type': 'application/json',
       },
     })
     .then((res: any) => {
-      dispatch(setUser(res.data as User));
+      console.log(res.data);
+      localStorage.setItem('token', res.data as string);
+      dispatch(setUser(jwtDecode(res.data as string) as AuthenticatedUser));
       dispatch(
         setNotification({
           open: true,
@@ -72,7 +78,7 @@ export const signUp = (user: RegisteredUser) => (dispatch: any) => {
       console.error(err);
     })
     .finally(() => {
-      dispatch(setIsLoggedIn(true));
+      dispatch(setIsLoading(false));
     });
 };
 // #endregion
