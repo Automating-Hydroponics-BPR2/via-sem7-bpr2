@@ -5,7 +5,7 @@ import { type ApplicationState, type AppDispatch, reset } from '../../shared';
 import { Header } from './header';
 
 const mapStateToProps = (state: ApplicationState) => ({
-  isLoggedIn: state.user.isLoading,
+  user: state.user.user,
 });
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
