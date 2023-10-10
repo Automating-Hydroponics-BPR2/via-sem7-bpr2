@@ -15,6 +15,5 @@ export const isEmailValid = (email: string) => {
       errorMessage = 'Must be between 7 and 30 characters';
     }
   }
-
   return errorMessage;
 };

@@ -7,6 +7,7 @@ export interface UserStore {
 }
 
 const initialState: UserStore = {
+  user: undefined,
   isLoading: false,
 };
 
@@ -24,6 +25,7 @@ const userSlice = createSlice({
       state.isLoading = action.payload;
     },
     reset(state) {
+      localStorage.removeItem('token');
       state = initialState;
     },
   },

@@ -88,7 +88,6 @@ export const Header = (props: HeaderProps) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const theme = useTheme();
   const navigate = useNavigate();
-
   const drawerWidth = 240;
   const navItems: NavItem[] = [
     { name: 'Home', path: '/' },
@@ -101,7 +100,9 @@ export const Header = (props: HeaderProps) => {
 
   const handleDrawerClick = (path: string) => {
     if (path === '/logout') {
+      console.log('logout');
       props.onLogout?.();
+      navigate('/');
     } else {
       navigate(path);
     }

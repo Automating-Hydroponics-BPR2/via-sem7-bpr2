@@ -8,4 +8,6 @@ export interface User {
 
 export interface AuthenticatedUser extends User {
   id: string;
+  iat: number;
+  exp: number;
 }

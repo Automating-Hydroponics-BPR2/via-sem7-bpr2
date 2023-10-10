@@ -2,7 +2,7 @@ import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import { AuthenticatedUser, User, setIsLoading, setNotification, setUser, userEndpoints } from '../shared';
 
-// #region signIn
+// #region login
 export const login = (username: string, password: string) => (dispatch: any) => {
   dispatch(setIsLoading(true));
   axios
@@ -20,8 +20,8 @@ export const login = (username: string, password: string) => (dispatch: any) => 
     )
     .then((res: any) => {
       console.log(res.data);
-      localStorage.setItem('token', res.data as string);
-      dispatch(setUser(jwtDecode(res.data as string) as AuthenticatedUser));
+      localStorage.setItem('token', res.data.token as string);
+      dispatch(setUser(jwtDecode(res.data.token as string) as AuthenticatedUser));
       dispatch(
         setNotification({
           open: true,
@@ -47,15 +47,19 @@ export const login = (username: string, password: string) => (dispatch: any) => 
 
 // #endregion
 
-// #region signUp
+// #region register
 export const register = (user: User) => (dispatch: any) => {
   dispatch(setIsLoading(true));
+  console.log(user);
   axios
-    .post(userEndpoints.register(), JSON.stringify(user))
+    .post(userEndpoints.register(), JSON.stringify(user), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
     .then((res: any) => {
-      console.log(res.data);
-      localStorage.setItem('token', res.data as string);
-      dispatch(setUser(jwtDecode(res.data as string) as AuthenticatedUser));
+      localStorage.setItem('token', res.data.token as string);
+      dispatch(setUser(jwtDecode(res.data.token as string) as AuthenticatedUser));
       dispatch(
         setNotification({
           open: true,
