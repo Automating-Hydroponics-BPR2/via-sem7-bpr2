@@ -7,6 +7,48 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/user": {
+      "name": "/user",
+      "lambdaFunction": "bpr2lambda1",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/user/login": {
+      "name": "/user/login",
+      "lambdaFunction": "bpr2lambda1",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/user/register": {
+      "name": "/user/register",
+      "lambdaFunction": "bpr2lambda1",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/device/new": {
+      "name": "/device/new",
+      "lambdaFunction": "bpr2lambda1",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/device/current": {
+      "name": "/device/current",
+      "lambdaFunction": "bpr2lambda1",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/device/historical": {
+      "name": "/device/historical",
+      "lambdaFunction": "bpr2lambda1",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }
