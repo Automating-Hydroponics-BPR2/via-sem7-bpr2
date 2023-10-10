@@ -7,13 +7,6 @@
       "permissions": {
         "setting": "open"
       }
-    },
-    "/user": {
-      "name": "/user",
-      "lambdaFunction": "bpr2lambda2",
-      "permissions": {
-        "setting": "open"
-      }
     }
   }
 }
