@@ -40,7 +40,8 @@ export const Register = (props: RegisterProps) => {
   };
 
   const validateForm = () => {
-    return isEmailValid(formState.email) !== '' &&
+    return (
+      isEmailValid(formState.email) !== '' &&
       formState.email !== '' &&
       formState.username !== '' &&
       formState.username.length >= 3 &&
@@ -54,6 +55,7 @@ export const Register = (props: RegisterProps) => {
       formState.password !== '' &&
       formState.password.length >= 5 &&
       formState.password.length <= 21
+    );
   };
 
   const redirectIfLoggedIn = React.useCallback(() => {

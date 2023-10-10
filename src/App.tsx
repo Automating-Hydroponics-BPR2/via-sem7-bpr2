@@ -10,7 +10,7 @@ import {
   setNotificationVisibility,
   Snackbar,
 } from './shared';
-import { Home, Error, SignIn, SignUp } from './pages';
+import { Home, Error, Login, Register } from './pages';
 import { Header, BottomNavigation } from './components';
 
 function App() {
@@ -32,8 +32,8 @@ function App() {
             <Header />
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/sign-up" element={<SignUp />} />
-              <Route path="/sign-in" element={<SignIn />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
               <Route path="*" element={<Error />} />
             </Routes>
             <Snackbar

@@ -1,4 +1,4 @@
-// eslint-disable @typescript-eslint/no-unnecessary-type-assertion
+import * as React from 'react';
 import ThemeIcon from '@mui/icons-material/Brightness6';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
@@ -20,8 +20,8 @@ import {
 } from '@mui/material';
 import { alpha, styled, useTheme } from '@mui/material/styles';
 import { Box } from '@mui/system';
-import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { type NavItem } from '../../shared';
 import { ThemeDialogContainer } from '../theme-dialog/theme-dialog.container';
 import { HeaderProps } from './header.props';
@@ -92,7 +92,7 @@ export const Header = (props: HeaderProps) => {
   const drawerWidth = 240;
   const navItems: NavItem[] = [
     { name: 'Home', path: '/' },
-    props.isLoggedIn ? { name: 'Logout', path: '/logout' } : { name: 'Sign in', path: '/sign-in' },
+    props.user ? { name: 'Logout', path: '/logout' } : { name: 'Login', path: '/login' },
   ];
 
   const handleDrawerToggle = () => {
