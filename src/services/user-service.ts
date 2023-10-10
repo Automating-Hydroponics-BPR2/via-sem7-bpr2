@@ -6,13 +6,18 @@ import { AuthenticatedUser, User, setIsLoading, setNotification, setUser, userEn
 export const login = (username: string, password: string) => (dispatch: any) => {
   dispatch(setIsLoading(true));
   axios
-    .post(userEndpoints.login(), {
-      Username: username,
-      Password: password,
-      headers: {
-        'Content-Type': 'application/json',
+    .post(
+      userEndpoints.login(),
+      JSON.stringify({
+        username,
+        password,
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-    })
+    )
     .then((res: any) => {
       console.log(res.data);
       localStorage.setItem('token', res.data as string);
@@ -39,22 +44,14 @@ export const login = (username: string, password: string) => (dispatch: any) => 
       dispatch(setIsLoading(false));
     });
 };
+
 // #endregion
 
 // #region signUp
 export const register = (user: User) => (dispatch: any) => {
   dispatch(setIsLoading(true));
   axios
-    .post(userEndpoints.register(), {
-      username: user.username,
-      password: user.password,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    .post(userEndpoints.register(), JSON.stringify(user))
     .then((res: any) => {
       console.log(res.data);
       localStorage.setItem('token', res.data as string);

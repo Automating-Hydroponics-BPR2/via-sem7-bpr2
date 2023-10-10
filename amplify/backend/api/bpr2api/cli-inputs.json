@@ -1,9 +1,16 @@
 {
   "version": 1,
   "paths": {
-    "/devices": {
-      "name": "/devices",
+    "/device": {
+      "name": "/device",
       "lambdaFunction": "bpr2lambda1",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/user": {
+      "name": "/user",
+      "lambdaFunction": "bpr2lambda2",
       "permissions": {
         "setting": "open"
       }
