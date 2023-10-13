@@ -1,4 +1,4 @@
-import { HomeContainer } from './home/home';
+import { HomeContainer } from './home/home.container.js';
 import { Error } from './error/error';
 import { Login, Register } from './authentication';
 

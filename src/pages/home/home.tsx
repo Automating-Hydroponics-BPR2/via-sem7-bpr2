@@ -1,15 +1,11 @@
-import { connect } from 'react-redux';
-import { bindActionCreators } from '@reduxjs/toolkit';
+import { IHomeProps } from './home.props';
+import { StyledHomeTitle, StyledHomeWrapper } from './home.styles';
 
-import { type ApplicationState, type AppDispatch } from '../../shared';
-import { Home } from './home.container';
-
-const mapStateToProps = (state: ApplicationState) => ({
-  title: 'Home',
-});
-
-const mapDispatchToProps = (dispatch: AppDispatch) => {
-  return bindActionCreators({}, dispatch);
+export const Home = (props: IHomeProps) => {
+  const { title } = props;
+  return (
+    <StyledHomeWrapper>
+      <StyledHomeTitle>{title}</StyledHomeTitle>
+    </StyledHomeWrapper>
+  );
 };
-
-export const HomeContainer = connect(mapStateToProps, mapDispatchToProps)(Home);
