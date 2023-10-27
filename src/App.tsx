@@ -1,3 +1,6 @@
+import { useEffect } from 'react';
+import jwtDecode from 'jwt-decode';
+import { connect } from 'react-redux';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import { ThemeProvider as ScThemeProvider } from 'styled-components';
@@ -5,37 +8,34 @@ import {
   useCustomTheme,
   useGetDeviceType,
   DeviceTypes,
-  useAppDispatch,
-  useAppSelector,
   setNotificationVisibility,
   Snackbar,
   AuthenticatedUser,
   setUser,
+  AppDispatch,
+  ApplicationState,
+  TSnackbar,
+  setNotification,
 } from './shared';
-import { Home, Error, Login, Register } from './pages';
+import { Home, Error, Login, Register, Dashboard } from './pages';
 import { Header, BottomNavigation } from './components';
-import jwtDecode from 'jwt-decode';
-import { useEffect } from 'react';
 
-function App() {
-  const notification = useAppSelector((state) => state.notifications.notification);
-  const theme = useCustomTheme();
-  const dispatch = useAppDispatch();
+interface AppProps {
+  notification: TSnackbar;
+  onInit: () => void;
+  setNotificationVisibility: (visibility: boolean) => void;
+}
 
+function App(props: AppProps) {
   // Set background color for the root element
   const root = document.getElementById('root') as HTMLElement;
+  const theme = useCustomTheme();
   root.style.backgroundColor = theme.palette.background.default;
 
-  // Check if the user is authenticated and set the user in the store or remove token if expired
+  const { notification, setNotificationVisibility } = props;
+
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const decoded = jwtDecode(token) as AuthenticatedUser;
-      if (decoded && decoded.exp >= Date.now() / 1000) {
-        // Dispatch setUser if a valid token exists
-        dispatch(setUser(decoded));
-      }
-    }
+    props.onInit();
   }, []);
 
   return (
@@ -52,13 +52,16 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="*" element={<Error />} />
             </Routes>
             <Snackbar
               open={notification.open}
               message={notification.message}
               type={notification.type}
-              onClose={() => dispatch(setNotificationVisibility(false))}
+              onClose={() => {
+                setNotificationVisibility(false);
+              }}
               autoHideDuration={4000}
             />
             {useGetDeviceType() !== DeviceTypes.DESKTOP && <BottomNavigation />}
@@ -69,4 +72,32 @@ function App() {
   );
 }
 
-export default App;
+const mapStateToProps = (state: ApplicationState) => ({
+  notification: state.notifications.notification,
+});
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+  return {
+    onInit: () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const decoded = jwtDecode(token) as AuthenticatedUser;
+        console.log('decoded', decoded);
+        if (decoded && decoded.exp >= Date.now() / 1000) {
+          // Dispatch setUser if a valid token exists
+          dispatch(setUser(decoded));
+          dispatch(
+            setNotification({
+              open: true,
+              message: `Welcome back! ${decoded.username}`,
+              type: 'success',
+            }),
+          );
+        }
+      }
+    },
+    setNotificationVisibility: (visibility: boolean) => dispatch(setNotificationVisibility(visibility)),
+  };
+};
+
+export const AppContainer = connect(mapStateToProps, mapDispatchToProps)(App);

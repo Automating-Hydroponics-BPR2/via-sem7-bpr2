@@ -91,6 +91,7 @@ export const Header = (props: HeaderProps) => {
   const drawerWidth = 240;
   const navItems: NavItem[] = [
     { name: 'Home', path: '/' },
+    { name: 'Dashboard', path: '/dashboard' },
     props.user ? { name: 'Logout', path: '/logout' } : { name: 'Login', path: '/login' },
   ];
 
@@ -134,7 +135,6 @@ export const Header = (props: HeaderProps) => {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      {/* eslint-disable-next-line */}
       <HideOnScroll {...props}>
         <AppBar
           component="nav"
@@ -143,7 +143,11 @@ export const Header = (props: HeaderProps) => {
             color: theme.palette.text.primary,
           }}>
           <Toolbar>
-            <Box sx={{ flexGrow: 1 }}>
+            <Box
+              sx={{ flexGrow: 1, cursor: 'pointer' }}
+              onClick={() => {
+                navigate('/');
+              }}>
               <Logo src="/images/stgdev__logo__dark.png" />
             </Box>
             <Box sx={{ display: { xs: 'none', lg: 'block' } }}>

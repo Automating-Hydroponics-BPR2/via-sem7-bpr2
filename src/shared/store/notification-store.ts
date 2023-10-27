@@ -1,8 +1,8 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type Notification } from '../utils/typescript/types';
+import { TSnackbar } from '../models';
 
 export interface NotificationStore {
-  notification: Notification;
+  notification: TSnackbar;
 }
 
 const initialState: NotificationStore = {
@@ -17,7 +17,7 @@ const notificationSlice = createSlice({
   name: 'notifications',
   initialState,
   reducers: {
-    setNotification(state, action: PayloadAction<Notification>) {
+    setNotification(state, action: PayloadAction<TSnackbar>) {
       state.notification = action.payload;
     },
     setNotificationType(state, action: PayloadAction<'success' | 'error'>) {

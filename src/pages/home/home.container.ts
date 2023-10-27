@@ -5,7 +5,7 @@ import { type ApplicationState, type AppDispatch } from '../../shared';
 import { Home } from './home';
 
 const mapStateToProps = (state: ApplicationState) => ({
-  title: 'Home',
+  title: 'Welcome to your customized hydroponics dashboard!',
 });
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
