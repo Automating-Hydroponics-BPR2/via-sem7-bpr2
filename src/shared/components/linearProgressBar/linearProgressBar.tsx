@@ -9,7 +9,11 @@ export const LinearProgressBar = (props: LinearProgressBarProps) => {
   const progress = (activeCheckpoint + 1) * 25;
   return (
     <LinearProgressBarWrapper>
-      <LinearProgress variant="determinate" value={progress} sx={{animationDuration:'1s', animationDelay:'0.5s', animationFillMode:'forwards'}} />
+      <LinearProgress
+        variant="determinate"
+        value={progress}
+        sx={{ animationDuration: '1s', animationDelay: '0.5s', animationFillMode: 'forwards' }}
+      />
     </LinearProgressBarWrapper>
   );
 };

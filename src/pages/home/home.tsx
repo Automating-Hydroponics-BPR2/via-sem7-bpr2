@@ -64,7 +64,8 @@ export const Home = (props: IHomeProps) => {
               <Box>
                 <StyledLink>
                   <a href="https://github.com/NoHop3">Stefan's GitHub</a>
-                </StyledLink>{'&'}
+                </StyledLink>
+                {'&'}
                 <StyledLink>
                   <a href="https://github.com/YoyoMy">Yoana's GitHub</a>
                 </StyledLink>
