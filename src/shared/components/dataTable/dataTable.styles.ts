@@ -41,7 +41,7 @@ export const StyledTableHeaderCell = styled(TableCell)`
 `;
 
 export const StyledTableCell = styled(TableCell)`
-font-size: 12px;
+  font-size: 12px;
   color: ${({ theme }) => theme.palette.text.primary};
   border-bottom: 1px solid ${({ theme }) => theme.palette.text.primary};
 `;
