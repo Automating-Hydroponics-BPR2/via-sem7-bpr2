@@ -1,5 +1,5 @@
 export interface CardProps {
-  id: number;
+  id: string;
   title: string;
   imgSource?: string;
   description: string;
@@ -8,6 +8,6 @@ export interface CardProps {
   showFavorite?: boolean;
   disabledFavoriteButton?: boolean;
 
-  onAddToFavoritesClick?: (id: number) => void;
-  onCardClick?: (id: number) => void;
+  onAddToFavoritesClick?: (id: string) => void;
+  onCardClick?: (id: string) => void;
 }

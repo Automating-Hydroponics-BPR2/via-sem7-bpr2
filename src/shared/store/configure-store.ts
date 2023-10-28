@@ -4,6 +4,7 @@ import { createBrowserHistory, History } from 'history';
 import notificationReducer from './notification-store';
 import themeReducer from './theme-store';
 import userReducer from './user-store';
+import deviceReducer from './device-store';
 import jwtDecode from 'jwt-decode';
 import { AuthenticatedUser } from '../models';
 
@@ -26,6 +27,7 @@ const createRootReducer = (history: History) =>
     notifications: notificationReducer,
     theme: themeReducer,
     user: userReducer,
+    device: deviceReducer,
   });
 
 export let store: ReturnType<typeof configureAppStore>;
