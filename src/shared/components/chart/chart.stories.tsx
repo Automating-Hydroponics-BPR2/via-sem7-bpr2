@@ -23,4 +23,4 @@ export const BarChartStory: Story = () => {
   );
 };
 
-BarChartStory.storyName = 'SimpleBarChart';
+BarChartStory.storyName = 'Chart';

@@ -7,6 +7,7 @@ import {
   StyledTableCell,
   StyledTableContainer,
   StyledTableRow,
+  StyledDataTableTitle,
 } from './dataTable.styles';
 
 export const DataTable = (props: IDataTableProps) => {
@@ -14,29 +15,30 @@ export const DataTable = (props: IDataTableProps) => {
 
   return (
     <StyledTableWrapper height={height}>
+      <StyledDataTableTitle>
+        Device: {deviceName} ({deviceId})
+      </StyledDataTableTitle>
       <StyledTableContainer as={Paper}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <StyledTableHeaderCell>Device ID</StyledTableHeaderCell>
-              <StyledTableHeaderCell>Device Name</StyledTableHeaderCell>
               <StyledTableHeaderCell>Light</StyledTableHeaderCell>
               <StyledTableHeaderCell>pH</StyledTableHeaderCell>
               <StyledTableHeaderCell>Temperature</StyledTableHeaderCell>
               <StyledTableHeaderCell>Water Temperature</StyledTableHeaderCell>
               <StyledTableHeaderCell>Humidity</StyledTableHeaderCell>
+              <StyledTableHeaderCell>Timestamp</StyledTableHeaderCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {data.map((reading) => (
               <StyledTableRow key={reading.id}>
-                <StyledTableCell>{deviceId}</StyledTableCell>
-                <StyledTableCell>{deviceName}</StyledTableCell>
                 <StyledTableCell>{reading.light}</StyledTableCell>
                 <StyledTableCell>{reading.ph}</StyledTableCell>
                 <StyledTableCell>{reading.temp}</StyledTableCell>
                 <StyledTableCell>{reading.waterTemp}</StyledTableCell>
                 <StyledTableCell>{reading.humidity}</StyledTableCell>
+                <StyledTableCell>{reading.timestamp}</StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>

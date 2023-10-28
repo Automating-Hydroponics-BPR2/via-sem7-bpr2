@@ -4,13 +4,13 @@ export interface DeviceModel {
 }
 
 export interface DeviceReading {
-    id: string;
-    deviceId: string;
-    name: string;
-    temp: string;
-    humidity: string;
-    ph: string;
-    waterTemp: string;
-    light: string;
-    timestamp: string;
+  id: string;
+  deviceId: string;
+  name: string;
+  temp: string;
+  humidity: string;
+  ph: string;
+  waterTemp: string;
+  light: string;
+  timestamp: string;
 }

@@ -1,5 +1,5 @@
 // dataTable.styles.ts
-import { TableContainer, TableCell, TableRow } from '@mui/material';
+import { TableContainer, TableCell, TableRow, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const StyledTableWrapper = styled('div')<{ height: number }>`
@@ -12,9 +12,17 @@ export const StyledTableContainer = styled(TableContainer)`
   && {
     background-color: ${({ theme }) => theme.palette.background.default};
     border: 1px solid ${({ theme }) => theme.palette.text.primary};
-    max-height: 250px;
+    max-height: calc(100% - 1rem - 30px - 2px);
     overflow-y: auto;
   }
+`;
+
+export const StyledDataTableTitle = styled(Typography)`
+  text-align: center;
+  font-size: 20px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.palette.text.primary};
+  margin-bottom: 1rem;
 `;
 
 export const StyledTableRow = styled(TableRow)`
@@ -33,6 +41,7 @@ export const StyledTableHeaderCell = styled(TableCell)`
 `;
 
 export const StyledTableCell = styled(TableCell)`
+font-size: 12px;
   color: ${({ theme }) => theme.palette.text.primary};
   border-bottom: 1px solid ${({ theme }) => theme.palette.text.primary};
 `;
