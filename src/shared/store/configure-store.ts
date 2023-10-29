@@ -5,6 +5,7 @@ import notificationReducer from './notification-store';
 import themeReducer from './theme-store';
 import userReducer from './user-store';
 import deviceReducer from './device-store';
+import dashboardReducer from './dashboard-store';
 import jwtDecode from 'jwt-decode';
 import { AuthenticatedUser } from '../models';
 
@@ -26,6 +27,7 @@ const createRootReducer = (history: History) =>
     router: connectRouter(history),
     notifications: notificationReducer,
     theme: themeReducer,
+    dashboard: dashboardReducer,
     user: userReducer,
     device: deviceReducer,
   });

@@ -1,29 +1,64 @@
 import { connect } from 'react-redux';
-import { bindActionCreators } from '@reduxjs/toolkit';
 
-import { type ApplicationState, type AppDispatch, setDevice, DeviceModel, setReadingsList } from '../../shared';
+import {
+  type ApplicationState,
+  type AppDispatch,
+  DeviceModel,
+  setDashboardDevice,
+  setDashboardReadingsList,
+  setDashboardThreshold,
+  setDashboardIsLoading,
+  setDashboardUser,
+  setDashboardDeviceIds,
+  setDashboardSelectedDeviceId,
+  AuthenticatedUser,
+  resetDashboard,
+  setDashboardType,
+} from '../../shared';
 import { Dashboard } from './dashboard';
 import { DeviceReading } from '../../shared/models/device';
 
 const mapStateToProps = (state: ApplicationState) => ({
-  device: state.device.device,
-  readingsList: state.device.readingsList,
-  user: state.user.user,
-  isLoading: state.user.isLoading,
+  type: state.dashboard.type,
+  user: state.dashboard.user,
+  device: state.dashboard.device,
+  deviceIds: state.dashboard.deviceIds,
+  isLoading: state.dashboard.isLoading,
+  threshold: state.dashboard.threshold,
+  readingsList: state.dashboard.readingsList,
+  selectedDeviceId: state.dashboard.selectedDeviceId,
 });
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
-  return bindActionCreators(
-    {
-      setDevice: (device: DeviceModel) => {
-        dispatch(setDevice(device));
-      },
-      setReadingsList: (readingsList: DeviceReading[]) => {
-        dispatch(setReadingsList(readingsList));
-      },
+  return {
+    setDevice: (device: DeviceModel) => {
+      dispatch(setDashboardDevice(device));
     },
-    dispatch,
-  );
+    setUser: (user: AuthenticatedUser) => {
+      dispatch(setDashboardUser(user));
+    },
+    setReadingsList: (readingsList: DeviceReading[]) => {
+      dispatch(setDashboardReadingsList(readingsList));
+    },
+    setThreshold: (threshold: number) => {
+      dispatch(setDashboardThreshold(threshold));
+    },
+    setIsLoading: (isLoading: boolean) => {
+      dispatch(setDashboardIsLoading(isLoading));
+    },
+    setSelectedDeviceId: (deviceId: string) => {
+      dispatch(setDashboardSelectedDeviceId(deviceId));
+    },
+    setDeviceIds: (deviceIds: string[]) => {
+      dispatch(setDashboardDeviceIds(deviceIds));
+    },
+    setType: (type: string) => {
+      dispatch(setDashboardType(type));
+    },
+    reset() {
+      dispatch(resetDashboard());
+    },
+  };
 };
 
 export const DashboardContainer = connect(mapStateToProps, mapDispatchToProps)(Dashboard);

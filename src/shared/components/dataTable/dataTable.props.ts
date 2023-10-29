@@ -1,9 +1,14 @@
 import { DeviceReading } from '../../models/device';
 
 export interface IDataTableProps {
-  deviceId: string;
-  deviceName: string;
   data: DeviceReading[];
   height: number;
-  width?: string | number;
+  width: number;
+
+  type?: string;
+  deviceIds?: string[];
+  selectedDeviceId?: string;
+
+  setType: (type: string) => void;
+  setSelectedDeviceId: (deviceId: string) => void;
 }

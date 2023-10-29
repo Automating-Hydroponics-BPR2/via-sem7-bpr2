@@ -5,3 +5,4 @@ export * from './notification-store';
 export * from './theme-store';
 export * from './user-store';
 export * from './device-store';
+export * from './dashboard-store';

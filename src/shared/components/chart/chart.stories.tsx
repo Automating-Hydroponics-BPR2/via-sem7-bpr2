@@ -1,14 +1,14 @@
 import { StoryObj } from '@storybook/react';
-import { BarChartWithReferenceLine } from './chart';
+import { Chart } from './chart';
 
 export default {
   title: 'Chart',
   // Though optional, `component` is required to fully populate ArgsTable
-  component: BarChartWithReferenceLine,
+  component: Chart,
 };
-type Story = StoryObj<typeof BarChartWithReferenceLine>;
+type Story = StoryObj<typeof Chart>;
 
-export const BarChartStory: Story = () => {
+export const ChartStory: Story = () => {
   const data = [
     { name: 'ph', value: '20' },
     { name: 'light', value: '30' },
@@ -18,9 +18,27 @@ export const BarChartStory: Story = () => {
   ];
   return (
     <div style={{ maxWidth: 900, margin: '30px auto' }}>
-      <BarChartWithReferenceLine data={data} width={'100%'} height={250} />
+      <Chart
+        deviceIds={[
+          'a0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
+          'b0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
+          'c0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
+          'd0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
+        ]}
+        threshold={60}
+        data={data}
+        width={100}
+        height={350}
+        selectedDeviceId="a0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a"
+        setThreshold={() => {
+          console.log('setThreshold');
+        }}
+        setSelectedDeviceId={() => {
+          console.log('setSelectedDeviceId');
+        }}
+      />
     </div>
   );
 };
 
-BarChartStory.storyName = 'Chart';
+ChartStory.storyName = 'Chart';

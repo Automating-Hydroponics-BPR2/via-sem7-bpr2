@@ -1,15 +1,7 @@
-import { MenuItem, Select, Typography } from '@mui/material';
-import { Box } from '@mui/system';
-import styled from 'styled-components';
+import styled from "styled-components";
+import { Box, Typography, Select, MenuItem } from "@mui/material";
 
-export const StyledChartWrapper = styled('div')<{ height: number, width: number }>`
-  width: ${({ width }) => width}%;
-  max-height: ${({ height }) => height}px;
-  background-color: ${({ theme }) => theme.palette.background.default};
-  margin-bottom: 1rem;
-`;
-
-export const StyledChartHeaderWrapper = styled(Box)`
+export const StyledHeaderWrapper = styled(Box)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,7 +9,7 @@ export const StyledChartHeaderWrapper = styled(Box)`
   margin-bottom: 1rem;
 `;
 
-export const StyledChartTitle = styled(Typography)`
+export const StyledTitle = styled(Typography)`
   text-align: center;
   font-size: 20px;
   font-weight: 500;
@@ -25,14 +17,14 @@ export const StyledChartTitle = styled(Typography)`
   margin-bottom: 20px;
 `;
 
-export const StyledChartHeaderCategoryWrapper = styled(Box)`
+export const StyledHeaderCategoryWrapper = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: space-evenly;
   width: 100%;
 `;
 
-export const StyledChartHeaderCategory = styled(Box)`
+export const StyledHeaderCategory = styled(Box)`
   display: flex;
   align-items: center;
 
@@ -41,13 +33,13 @@ export const StyledChartHeaderCategory = styled(Box)`
   }
 `;
 
-export const StyledChartHeaderLabel = styled(Typography)`
+export const StyledHeaderLabel = styled(Typography)`
   font-size: 14px;
   font-weight: 500;
   color: ${({ theme }) => theme.palette.text.primary};
 `;
 
-export const StyledChartHeaderSelect = styled(Select)`
+export const StyledHeaderSelect = styled(Select)`
   && {
     font-size: 14px;
     font-weight: 500;
