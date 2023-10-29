@@ -2,7 +2,7 @@ import { MenuItem, Select, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import styled from 'styled-components';
 
-export const StyledChartWrapper = styled('div')<{ height: number, width: number }>`
+export const StyledChartWrapper = styled('div')<{ height: number; width: number }>`
   width: ${({ width }) => width}%;
   max-height: ${({ height }) => height}px;
   background-color: ${({ theme }) => theme.palette.background.default};

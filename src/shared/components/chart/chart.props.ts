@@ -3,7 +3,7 @@ export interface IChartProps {
   width: number;
   height: number;
   threshold: number;
-  
+
   deviceIds?: string[];
   selectedDeviceId?: string;
 
