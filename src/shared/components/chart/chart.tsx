@@ -2,11 +2,10 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { IChartProps } from './chart.props';
 import { StyledChartWrapper } from './chart.styles';
 import { useTheme } from '@mui/material/styles';
-import { DashboardSectionHeader } from '../dashboardSectionHeader';
 
 export const Chart = (props: IChartProps) => {
   const theme = useTheme();
-  const { width, height, data, threshold, deviceIds, selectedDeviceId, setSelectedDeviceId, setThreshold } = props;
+  const { width, height, data, threshold } = props;
 
   const axisLabelStyle = {
     fill: theme.palette.text.primary,
@@ -14,16 +13,13 @@ export const Chart = (props: IChartProps) => {
 
   return (
     <StyledChartWrapper height={height} width={width}>
-      <DashboardSectionHeader
-        threshold={threshold}
-        setSelectedDeviceId={setSelectedDeviceId}
-        selectedDeviceId={selectedDeviceId}
-        setThreshold={setThreshold}
-        title={'Current Readings'}
-        deviceIds={deviceIds}
-      />
       <ResponsiveContainer width={'100%'} height={200}>
-        <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+        <BarChart
+          data={data}
+          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+          style={{
+            cursor: 'pointer',
+          }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" tick={axisLabelStyle} />
           <YAxis tick={axisLabelStyle} />

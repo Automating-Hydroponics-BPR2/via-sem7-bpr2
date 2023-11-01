@@ -6,6 +6,8 @@ export const StyledTableWrapper = styled('div')<{ height: number; width: number 
   max-height: ${({ height }) => height}px;
   width: ${({ width }) => width}%;
   background-color: ${({ theme }) => theme.palette.background.default};
+  margin-bottom: 1rem;
+  cursor: pointer;
 `;
 
 export const StyledTableContainer = styled(TableContainer)`

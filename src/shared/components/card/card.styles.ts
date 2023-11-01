@@ -13,7 +13,7 @@ export const ItemImageWrapper = styled.div`
 `;
 
 export const ImageContainer = styled.div`
-  width: 250px;
+  width: 150px;
   height: 150px;
   background-color: ${({ theme }) => theme.palette.background.paper};
   border-radius: 5px;
@@ -29,11 +29,11 @@ export const ImageContainer = styled.div`
     height: 100%;
     object-fit: cover;
     object-position: cover;
-    border-radius: 5px;
+    border-radius: 50%;
   }
 
   [data-no-image] {
-    border-radius: 5px;
+    border-radius: 50%;
   }
 `;
 
@@ -163,19 +163,16 @@ export const AddToFavoritesButton = styled.button<{ disabled?: boolean }>`
   }
 `;
 
-export const CardWrapper = styled.div`
+export const CardWrapper = styled.div<{ width: string; height: string; padding?: string }>`
+  width: ${({ width }) => width}%;
+  max-height: ${({ height }) => height}px;
   display: flex;
-  padding: 24px 0;
-  border-top: 1px solid ${({ theme }) => theme.palette.divider};
+  padding: ${({ padding }) => padding ?? '24px 0'};
   cursor: pointer;
+  margin-bottom: 1rem;
 
   &:hover {
     background-color: ${({ theme }) => hexWithAlpha(theme.palette.background.default, 10)};
-    border-color: transparent;
-
-    & + * {
-      border-color: transparent;
-    }
 
     [data-search-result-faux-button] {
       opacity: 1;

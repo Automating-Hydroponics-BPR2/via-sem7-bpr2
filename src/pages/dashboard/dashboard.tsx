@@ -1,13 +1,27 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { DashboardProps } from './dashboard.props';
 import { Card } from '../../shared';
 import { Grid, Skeleton } from '@mui/material';
 import { StyledDashboardGridWrapper } from './dashboard.styles';
 import { Chart } from '../../shared/components/chart/chart';
 import { DataTable } from '../../shared/components/dataTable';
+import { DashboardSectionHeader } from '../../shared/components/dashboardSectionHeader';
 
 export const Dashboard = (props: DashboardProps) => {
-  const { threshold, isLoading, setSelectedDeviceId, selectedDeviceId, setThreshold, setType, type, reset } = props;
+  const {
+    type,
+    reset,
+    threshold,
+    isLoading,
+    selectedDeviceIdChart,
+    selectedDeviceIdDataTable,
+    selectedDeviceIdInformaton,
+    setType,
+    setThreshold,
+    setSelectedDeviceIdChart,
+    setSelectedDeviceIdDataTable,
+    setSelectedDeviceIdInformaton,
+  } = props;
   useEffect(() => {
     return () => {
       reset();
@@ -33,16 +47,40 @@ export const Dashboard = (props: DashboardProps) => {
       ) : (
         <>
           <Grid item xs={12} md={6} lg={4}>
-            <Card title="Device 1" description="This is the current reading from the device" id={'123'} />
-          </Grid>
-          <Grid item xs={12} md={6} lg={8}>
-            <Chart
+            <DashboardSectionHeader
+              selectedDeviceId={selectedDeviceIdInformaton}
               deviceIds={[
                 'a0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
                 'b0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
                 'c0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
                 'd0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
               ]}
+              title="Device information"
+              setSelectedDeviceId={setSelectedDeviceIdInformaton}
+            />
+            <Card
+              height="200"
+              width="100"
+              title="Device 1"
+              description="This is the current reading from the device"
+              id={'123'}
+            />
+          </Grid>
+          <Grid item xs={12} md={6} lg={8}>
+            <DashboardSectionHeader
+              threshold={threshold}
+              setSelectedDeviceId={setSelectedDeviceIdChart}
+              selectedDeviceId={selectedDeviceIdChart}
+              setThreshold={setThreshold}
+              deviceIds={[
+                'a0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
+                'b0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
+                'c0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
+                'd0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
+              ]}
+              title={'Current Readings'}
+            />
+            <Chart
               data={[
                 { name: 'ph', value: '20' },
                 { name: 'light', value: '30' },
@@ -51,14 +89,24 @@ export const Dashboard = (props: DashboardProps) => {
                 { name: 'humidity', value: '55' },
               ]}
               width={100}
-              height={350}
+              height={200}
               threshold={threshold}
-              setThreshold={setThreshold}
-              setSelectedDeviceId={setSelectedDeviceId}
-              selectedDeviceId={selectedDeviceId}
             />
           </Grid>
           <Grid item xs={12} md={6} lg={8}>
+            <DashboardSectionHeader
+              type={type}
+              setSelectedDeviceId={setSelectedDeviceIdDataTable}
+              selectedDeviceId={selectedDeviceIdDataTable}
+              setType={setType}
+              deviceIds={[
+                'a0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
+                'b0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
+                'c0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
+                'd0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
+              ]}
+              title={'Current Readings'}
+            />
             <DataTable
               data={[
                 {
@@ -96,21 +144,19 @@ export const Dashboard = (props: DashboardProps) => {
                 },
               ]}
               width={100}
-              height={350}
-              type={type}
-              setType={setType}
-              setSelectedDeviceId={setSelectedDeviceId}
-              selectedDeviceId={selectedDeviceId}
-              deviceIds={[
-                'a0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-                'b0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-                'c0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-                'd0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-              ]}
+              height={200}
             />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
-            <Card title="Device 2" description="This is the current reading from the device" id={'123'} />
+            <DashboardSectionHeader title="User information" />
+            <Card
+              height="200"
+              width="100"
+              title="username"
+              description="This is information for the current user"
+              id={'123'}
+              padding={'0'}
+            />
           </Grid>
         </>
       )}

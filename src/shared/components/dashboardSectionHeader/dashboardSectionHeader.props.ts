@@ -6,7 +6,7 @@ export interface IDashboardSectionHeaderProps {
   deviceIds?: string[];
   selectedDeviceId?: string;
 
-  setSelectedDeviceId: (deviceId: string) => void;
+  setSelectedDeviceId?: (deviceId: string) => void;
   setThreshold?: (threshold: number) => void;
   setType?: (type: string) => void;
 }

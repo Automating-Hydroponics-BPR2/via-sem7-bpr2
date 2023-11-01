@@ -19,23 +19,10 @@ export const ChartStory: Story = () => {
   return (
     <div style={{ maxWidth: 900, margin: '30px auto' }}>
       <Chart
-        deviceIds={[
-          'a0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-          'b0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-          'c0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-          'd0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-        ]}
         threshold={60}
         data={data}
         width={100}
-        height={350}
-        selectedDeviceId="a0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a"
-        setThreshold={() => {
-          console.log('setThreshold');
-        }}
-        setSelectedDeviceId={() => {
-          console.log('setSelectedDeviceId');
-        }}
+        height={200}
       />
     </div>
   );

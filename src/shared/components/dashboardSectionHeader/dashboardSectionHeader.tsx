@@ -15,7 +15,7 @@ export const DashboardSectionHeader = (props: IDashboardSectionHeaderProps) => {
 
   const handleDeviceChange = (e: SelectChangeEvent<unknown>) => {
     const newDeviceId = e.target.value as string;
-    setSelectedDeviceId(newDeviceId);
+    setSelectedDeviceId?.(newDeviceId);
   };
 
   const handleThresholdChange = (e: SelectChangeEvent<unknown>) => {
@@ -36,10 +36,11 @@ export const DashboardSectionHeader = (props: IDashboardSectionHeaderProps) => {
     <StyledHeaderWrapper>
       <StyledTitle>{title}</StyledTitle>
       <StyledHeaderCategoryWrapper>
-        <StyledHeaderCategory>
-          <StyledHeaderLabel>Device:</StyledHeaderLabel>
-          {deviceIds && deviceIds.length > 1 && (
+        {deviceIds && deviceIds.length > 1 && (
+          <StyledHeaderCategory>
+            <StyledHeaderLabel>Device:</StyledHeaderLabel>
             <StyledHeaderSelect
+              width="10rem"
               value={selectedDeviceId ?? 'Choose a device'}
               onChange={handleDeviceChange}
               label={'Device Id'}>
@@ -52,30 +53,35 @@ export const DashboardSectionHeader = (props: IDashboardSectionHeaderProps) => {
                 </StyledMenuItem>
               ))}
             </StyledHeaderSelect>
-          )}
-        </StyledHeaderCategory>
+          </StyledHeaderCategory>
+        )}
 
-        <StyledHeaderCategory>
-          <StyledHeaderLabel>{threshold ? 'Threshold:' : 'Type:'}</StyledHeaderLabel>
-          <StyledHeaderSelect value={threshold ?? type} onChange={threshold ? handleThresholdChange : handleTypeChange}>
-            {type && (
-              <StyledMenuItem key={'Choose a type'} value={'Choose a type'} disabled>
-                {'Choose a type'}
-              </StyledMenuItem>
-            )}
-            {threshold
-              ? thresholdOptions.map((option) => (
-                  <StyledMenuItem key={option} value={option}>
-                    {option}
-                  </StyledMenuItem>
-                ))
-              : typeOptions.map((option) => (
-                  <StyledMenuItem key={option} value={option}>
-                    {option}
-                  </StyledMenuItem>
-                ))}
-          </StyledHeaderSelect>
-        </StyledHeaderCategory>
+        {!(!type && !threshold) ? (
+          <StyledHeaderCategory>
+            <StyledHeaderLabel>{threshold ? 'Threshold:' : 'Type:'}</StyledHeaderLabel>
+            <StyledHeaderSelect
+              width="8rem"
+              value={threshold ?? type}
+              onChange={threshold ? handleThresholdChange : handleTypeChange}>
+              {type && (
+                <StyledMenuItem key={'Choose a type'} value={'Choose a type'} disabled>
+                  {'Choose a type'}
+                </StyledMenuItem>
+              )}
+              {threshold
+                ? thresholdOptions.map((option) => (
+                    <StyledMenuItem key={option} value={option}>
+                      {option}
+                    </StyledMenuItem>
+                  ))
+                : typeOptions.map((option) => (
+                    <StyledMenuItem key={option} value={option}>
+                      {option}
+                    </StyledMenuItem>
+                  ))}
+            </StyledHeaderSelect>
+          </StyledHeaderCategory>
+        ) : null}
       </StyledHeaderCategoryWrapper>
     </StyledHeaderWrapper>
   );

@@ -123,19 +123,7 @@ export const DataTableStory: Story = () => {
   ];
   return (
     <div style={{ maxWidth: 900, margin: '30px auto' }}>
-      <DataTable
-        data={data}
-        height={350}
-        width={100}
-        setType={() => {
-          console.log('setType');
-        }}
-        setSelectedDeviceId={() => {
-          console.log('setSelectedDeviceId');
-        }}
-        selectedDeviceId={'1'}
-        deviceIds={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']}
-      />
+      <DataTable data={data} height={200} width={100} />
     </div>
   );
 };

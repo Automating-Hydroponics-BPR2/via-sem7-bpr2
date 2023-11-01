@@ -8,21 +8,12 @@ import {
   StyledTableContainer,
   StyledTableRow,
 } from './dataTable.styles';
-import { DashboardSectionHeader } from '../dashboardSectionHeader';
 
 export const DataTable = (props: IDataTableProps) => {
-  const { data, height, width, setSelectedDeviceId, deviceIds, selectedDeviceId, type, setType } = props;
+  const { data, height, width } = props;
 
   return (
     <StyledTableWrapper height={height} width={width}>
-      <DashboardSectionHeader
-        title={'Historical Readings'}
-        setSelectedDeviceId={setSelectedDeviceId}
-        type={type}
-        setType={setType}
-        deviceIds={deviceIds}
-        selectedDeviceId={selectedDeviceId}
-      />
       <StyledTableContainer as={Paper}>
         <Table stickyHeader>
           <TableHead>

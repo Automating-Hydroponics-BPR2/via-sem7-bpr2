@@ -10,10 +10,12 @@ import {
   setDashboardIsLoading,
   setDashboardUser,
   setDashboardDeviceIds,
-  setDashboardSelectedDeviceId,
+  setDashboardSelectedDeviceIdChart,
   AuthenticatedUser,
   resetDashboard,
   setDashboardType,
+  setDashboardSelectedDeviceIdDataTable,
+  setDashboardSelectedDeviceIdInformaton,
 } from '../../shared';
 import { Dashboard } from './dashboard';
 import { DeviceReading } from '../../shared/models/device';
@@ -26,7 +28,9 @@ const mapStateToProps = (state: ApplicationState) => ({
   isLoading: state.dashboard.isLoading,
   threshold: state.dashboard.threshold,
   readingsList: state.dashboard.readingsList,
-  selectedDeviceId: state.dashboard.selectedDeviceId,
+  selectedDeviceIdChart: state.dashboard.selectedDeviceIdChart,
+  selectedDeviceIdDataTable: state.dashboard.selectedDeviceIdDataTable,
+  selectedDeviceIdInformaton: state.dashboard.selectedDeviceIdInformaton,
 });
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
@@ -46,8 +50,14 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     setIsLoading: (isLoading: boolean) => {
       dispatch(setDashboardIsLoading(isLoading));
     },
-    setSelectedDeviceId: (deviceId: string) => {
-      dispatch(setDashboardSelectedDeviceId(deviceId));
+    setSelectedDeviceIdChart: (deviceId: string) => {
+      dispatch(setDashboardSelectedDeviceIdChart(deviceId));
+    },
+    setSelectedDeviceIdDataTable: (deviceId: string) => {
+      dispatch(setDashboardSelectedDeviceIdDataTable(deviceId));
+    },
+    setSelectedDeviceIdInformaton: (deviceId: string) => {
+      dispatch(setDashboardSelectedDeviceIdInformaton(deviceId));
     },
     setDeviceIds: (deviceIds: string[]) => {
       dispatch(setDashboardDeviceIds(deviceIds));

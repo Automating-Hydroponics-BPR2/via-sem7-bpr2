@@ -7,6 +7,8 @@ export const StyledHeaderWrapper = styled(Box)`
   align-items: center;
   flex-direction: column;
   margin-bottom: 1rem;
+  padding: 24px 0;
+  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
 `;
 
 export const StyledTitle = styled(Typography)`
@@ -39,7 +41,9 @@ export const StyledHeaderLabel = styled(Typography)`
   color: ${({ theme }) => theme.palette.text.primary};
 `;
 
-export const StyledHeaderSelect = styled(Select)`
+export const StyledHeaderSelect = styled(Select)<{ width: string }>`
+  width: ${({ width }) => width};
+  text-align: center;
   && {
     font-size: 14px;
     font-weight: 500;

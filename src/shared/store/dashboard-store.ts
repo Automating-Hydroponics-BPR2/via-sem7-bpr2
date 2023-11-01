@@ -9,7 +9,9 @@ export interface DashboardStore {
   deviceIds?: string[];
   device?: DeviceModel;
   user?: AuthenticatedUser;
-  selectedDeviceId?: string;
+  selectedDeviceIdChart?: string;
+  selectedDeviceIdDataTable?: string;
+  selectedDeviceIdInformaton?: string;
   readingsList?: DeviceReading[];
 }
 
@@ -21,7 +23,9 @@ const initialState: DashboardStore = {
   device: undefined,
   deviceIds: undefined,
   readingsList: undefined,
-  selectedDeviceId: undefined,
+  selectedDeviceIdChart: undefined,
+  selectedDeviceIdDataTable: undefined,
+  selectedDeviceIdInformaton: undefined,
 };
 
 const dashboardSlice = createSlice({
@@ -46,8 +50,14 @@ const dashboardSlice = createSlice({
     setDashboardThreshold(state, action: PayloadAction<number>) {
       state.threshold = action.payload;
     },
-    setDashboardSelectedDeviceId(state, action: PayloadAction<string>) {
-      state.selectedDeviceId = action.payload;
+    setDashboardSelectedDeviceIdChart(state, action: PayloadAction<string>) {
+      state.selectedDeviceIdChart = action.payload;
+    },
+    setDashboardSelectedDeviceIdDataTable(state, action: PayloadAction<string>) {
+      state.selectedDeviceIdDataTable = action.payload;
+    },
+    setDashboardSelectedDeviceIdInformaton(state, action: PayloadAction<string>) {
+      state.selectedDeviceIdInformaton = action.payload;
     },
     setDashboardType(state, action: PayloadAction<string>) {
       state.type = action.payload;
@@ -68,5 +78,7 @@ export const {
   setDashboardThreshold,
   setDashboardType,
   setDashboardUser,
-  setDashboardSelectedDeviceId,
+  setDashboardSelectedDeviceIdChart,
+  setDashboardSelectedDeviceIdDataTable,
+  setDashboardSelectedDeviceIdInformaton,
 } = dashboardSlice.actions;
