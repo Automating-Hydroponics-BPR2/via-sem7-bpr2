@@ -18,12 +18,7 @@ export const ChartStory: Story = () => {
   ];
   return (
     <div style={{ maxWidth: 900, margin: '30px auto' }}>
-      <Chart
-        threshold={60}
-        data={data}
-        width={100}
-        height={200}
-      />
+      <Chart threshold={60} data={data} width={100} height={200} />
     </div>
   );
 };
