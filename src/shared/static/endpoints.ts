@@ -19,5 +19,6 @@ export const deviceEndpoints = {
     type
       ? `${baseUrl}/device/historical?id=${id}&start=${start}&end=${end}&type=${type}`
       : `${baseUrl}/device/historical?id=${id}&start=${start}&end=${end}`,
+  getDeviceIds: () => `${baseUrl}/device/all`,
 };
 // #endregion

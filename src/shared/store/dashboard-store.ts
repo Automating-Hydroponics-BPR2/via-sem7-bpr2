@@ -1,6 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { DeviceModel, DeviceReading } from '../models/device';
-import { AuthenticatedUser } from '../models';
+import { AuthenticatedUser, DeviceModel, DeviceReading } from '../models';
 
 export interface DashboardStore {
   isLoading: boolean;
@@ -12,7 +11,8 @@ export interface DashboardStore {
   selectedDeviceIdChart?: string;
   selectedDeviceIdDataTable?: string;
   selectedDeviceIdInformaton?: string;
-  readingsList?: DeviceReading[];
+  historicalReadings?: DeviceReading[];
+  currentReading?: DeviceReading;
 }
 
 const initialState: DashboardStore = {
@@ -22,7 +22,8 @@ const initialState: DashboardStore = {
   user: undefined,
   device: undefined,
   deviceIds: undefined,
-  readingsList: undefined,
+  currentReading: undefined,
+  historicalReadings: undefined,
   selectedDeviceIdChart: undefined,
   selectedDeviceIdDataTable: undefined,
   selectedDeviceIdInformaton: undefined,
@@ -35,8 +36,8 @@ const dashboardSlice = createSlice({
     setDashboardDevice(state, action: PayloadAction<DeviceModel>) {
       state.device = action.payload;
     },
-    setDashboardReadingsList(state, action: PayloadAction<DeviceReading[]>) {
-      state.readingsList = action.payload;
+    setDashboardHistoricalReadings(state, action: PayloadAction<DeviceReading[]>) {
+      state.historicalReadings = action.payload;
     },
     setDashboardUser(state, action: PayloadAction<AuthenticatedUser>) {
       state.user = action.payload;
@@ -62,6 +63,9 @@ const dashboardSlice = createSlice({
     setDashboardType(state, action: PayloadAction<string>) {
       state.type = action.payload;
     },
+    setDasboardCurrentReading(state, action: PayloadAction<DeviceReading>) {
+      state.currentReading = action.payload;
+    },
     resetDashboard(state) {
       state = initialState;
     },
@@ -70,14 +74,15 @@ const dashboardSlice = createSlice({
 
 export default dashboardSlice.reducer;
 export const {
-  setDashboardDevice,
   resetDashboard,
-  setDashboardReadingsList,
+  setDashboardUser,
+  setDashboardType,
+  setDashboardDevice,
   setDashboardDeviceIds,
   setDashboardIsLoading,
   setDashboardThreshold,
-  setDashboardType,
-  setDashboardUser,
+  setDasboardCurrentReading,
+  setDashboardHistoricalReadings,
   setDashboardSelectedDeviceIdChart,
   setDashboardSelectedDeviceIdDataTable,
   setDashboardSelectedDeviceIdInformaton,
