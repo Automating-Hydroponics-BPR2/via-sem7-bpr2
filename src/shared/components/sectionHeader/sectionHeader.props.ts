@@ -1,4 +1,4 @@
-export interface IDashboardSectionHeaderProps {
+export interface ISectionHeaderProps {
   title: string;
   threshold?: number;
   type?: string;

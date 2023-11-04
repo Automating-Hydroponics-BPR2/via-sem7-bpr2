@@ -1,5 +1,5 @@
-export const mdBreakpoint = 960;
-export const smBreakpoint = 600;
+export const mdBreakpoint = 1024;
+export const smBreakpoint = 768;
 
 export const mediaUpTo = (key: 'desktop' | 'tablet') => {
   switch (key) {

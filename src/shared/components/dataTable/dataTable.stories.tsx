@@ -123,7 +123,7 @@ export const DataTableStory: Story = () => {
   ];
   return (
     <div style={{ maxWidth: 900, margin: '30px auto' }}>
-      <DataTable data={data} height={200} width={100} />
+      <DataTable data={data} height={'200px'} width={'100%'} />
     </div>
   );
 };

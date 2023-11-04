@@ -2,8 +2,9 @@ import { Grid } from '@mui/material';
 import styled from 'styled-components';
 
 export const StyledDashboardGridWrapper = styled(Grid)`
+  position: relative;
+  width: 100%;
   align-items: center;
-  width: calc(100vw - 5%);
-  margin: 0 auto;
+  padding: 0 0 58px 24px;
   background-color: ${({ theme }) => theme.palette.background.default};
 `;

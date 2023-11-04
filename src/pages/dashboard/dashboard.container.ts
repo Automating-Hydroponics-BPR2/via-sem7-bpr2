@@ -5,7 +5,7 @@ import {
   type AppDispatch,
   DeviceModel,
   setDashboardDevice,
-  setDashboardReadingsList,
+  setDashboardHistoricalReadings,
   setDashboardThreshold,
   setDashboardIsLoading,
   setDashboardUser,
@@ -27,7 +27,7 @@ const mapStateToProps = (state: ApplicationState) => ({
   deviceIds: state.dashboard.deviceIds,
   isLoading: state.dashboard.isLoading,
   threshold: state.dashboard.threshold,
-  readingsList: state.dashboard.readingsList,
+  historicalReadings: state.dashboard.historicalReadings,
   selectedDeviceIdChart: state.dashboard.selectedDeviceIdChart,
   selectedDeviceIdDataTable: state.dashboard.selectedDeviceIdDataTable,
   selectedDeviceIdInformaton: state.dashboard.selectedDeviceIdInformaton,
@@ -41,8 +41,8 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     setUser: (user: AuthenticatedUser) => {
       dispatch(setDashboardUser(user));
     },
-    setReadingsList: (readingsList: DeviceReading[]) => {
-      dispatch(setDashboardReadingsList(readingsList));
+    setHistoricalReadings: (readingsList: DeviceReading[]) => {
+      dispatch(setDashboardHistoricalReadings(readingsList));
     },
     setThreshold: (threshold: number) => {
       dispatch(setDashboardThreshold(threshold));

@@ -15,12 +15,12 @@ export const ItemImageWrapper = styled.div`
 export const ImageContainer = styled.div`
   width: 150px;
   height: 150px;
-  background-color: ${({ theme }) => theme.palette.background.paper};
+  background-color: ${({ theme }) => theme.palette.background.default};
   border-radius: 5px;
 
   ${mediaUpTo('tablet')} {
-    width: 140px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
   }
 
   img {
@@ -40,7 +40,6 @@ export const ImageContainer = styled.div`
 export const ContentHolder = styled.div`
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
 `;
 
 export const ItemTitleHolder = styled.div`
@@ -164,8 +163,8 @@ export const AddToFavoritesButton = styled.button<{ disabled?: boolean }>`
 `;
 
 export const CardWrapper = styled.div<{ width: string; height: string; padding?: string }>`
-  width: ${({ width }) => width}%;
-  max-height: ${({ height }) => height}px;
+  max-width: ${({ width }) => width};
+  max-height: ${({ height }) => height};
   display: flex;
   padding: ${({ padding }) => padding ?? '24px 0'};
   cursor: pointer;

@@ -5,7 +5,7 @@ import { Grid, Skeleton } from '@mui/material';
 import { StyledDashboardGridWrapper } from './dashboard.styles';
 import { Chart } from '../../shared/components/chart/chart';
 import { DataTable } from '../../shared/components/dataTable';
-import { DashboardSectionHeader } from '../../shared/components/dashboardSectionHeader';
+import { SectionHeader } from '../../shared/components/sectionHeader';
 
 export const Dashboard = (props: DashboardProps) => {
   const {
@@ -47,7 +47,7 @@ export const Dashboard = (props: DashboardProps) => {
       ) : (
         <>
           <Grid item xs={12} md={6} lg={4}>
-            <DashboardSectionHeader
+            <SectionHeader
               selectedDeviceId={selectedDeviceIdInformaton}
               deviceIds={[
                 'a0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
@@ -59,15 +59,15 @@ export const Dashboard = (props: DashboardProps) => {
               setSelectedDeviceId={setSelectedDeviceIdInformaton}
             />
             <Card
-              height="200"
-              width="100"
+              height="200px"
+              width="100%"
               title="Device 1"
               description="This is the current reading from the device"
               id={'123'}
             />
           </Grid>
           <Grid item xs={12} md={6} lg={8}>
-            <DashboardSectionHeader
+            <SectionHeader
               threshold={threshold}
               setSelectedDeviceId={setSelectedDeviceIdChart}
               selectedDeviceId={selectedDeviceIdChart}
@@ -94,7 +94,7 @@ export const Dashboard = (props: DashboardProps) => {
             />
           </Grid>
           <Grid item xs={12} md={6} lg={8}>
-            <DashboardSectionHeader
+            <SectionHeader
               type={type}
               setSelectedDeviceId={setSelectedDeviceIdDataTable}
               selectedDeviceId={selectedDeviceIdDataTable}
@@ -143,15 +143,15 @@ export const Dashboard = (props: DashboardProps) => {
                   timestamp: '2021-10-10T00:00:00.000Z',
                 },
               ]}
-              width={100}
-              height={200}
+              width={'100%'}
+              height={'200px'}
             />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
-            <DashboardSectionHeader title="User information" />
+            <SectionHeader title="User information" />
             <Card
-              height="200"
-              width="100"
+              height="200px"
+              width="100%"
               title="username"
               description="This is information for the current user"
               id={'123'}

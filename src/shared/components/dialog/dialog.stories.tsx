@@ -26,13 +26,33 @@ export const DialogStory: Story = () => {
       <div key="4">Dialog body</div>,
       <div key="5">Dialog body</div>,
       <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
+      <div key="6">Dialog body</div>,
       <div key="7">Dialog body</div>,
       <div key="8">Dialog body</div>,
     ],
     options: ['Save', 'Close'],
     onOptionClick: (option: string) => {
       alert(option);
+      setOpen(false);
     },
+    width: '500px',
   };
 
   return (

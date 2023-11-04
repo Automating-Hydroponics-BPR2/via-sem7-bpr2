@@ -14,8 +14,8 @@ export const DataTable = (props: IDataTableProps) => {
 
   return (
     <StyledTableWrapper height={height} width={width}>
-      <StyledTableContainer as={Paper}>
-        <Table stickyHeader>
+      <StyledTableContainer as={Paper} height={height} width={width}>
+        <Table>
           <TableHead>
             <TableRow>
               <StyledTableHeaderCell>Light</StyledTableHeaderCell>

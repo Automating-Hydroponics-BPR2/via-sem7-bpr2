@@ -9,7 +9,7 @@ export interface DashboardProps {
   device?: DeviceModel;
   deviceIds?: string[];
   user?: AuthenticatedUser;
-  readingsList?: DeviceReading[];
+  historicalReadings?: DeviceReading[];
   selectedDeviceIdChart?: string;
   selectedDeviceIdDataTable?: string;
   selectedDeviceIdInformaton?: string;
@@ -21,7 +21,7 @@ export interface DashboardProps {
   setUser: (user: AuthenticatedUser) => void;
   setIsLoading: (isLoading: boolean) => void;
   setDeviceIds: (deviceIds: string[]) => void;
-  setReadingsList: (readingsList: DeviceReading[]) => void;
+  setHistoricalReadings: (historicalReadings: DeviceReading[]) => void;
   setSelectedDeviceIdChart: (deviceId: string) => void;
   setSelectedDeviceIdDataTable: (deviceId: string) => void;
   setSelectedDeviceIdInformaton: (deviceId: string) => void;

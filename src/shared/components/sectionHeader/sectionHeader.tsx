@@ -1,4 +1,4 @@
-import { IDashboardSectionHeaderProps } from './dashboardSectionHeader.props';
+import { ISectionHeaderProps } from './sectionHeader.props';
 import { SelectChangeEvent } from '@mui/material';
 import {
   StyledHeaderWrapper,
@@ -8,9 +8,9 @@ import {
   StyledHeaderLabel,
   StyledHeaderSelect,
   StyledMenuItem,
-} from './dashboardSectionHeader.styles';
+} from './sectionHeader.styles';
 
-export const DashboardSectionHeader = (props: IDashboardSectionHeaderProps) => {
+export const SectionHeader = (props: ISectionHeaderProps) => {
   const { threshold, setSelectedDeviceId, selectedDeviceId, setThreshold, title, deviceIds, type, setType } = props;
 
   const handleDeviceChange = (e: SelectChangeEvent<unknown>) => {
