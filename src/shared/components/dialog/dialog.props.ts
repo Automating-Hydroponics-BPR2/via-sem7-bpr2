@@ -8,8 +8,8 @@ export interface DialogProps extends CommonProps {
   height?: string;
   options?: string[];
   children?: React.ReactNode;
-  
+
   onClose: () => void;
-  
+
   onOptionClick?: (option: string) => void;
 }

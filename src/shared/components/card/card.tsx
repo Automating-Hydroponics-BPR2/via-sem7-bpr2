@@ -1,12 +1,11 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart } from '@fortawesome/free-regular-svg-icons';
-import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 
 import { LazyImage, NoImage } from '../..';
 import { CardProps } from './card.props';
 import {
-  AddToFavoritesButton,
+  CardButton,
   ContentHolder,
   ImageContainer,
   ItemDescription,
@@ -16,29 +15,67 @@ import {
   CardWrapper,
   ItemDate,
 } from './card.styles';
+import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 
 export const Card = React.memo((props: CardProps) => {
+  const [isHovering, setIsHovering] = React.useState(false);
   const { width, height, padding } = props;
   return (
-    <CardWrapper width={width} height={height} padding={padding}>
+    <CardWrapper
+      width={width}
+      height={height}
+      padding={padding}
+      onMouseEnter={() => {
+        setIsHovering(true);
+      }}
+      onMouseLeave={() => {
+        setIsHovering(false);
+      }}>
       <ItemImageWrapper>
-        <ImageContainer
-          data-search-result-image
-          onClick={() => {
-            props.onCardClick?.(props.id);
-          }}>
+        <ImageContainer data-search-result-image>
           {props.imgSource ? <LazyImage src={props.imgSource} /> : <NoImage iconSize={80} />}
         </ImageContainer>
-        {props.showFavorite && (
-          <AddToFavoritesButton
-            type="button"
-            disabled={!!props.disabledFavoriteButton}
-            onClick={(e: React.MouseEvent) => {
-              props.onAddToFavoritesClick?.(props.id);
-              e.stopPropagation();
-            }}>
-            <FontAwesomeIcon icon={props.isFavorite ? faHeartSolid : faHeart} />
-          </AddToFavoritesButton>
+        {isHovering && (
+          <>
+            {props.showAdd && (
+              <CardButton
+                top="6px"
+                right="-6px"
+                type="button"
+                onClick={(e: React.MouseEvent) => {
+                  props.onAddClick?.(props.id);
+                  e.stopPropagation();
+                }}>
+                <FontAwesomeIcon icon={faCirclePlus} />
+              </CardButton>
+            )}
+            {props.showEdit && (
+              <CardButton
+                top="32px"
+                right="-6px"
+                type="button"
+                onClick={(e: React.MouseEvent) => {
+                  props.onEditClick?.(props.id);
+                  e.stopPropagation();
+                }}>
+                <FontAwesomeIcon icon={faPenToSquare} />
+              </CardButton>
+            )}
+            {props.showDelete && (
+              <CardButton
+                top="58px"
+                right="-6px"
+                type="button"
+                onClick={(e: React.MouseEvent) => {
+                  props.onDeleteClick?.(props.id);
+                  e.stopPropagation();
+                }}>
+                <FontAwesomeIcon icon={faTrashCan} 
+                color='#ef5350'
+                />
+              </CardButton>
+            )}
+          </>
         )}
       </ItemImageWrapper>
       <ContentHolder>

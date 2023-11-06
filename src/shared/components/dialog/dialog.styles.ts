@@ -11,6 +11,7 @@ export const StyledDialog = styled.div<{ width?: string; height?: string }>`
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
   background: ${({ theme }) => theme.palette.background.default};
   border-radius: 4px;
   box-shadow:
@@ -64,7 +65,7 @@ export const StyledDialogWrapper = styled.div<{ open: boolean }>`
 `;
 
 export const DialogTitle = styled.h3`
-  font-size: 1.2rem;
+  font-size: 1rem;
   text-align: center;
   margin: 0;
   padding: ${({ theme }) => theme.spacing(2)};
@@ -91,7 +92,7 @@ export const DialogOptionItem = styled.div<{
   background-color: ${({ theme, isSelected }) => (isSelected ? hexWithAlpha(theme.palette.primary.main, 10) : 'none')};
   border-radius: 5px;
   text-overflow: ellipsis;
-  font-size: 20px;
+  font-size: 0.875rem;
   font-weight: ${({ isSelected }) => (isSelected ? '500' : '400')};
   cursor: pointer;
   color: ${({ theme }) => theme.palette.text.primary};

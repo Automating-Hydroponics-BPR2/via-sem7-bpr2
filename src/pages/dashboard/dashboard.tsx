@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { DashboardProps } from './dashboard.props';
-import { Card } from '../../shared';
+import { Card, Dialog, DialogProps } from '../../shared';
 import { Grid, Skeleton } from '@mui/material';
 import { StyledDashboardGridWrapper } from './dashboard.styles';
 import { Chart } from '../../shared/components/chart/chart';
@@ -27,6 +27,42 @@ export const Dashboard = (props: DashboardProps) => {
       reset();
     };
   }, [reset]);
+  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
+
+  const dialogProps: DialogProps = {
+    open: isConfirmationDialogOpen,
+    onClose: () => {
+      setIsConfirmationDialogOpen(false);
+    },
+    title: 'Are you sure you want to delete this device?',
+    children: [
+      <div>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+          magna aliqua.
+        </p>
+      </div>,
+    ],
+    options: ['Confirm', 'Cancel'],
+    onOptionClick: (option: string) => {
+      handleOptionClick(option);
+    },
+    width: '500px',
+    height: '200px',
+  };
+  const handleOptionClick = (option: string) => {
+    switch (option) {
+      case 'Confirm':
+        console.log('Confirm clicked');
+        setIsConfirmationDialogOpen(false);
+        break;
+      case 'Cancel':
+        console.log('Cancel clicked');
+        setIsConfirmationDialogOpen(false);
+        break;
+    }
+  };
+
   return (
     <StyledDashboardGridWrapper container columnSpacing={3}>
       {isLoading ? (
@@ -59,6 +95,19 @@ export const Dashboard = (props: DashboardProps) => {
               setSelectedDeviceId={setSelectedDeviceIdInformaton}
             />
             <Card
+              showAdd
+              showEdit
+              showDelete
+              onAddClick={() => {
+                console.log('Add clicked');
+              }}
+              onEditClick={() => {
+                console.log('Edit clicked');
+              }}
+              onDeleteClick={() => {
+                console.log('Delete clicked');
+                setIsConfirmationDialogOpen(true);
+              }}
               height="200px"
               width="100%"
               title="Device 1"
@@ -150,6 +199,15 @@ export const Dashboard = (props: DashboardProps) => {
           <Grid item xs={12} md={6} lg={4}>
             <SectionHeader title="User information" />
             <Card
+              showEdit
+              showDelete
+              onEditClick={() => {
+                console.log('Edit clicked');
+              }}
+              onDeleteClick={() => {
+                console.log('Delete clicked');
+                setIsConfirmationDialogOpen(true);
+              }}
               height="200px"
               width="100%"
               title="username"
@@ -158,6 +216,7 @@ export const Dashboard = (props: DashboardProps) => {
               padding={'0'}
             />
           </Grid>
+          <Dialog {...dialogProps} />
         </>
       )}
     </StyledDashboardGridWrapper>

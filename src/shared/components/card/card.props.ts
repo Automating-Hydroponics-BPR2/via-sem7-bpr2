@@ -7,11 +7,12 @@ export interface CardProps {
   imgSource?: string;
   description: string;
   date?: string;
-  isFavorite?: boolean;
-  showFavorite?: boolean;
-  disabledFavoriteButton?: boolean;
   padding?: string;
+  showAdd?: boolean;
+  showEdit?: boolean;
+  showDelete?: boolean;
 
-  onAddToFavoritesClick?: (id: string) => void;
-  onCardClick?: (id: string) => void;
+  onAddClick?: (id: string) => void;
+  onEditClick?: (id: string) => void;
+  onDeleteClick?: (id: string) => void;
 }
