@@ -3,12 +3,12 @@ import axios from 'axios';
 import {
   DeviceModel,
   deviceEndpoints,
-  setDashboardDevice,
   setNotification,
-  setDashboardCurrentReading,
   DeviceReading,
-  setDashboardHistoricalReadings,
-  setDashboardDeviceIds,
+  setCurrentReading,
+  setDevice,
+  setDeviceIds,
+  setHistoricalReadings,
 } from '../shared';
 
 const getToken = () => {
@@ -59,7 +59,7 @@ export const getDeviceWithId = (id: string) => (dispatch: any) => {
     })
     .then((res: any) => {
       console.log(res.data);
-      dispatch(setDashboardDevice(res.data as DeviceModel));
+      dispatch(setDevice(res.data as DeviceModel));
       dispatch(
         setNotification({
           open: true,
@@ -80,9 +80,9 @@ export const getDeviceWithId = (id: string) => (dispatch: any) => {
     });
 };
 
-export const updateDeviceWithId = (id: string, deviceData: any) => (dispatch: any) => {
+export const updateDeviceWithId = (id: string, deviceData: DeviceModel) => (dispatch: any) => {
   axios
-    .put(deviceEndpoints.update(id), JSON.stringify(deviceData), {
+    .patch(deviceEndpoints.update(id), JSON.stringify(deviceData), {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${getToken()}`,
@@ -90,7 +90,7 @@ export const updateDeviceWithId = (id: string, deviceData: any) => (dispatch: an
     })
     .then((res: any) => {
       console.log(res.data);
-      dispatch(setDashboardDevice(res.data as DeviceModel));
+      dispatch(setDevice(res.data as DeviceModel));
       dispatch(
         setNotification({
           open: true,
@@ -151,7 +151,7 @@ export const getCurrentReading = (id: string) => (dispatch: any) => {
     })
     .then((res: any) => {
       console.log(res.data);
-      dispatch(setDashboardCurrentReading(res.data as DeviceReading));
+      dispatch(setCurrentReading(res.data as DeviceReading));
       dispatch(
         setNotification({
           open: true,
@@ -182,7 +182,7 @@ export const getHistoricalReadings = (id: string, start: string, end: string, ty
     })
     .then((res: any) => {
       console.log(res.data);
-      dispatch(setDashboardHistoricalReadings(res.data as DeviceReading[]));
+      dispatch(setHistoricalReadings(res.data as DeviceReading[]));
       dispatch(
         setNotification({
           open: true,
@@ -213,7 +213,7 @@ export const getDeviceIds = () => (dispatch: any) => {
     })
     .then((res: any) => {
       console.log(res.data);
-      dispatch(setDashboardDeviceIds(res.data as string[]));
+      dispatch(setDeviceIds(res.data as string[]));
       dispatch(
         setNotification({
           open: true,

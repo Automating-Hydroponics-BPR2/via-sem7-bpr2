@@ -3,33 +3,28 @@ import { connect } from 'react-redux';
 import {
   type ApplicationState,
   type AppDispatch,
-  DeviceModel,
-  setDashboardDevice,
-  setDashboardHistoricalReadings,
-  setDashboardCurrentReading,
   setDashboardThreshold,
-  setDashboardIsLoading,
-  setDashboardUser,
-  setDashboardDeviceIds,
   setDashboardSelectedDeviceIdChart,
-  AuthenticatedUser,
-  resetDashboard,
+  resetDashboardStore,
   setDashboardType,
   setDashboardSelectedDeviceIdDataTable,
   setDashboardSelectedDeviceIdInformaton,
-  DeviceReading,
+  DeviceModel,
+  setDashboardIsLoading,
+  User,
 } from '../../shared';
 import { Dashboard } from './dashboard';
+import { deviceService, userService } from '../../services';
 
 const mapStateToProps = (state: ApplicationState) => ({
   type: state.dashboard.type,
-  user: state.dashboard.user,
-  device: state.dashboard.device,
-  deviceIds: state.dashboard.deviceIds,
+  user: state.user.user,
+  device: state.device.device,
+  deviceIds: state.device.deviceIds,
   isLoading: state.dashboard.isLoading,
   threshold: state.dashboard.threshold,
-  currentReading: state.dashboard.currentReading,
-  historicalReadings: state.dashboard.historicalReadings,
+  currentReading: state.device.currentReading,
+  historicalReadings: state.device.historicalReadings,
   selectedDeviceIdChart: state.dashboard.selectedDeviceIdChart,
   selectedDeviceIdDataTable: state.dashboard.selectedDeviceIdDataTable,
   selectedDeviceIdInformaton: state.dashboard.selectedDeviceIdInformaton,
@@ -37,23 +32,8 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
   return {
-    setDevice: (device: DeviceModel) => {
-      dispatch(setDashboardDevice(device));
-    },
-    setUser: (user: AuthenticatedUser) => {
-      dispatch(setDashboardUser(user));
-    },
-    setCurrentReading: (reading: DeviceReading) => {
-      dispatch(setDashboardCurrentReading(reading));
-    },
-    setHistoricalReadings: (readingsList: DeviceReading[]) => {
-      dispatch(setDashboardHistoricalReadings(readingsList));
-    },
     setThreshold: (threshold: number) => {
       dispatch(setDashboardThreshold(threshold));
-    },
-    setIsLoading: (isLoading: boolean) => {
-      dispatch(setDashboardIsLoading(isLoading));
     },
     setSelectedDeviceIdChart: (deviceId: string) => {
       dispatch(setDashboardSelectedDeviceIdChart(deviceId));
@@ -64,14 +44,45 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     setSelectedDeviceIdInformaton: (deviceId: string) => {
       dispatch(setDashboardSelectedDeviceIdInformaton(deviceId));
     },
-    setDeviceIds: (deviceIds: string[]) => {
-      dispatch(setDashboardDeviceIds(deviceIds));
-    },
     setType: (type: string) => {
       dispatch(setDashboardType(type));
     },
     reset() {
-      dispatch(resetDashboard());
+      dispatch(resetDashboardStore());
+    },
+
+    // Services
+    onInit: () => {
+      dispatch(setDashboardIsLoading(true));
+      dispatch(deviceService.getDeviceIds());
+      dispatch(setDashboardIsLoading(false));
+    },
+    // Device
+    getDeviceIds: () => {
+      dispatch(deviceService.getDeviceIds());
+    },
+    getDeviceWithId: (id: string) => {
+      dispatch(deviceService.getDeviceWithId(id));
+    },
+    getCurrentReading: (id: string) => {
+      dispatch(deviceService.getCurrentReading(id));
+    },
+    createDevice: (deviceData: DeviceModel) => {
+      dispatch(deviceService.createDevice(deviceData));
+    },
+    updateDeviceWithId: (id: string, deviceData: DeviceModel) => {
+      dispatch(deviceService.updateDeviceWithId(id, deviceData));
+    },
+    deleteDeviceWithId: (id: string) => {
+      dispatch(deviceService.deleteDeviceWithId(id));
+    },
+
+    // User
+    deleteUserWithId: () => {
+      dispatch(userService.deleteUserWithId());
+    },
+    updateUserWithId: (userData: User) => {
+      dispatch(userService.updateUserWithId(userData));
     },
   };
 };

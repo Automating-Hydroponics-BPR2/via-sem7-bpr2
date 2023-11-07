@@ -5,6 +5,8 @@ const baseUrl = process.env.REACT_APP_API_URL!;
 export const userEndpoints = {
   login: () => `${baseUrl}/user/login`,
   register: () => `${baseUrl}/user/register`,
+  delete: () => `${baseUrl}/user`,
+  update: () => `${baseUrl}/user`,
 };
 // #endregion
 

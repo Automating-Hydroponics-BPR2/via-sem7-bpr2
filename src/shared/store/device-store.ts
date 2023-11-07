@@ -2,13 +2,17 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { DeviceModel, DeviceReading } from '../models/device';
 
 export interface DeviceStore {
+  deviceIds?: string[];
   device?: DeviceModel;
-  readingsList?: DeviceReading[];
+  historicalReadings?: DeviceReading[];
+  currentReading?: DeviceReading;
 }
 
 const initialState: DeviceStore = {
   device: undefined,
-  readingsList: undefined,
+  deviceIds: undefined,
+  currentReading: undefined,
+  historicalReadings: undefined,
 };
 
 const deviceSlice = createSlice({
@@ -18,14 +22,21 @@ const deviceSlice = createSlice({
     setDevice(state, action: PayloadAction<DeviceModel>) {
       state.device = action.payload;
     },
-    setReadingsList(state, action: PayloadAction<DeviceReading[]>) {
-      state.readingsList = action.payload;
+    setHistoricalReadings(state, action: PayloadAction<DeviceReading[]>) {
+      state.historicalReadings = action.payload;
     },
-    resetDevice(state) {
+    setDeviceIds(state, action: PayloadAction<string[]>) {
+      state.deviceIds = action.payload;
+    },
+    setCurrentReading(state, action: PayloadAction<DeviceReading>) {
+      state.currentReading = action.payload;
+    },
+    resetDeviceStore(state) {
       state = initialState;
     },
   },
 });
 
 export default deviceSlice.reducer;
-export const { setDevice, resetDevice, setReadingsList } = deviceSlice.actions;
+export const { setDevice, resetDeviceStore, setCurrentReading, setDeviceIds, setHistoricalReadings } =
+  deviceSlice.actions;

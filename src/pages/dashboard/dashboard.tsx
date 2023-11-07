@@ -26,6 +26,11 @@ export const Dashboard = (props: DashboardProps) => {
     setSelectedDeviceIdChart,
     setSelectedDeviceIdDataTable,
     setSelectedDeviceIdInformaton,
+    // deleteDeviceWithId,
+    // createDevice,
+    // deleteUserWithId,
+    // updateDeviceWithId,
+    // updateUserWithId
   } = props;
 
   const convertToChartData = (data: DeviceReading) => {
@@ -88,8 +93,8 @@ export const Dashboard = (props: DashboardProps) => {
             <Card
               device={device}
               showAdd
-              showEdit
-              showDelete
+              showEdit={!!device}
+              showDelete={!!device}
               onDeviceAddClick={() => {
                 console.log('Add clicked');
               }}
@@ -224,8 +229,8 @@ export const Dashboard = (props: DashboardProps) => {
             <SectionHeader title="User information" />
             <Card
               user={user}
-              showEdit
-              showDelete
+              showEdit={!!user}
+              showDelete={!!user}
               onUserEditClick={() => {
                 console.log('Edit clicked');
               }}

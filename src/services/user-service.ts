@@ -2,6 +2,14 @@ import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import { AuthenticatedUser, User, setIsLoading, setNotification, setUser, userEndpoints } from '../shared';
 
+const getToken = () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('No token found');
+  }
+  return token;
+};
+
 // #region login
 export const login = (username: string, password: string) => (dispatch: any) => {
   dispatch(setIsLoading(true));
@@ -80,4 +88,70 @@ export const register = (user: User) => (dispatch: any) => {
       dispatch(setIsLoading(false));
     });
 };
+// #endregion
+
+// #region deleteUserWithId
+export const deleteUserWithId = () => (dispatch: any) => {
+  axios
+    .delete(userEndpoints.delete(), {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`,
+      },
+    })
+    .then((res: any) => {
+      dispatch(
+        setNotification({
+          open: true,
+          type: 'success',
+          message: `User was deleted successfully!`,
+        }),
+      );
+    })
+    .catch((err: any) => {
+      dispatch(
+        setNotification({
+          open: true,
+          type: 'error',
+          message: `User was not deleted!`,
+        }),
+      );
+      console.error(err);
+    });
+};
+
+// #endregion
+
+// #region updateUserWithId
+export const updateUserWithId = (userData: User) => (dispatch: any) => {
+  axios
+    .put(userEndpoints.update(), JSON.stringify(userData), {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`,
+      },
+    })
+    .then((res: any) => {
+      console.log(res.data);
+      dispatch(setUser(res.data as AuthenticatedUser));
+      dispatch(
+        setNotification({
+          open: true,
+          type: 'success',
+          message: `User was updated successfully!`,
+        }),
+      );
+    })
+    .catch((err: any) => {
+      dispatch(
+        setNotification({
+          open: true,
+          type: 'error',
+          message: `User was not updated!`,
+        }),
+      );
+      console.error(err);
+    });
+};
+
 // #endregion

@@ -1,4 +1,4 @@
-import { AuthenticatedUser, DeviceModel } from '../../shared';
+import { AuthenticatedUser, DeviceModel, User } from '../../shared';
 import { DeviceReading } from '../../shared/models/device';
 
 export interface DashboardProps {
@@ -15,16 +15,24 @@ export interface DashboardProps {
   selectedDeviceIdDataTable?: string;
   selectedDeviceIdInformaton?: string;
 
+  // Actions
   reset: () => void;
   setType: (type: string) => void;
-  setDevice: (device: DeviceModel) => void;
   setThreshold: (treshold: number) => void;
-  setUser: (user: AuthenticatedUser) => void;
-  setIsLoading: (isLoading: boolean) => void;
-  setDeviceIds: (deviceIds: string[]) => void;
-  setCurrentReading: (currentReading: DeviceReading) => void;
-  setHistoricalReadings: (historicalReadings: DeviceReading[]) => void;
   setSelectedDeviceIdChart: (deviceId: string) => void;
   setSelectedDeviceIdDataTable: (deviceId: string) => void;
   setSelectedDeviceIdInformaton: (deviceId: string) => void;
+
+  // Services
+  // Device
+  getDeviceIds: () => void;
+  getDeviceWithId: (id: string) => void;
+  getCurrentReading: (id: string) => void;
+  createDevice: (deviceData: DeviceModel) => void;
+  updateDeviceWithId: (id: string, deviceData: DeviceModel) => void;
+  deleteDeviceWithId: (id: string) => void;
+
+  // User
+  deleteUserWithId: () => void;
+  updateUserWithId: (userData: User) => void;
 }
