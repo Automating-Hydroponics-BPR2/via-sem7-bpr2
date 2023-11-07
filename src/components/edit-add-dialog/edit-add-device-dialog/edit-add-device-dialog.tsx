@@ -22,7 +22,7 @@ export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
   const handleSave = () => {
     if (validateForm()) {
       if (onDeviceEdit) {
-        onDeviceEdit({
+        onDeviceEdit(formState.id, {
           id: formState.id,
           name: formState.name,
         });

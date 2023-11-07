@@ -2,6 +2,7 @@ import * as React from 'react';
 import ThemeIcon from '@mui/icons-material/Brightness6';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import {
   AppBar,
   Button,
@@ -84,6 +85,7 @@ function HideOnScroll(props: HeaderProps) {
 
 export const Header = (props: HeaderProps) => {
   const [openThemeDialog, setOpenThemeDialog] = React.useState(false);
+  const [openNotificationDialog, setOpenNotificationDialog] = React.useState(false);
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const theme = useTheme();
@@ -164,6 +166,17 @@ export const Header = (props: HeaderProps) => {
               <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
             </Search>
             <Divider />
+            <IconButton
+              size="large"
+              aria-label="notification button"
+              edge="end"
+              onClick={() => {
+                setOpenNotificationDialog(true);
+              }}
+              color={'inherit'}
+              sx={{ ml: 2, pt: 2, display: { xs: 'none', lg: 'block' } }}>
+              <CircleNotificationsIcon />
+            </IconButton>
             <IconButton
               size="large"
               aria-label="theming button"

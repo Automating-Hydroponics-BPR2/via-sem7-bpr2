@@ -1,8 +1,8 @@
-import { AuthenticatedUser } from '../../../shared';
+import { AuthenticatedUser, User } from '../../../shared';
 
 export interface IEditUserDialogProps {
   open: boolean;
   onClose: () => void;
   user?: AuthenticatedUser;
-  onUserEdit?: (user: AuthenticatedUser) => void;
+  onUserEdit?: (user: User) => void;
 }

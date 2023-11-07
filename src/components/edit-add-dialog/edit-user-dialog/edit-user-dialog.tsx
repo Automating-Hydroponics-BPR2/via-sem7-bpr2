@@ -4,6 +4,7 @@ import { Dialog, DialogProps, User } from '../../../shared';
 import { IEditUserDialogProps } from './edit-user-dialog.props';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import { Container, CssBaseline, Avatar, Box, Typography, TextField } from '@mui/material';
+import { isEmailValid } from '../../../pages/authentication/register/register.utils';
 
 export const EditUserDialog = (props: IEditUserDialogProps) => {
   const theme = useTheme();
@@ -24,13 +25,10 @@ export const EditUserDialog = (props: IEditUserDialogProps) => {
     if (validateForm()) {
       if (onUserEdit) {
         onUserEdit({
-          id: user?.id ?? '',
           username: formState.username,
           firstName: formState.firstName,
           lastName: formState.lastName,
           email: formState.email,
-          iat: user?.iat ?? 0,
-          exp: user?.exp ?? 0,
         });
       }
       onClose();
@@ -38,7 +36,7 @@ export const EditUserDialog = (props: IEditUserDialogProps) => {
   };
   const validateForm = () => {
     return (
-      formState.username.match(/^[a-zA-Z0-9-]+$/) &&
+      formState.username.match(/^[a-zA-Z0-9- ]+$/) &&
       formState.username.length >= 3 &&
       formState.username.length <= 21 &&
       (formState.firstName === '' ||
@@ -49,7 +47,7 @@ export const EditUserDialog = (props: IEditUserDialogProps) => {
         (formState.lastName.match(/^[a-zA-Z0-9 ]+$/) &&
           formState.lastName.length >= 3 &&
           formState.lastName.length <= 21)) &&
-      (formState.email === '' || formState.email.match(/^[a-zA-Z0-9@.]+$/))
+      (formState.email === '' || isEmailValid(formState.email) === 'Email can be inserted')
     );
   };
   const dialogProps: DialogProps = {
@@ -90,13 +88,13 @@ export const EditUserDialog = (props: IEditUserDialogProps) => {
               autoFocus
               error={
                 formState.username !== '' &&
-                (!formState.username.match(/^[a-zA-Z0-9-]+$/) ||
+                (!formState.username.match(/^[a-zA-Z0-9- ]+$/) ||
                   formState.username.length < 3 ||
                   formState.username.length > 21)
               }
               helperText={
                 formState.username !== ''
-                  ? formState.username.match(/^[a-zA-Z0-9-]+$/) &&
+                  ? formState.username.match(/^[a-zA-Z0-9- ]+$/) &&
                     formState.username.length >= 3 &&
                     formState.username.length <= 21
                     ? 'Username can be inserted'
@@ -113,21 +111,8 @@ export const EditUserDialog = (props: IEditUserDialogProps) => {
               name="email"
               defaultValue={user?.email ?? ''}
               autoFocus
-              error={
-                formState.email !== '' &&
-                (!formState.email.match(/^[a-zA-Z0-9@.]+$/) ||
-                  formState.email.length < 3 ||
-                  formState.email.length > 21)
-              }
-              helperText={
-                formState.email !== ''
-                  ? formState.email.match(/^[a-zA-Z0-9@.]+$/) &&
-                    formState.email.length >= 3 &&
-                    formState.email.length <= 21
-                    ? 'Email can be inserted'
-                    : 'Cannot be less than 3 characters, contain special characters or be more than 21 characters'
-                  : 'This field is optional'
-              }
+              error={formState.email !== '' && isEmailValid(formState.email) !== 'Email can be inserted'}
+              helperText={isEmailValid(formState.email)}
             />
             <TextField
               onChange={handleChange}

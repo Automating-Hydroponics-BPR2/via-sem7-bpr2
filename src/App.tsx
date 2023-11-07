@@ -8,22 +8,24 @@ import {
   useCustomTheme,
   useGetDeviceType,
   DeviceTypes,
-  setNotificationVisibility,
+  setSnackbarVisibility,
   Snackbar,
   AuthenticatedUser,
   setUser,
   AppDispatch,
   ApplicationState,
   TSnackbar,
-  setNotification,
+  setSnackbar,
 } from './shared';
 import { Home, Error, Login, Register, Dashboard } from './pages';
 import { Header, BottomNavigation } from './components';
 
 interface AppProps {
-  notification: TSnackbar;
+  snackbar: TSnackbar;
+  user?: AuthenticatedUser;
+
   onInit: () => void;
-  setNotificationVisibility: (visibility: boolean) => void;
+  setSnackbarVisibility: (visibility: boolean) => void;
 }
 
 function App(props: AppProps) {
@@ -32,7 +34,7 @@ function App(props: AppProps) {
   const theme = useCustomTheme();
   root.style.backgroundColor = theme.palette.background.default;
 
-  const { notification, setNotificationVisibility } = props;
+  const { snackbar, setSnackbarVisibility } = props;
 
   useEffect(() => {
     props.onInit();
@@ -52,15 +54,19 @@ function App(props: AppProps) {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              {props.user ? (
+                <Route path="/dashboard" element={<Dashboard />} />
+              ) : (
+                <Route path="/dashboard" element={<Login />} />
+              )}
               <Route path="*" element={<Error />} />
             </Routes>
             <Snackbar
-              open={notification.open}
-              message={notification.message}
-              type={notification.type}
+              open={snackbar.open}
+              message={snackbar.message}
+              type={snackbar.type}
               onClose={() => {
-                setNotificationVisibility(false);
+                setSnackbarVisibility(false);
               }}
               autoHideDuration={4000}
             />
@@ -73,7 +79,8 @@ function App(props: AppProps) {
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
-  notification: state.notifications.notification,
+  snackbar: state.notifications.snackbar,
+  user: state.user.user,
 });
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
@@ -87,7 +94,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
           // Dispatch setUser if a valid token exists
           dispatch(setUser(decoded));
           dispatch(
-            setNotification({
+            setSnackbar({
               open: true,
               message: `Welcome back! ${decoded.username}`,
               type: 'success',
@@ -96,7 +103,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
         }
       }
     },
-    setNotificationVisibility: (visibility: boolean) => dispatch(setNotificationVisibility(visibility)),
+    setSnackbarVisibility: (visibility: boolean) => dispatch(setSnackbarVisibility(visibility)),
   };
 };
 

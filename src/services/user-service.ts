@@ -1,6 +1,14 @@
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
-import { AuthenticatedUser, User, setIsLoading, setNotification, setUser, userEndpoints } from '../shared';
+import {
+  AuthenticatedUser,
+  User,
+  setIsLoading,
+  setSnackbar,
+  setUser,
+  userEndpoints,
+  setDashboardIsLoading,
+} from '../shared';
 
 const getToken = () => {
   const token = localStorage.getItem('token');
@@ -30,7 +38,7 @@ export const login = (username: string, password: string) => (dispatch: any) => 
       localStorage.setItem('token', res.data.token as string);
       dispatch(setUser(jwtDecode(res.data.token as string) as AuthenticatedUser));
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'success',
           message: `User was signed in successfully!`,
@@ -39,7 +47,7 @@ export const login = (username: string, password: string) => (dispatch: any) => 
     })
     .catch((err: any) => {
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'error',
           message: `User was not signed in!`,
@@ -67,7 +75,7 @@ export const register = (user: User) => (dispatch: any) => {
       localStorage.setItem('token', res.data.token as string);
       dispatch(setUser(jwtDecode(res.data.token as string) as AuthenticatedUser));
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'success',
           message: `User was signed up successfully!`,
@@ -76,7 +84,7 @@ export const register = (user: User) => (dispatch: any) => {
     })
     .catch((err: any) => {
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'error',
           message: `User was not signed up!`,
@@ -92,6 +100,7 @@ export const register = (user: User) => (dispatch: any) => {
 
 // #region deleteUserWithId
 export const deleteUserWithId = () => (dispatch: any) => {
+  dispatch(setDashboardIsLoading(true));
   axios
     .delete(userEndpoints.delete(), {
       headers: {
@@ -101,7 +110,7 @@ export const deleteUserWithId = () => (dispatch: any) => {
     })
     .then((res: any) => {
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'success',
           message: `User was deleted successfully!`,
@@ -110,13 +119,16 @@ export const deleteUserWithId = () => (dispatch: any) => {
     })
     .catch((err: any) => {
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'error',
           message: `User was not deleted!`,
         }),
       );
       console.error(err);
+    })
+    .finally(() => {
+      dispatch(setDashboardIsLoading(false));
     });
 };
 
@@ -124,8 +136,9 @@ export const deleteUserWithId = () => (dispatch: any) => {
 
 // #region updateUserWithId
 export const updateUserWithId = (userData: User) => (dispatch: any) => {
+  dispatch(setDashboardIsLoading(true));
   axios
-    .put(userEndpoints.update(), JSON.stringify(userData), {
+    .patch(userEndpoints.update(), JSON.stringify(userData), {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${getToken()}`,
@@ -135,7 +148,7 @@ export const updateUserWithId = (userData: User) => (dispatch: any) => {
       console.log(res.data);
       dispatch(setUser(res.data as AuthenticatedUser));
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'success',
           message: `User was updated successfully!`,
@@ -144,13 +157,16 @@ export const updateUserWithId = (userData: User) => (dispatch: any) => {
     })
     .catch((err: any) => {
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'error',
           message: `User was not updated!`,
         }),
       );
       console.error(err);
+    })
+    .finally(() => {
+      dispatch(setDashboardIsLoading(false));
     });
 };
 

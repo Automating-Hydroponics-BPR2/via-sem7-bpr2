@@ -56,7 +56,7 @@ export const Card = React.memo((props: CardProps) => {
               )}
               {props.showDelete && (
                 <CardButton
-                  top="38px"
+                  top={props.showEdit ? '38px' : '6px'}
                   right="-6px"
                   type="button"
                   onClick={(e: React.MouseEvent) => {
@@ -68,7 +68,7 @@ export const Card = React.memo((props: CardProps) => {
               )}
               {props.showAdd && (
                 <CardButton
-                  top="70px"
+                  top={props.showEdit ? (props.showDelete ? '70px' : '38px') : '6px'}
                   right="-6px"
                   type="button"
                   onClick={(e: React.MouseEvent) => {
@@ -111,11 +111,8 @@ export const Card = React.memo((props: CardProps) => {
           switch (option) {
             case 'Confirm':
               if (props.device?.id) {
-                props.onDeleteClick?.(props.device.id);
-              }
-              if (props.user?.id) {
-                props.onDeleteClick?.(props.user.id);
-              }
+                props.onDeviceDeleteClick?.(props.device.id);
+              } else props.onUserDeleteClick?.();
               break;
             case 'Cancel':
               break;
@@ -133,11 +130,7 @@ export const Card = React.memo((props: CardProps) => {
           setOpenEditUserDialog(false);
         }}
         user={props.user}
-        onUserEdit={() => {
-          if (props.user) {
-            props.onUserEditClick?.(props.user);
-          }
-        }}
+        onUserEdit={props.onUserEditClick}
       />
       <EditAddDeviceDialog
         open={openEditAddDeviceDialog}
@@ -145,14 +138,8 @@ export const Card = React.memo((props: CardProps) => {
           setOpenEditAddDeviceDialog(false);
         }}
         device={props.device ? props.device : undefined}
-        onDeviceEdit={() => {
-          if (props.device) {
-            props.onDeviceEditClick?.(props.device);
-          }
-        }}
-        onDeviceAdd={() => {
-          props.onDeviceAddClick?.(props.device);
-        }}
+        onDeviceEdit={props.onDeviceEditClick}
+        onDeviceAdd={props.onDeviceAddClick}
       />
     </>
   );

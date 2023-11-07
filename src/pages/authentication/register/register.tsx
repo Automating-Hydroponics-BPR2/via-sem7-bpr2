@@ -43,7 +43,7 @@ export const Register = (props: RegisterProps) => {
 
   const validateForm = () => {
     return (
-      isEmailValid(formState.email) === '' &&
+      isEmailValid(formState.email) === 'Email can be inserted' &&
       formState.email !== '' &&
       formState.username !== '' &&
       formState.username.length >= 3 &&
@@ -157,7 +157,7 @@ export const Register = (props: RegisterProps) => {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
-                  error={formState.email !== '' && isEmailValid(formState.email) !== ''}
+                  error={formState.email !== '' && isEmailValid(formState.email) !== 'Email can be inserted'}
                   helperText={isEmailValid(formState.email)}
                 />
               </Grid>

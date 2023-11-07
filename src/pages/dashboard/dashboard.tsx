@@ -1,11 +1,9 @@
 import { useEffect } from 'react';
 import { DashboardProps } from './dashboard.props';
-import { Card, DeviceReading } from '../../shared';
+import { Card, Chart, DataTable, SectionHeader } from '../../shared';
 import { Grid, Skeleton } from '@mui/material';
 import { StyledDashboardGridWrapper } from './dashboard.styles';
-import { Chart } from '../../shared/components/chart';
-import { DataTable } from '../../shared/components/dataTable';
-import { SectionHeader } from '../../shared/components/sectionHeader';
+import { convertToChartData, convertTimestampToDate } from './dashboard.utils';
 
 export const Dashboard = (props: DashboardProps) => {
   const {
@@ -26,37 +24,12 @@ export const Dashboard = (props: DashboardProps) => {
     setSelectedDeviceIdChart,
     setSelectedDeviceIdDataTable,
     setSelectedDeviceIdInformaton,
-    // deleteDeviceWithId,
-    // createDevice,
-    // deleteUserWithId,
-    // updateDeviceWithId,
-    // updateUserWithId
+    deleteDeviceWithId,
+    createDevice,
+    deleteUserWithId,
+    updateDeviceWithId,
+    updateUserWithId,
   } = props;
-
-  const convertToChartData = (data: DeviceReading) => {
-    return [
-      {
-        name: 'ph',
-        value: data.ph,
-      },
-      {
-        name: 'light',
-        value: data.light,
-      },
-      {
-        name: 'temp',
-        value: data.temp,
-      },
-      {
-        name: 'waterTemp',
-        value: data.waterTemp,
-      },
-      {
-        name: 'humidity',
-        value: data.humidity,
-      },
-    ];
-  };
 
   useEffect(() => {
     return () => {
@@ -95,15 +68,9 @@ export const Dashboard = (props: DashboardProps) => {
               showAdd
               showEdit={!!device}
               showDelete={!!device}
-              onDeviceAddClick={() => {
-                console.log('Add clicked');
-              }}
-              onDeviceEditClick={() => {
-                console.log('Edit clicked');
-              }}
-              onDeleteClick={() => {
-                console.log('Delete clicked');
-              }}
+              onDeviceAddClick={createDevice}
+              onDeviceEditClick={updateDeviceWithId}
+              onDeviceDeleteClick={deleteDeviceWithId}
               height="200px"
               width="100%"
               title={selectedDeviceIdInformaton ?? 'No device selected'}
@@ -128,12 +95,12 @@ export const Dashboard = (props: DashboardProps) => {
                   id: '1',
                   deviceId: '2',
                   name: 'Device 2',
-                  light: '1',
-                  ph: '2',
-                  temp: '3',
-                  waterTemp: '4',
-                  humidity: '5',
-                  timestamp: '2021-10-10T00:00:00.000Z',
+                  light: '15',
+                  ph: '20',
+                  temp: '33',
+                  waterTemp: '40',
+                  humidity: '50',
+                  timestamp: '1697637285',
                 },
               )}
               width={100}
@@ -152,74 +119,81 @@ export const Dashboard = (props: DashboardProps) => {
             />
             <DataTable
               data={
-                historicalReadings ?? [
-                  {
-                    id: '1',
-                    deviceId: '2',
-                    name: 'Device 2',
-                    light: '1',
-                    ph: '2',
-                    temp: '3',
-                    waterTemp: '4',
-                    humidity: '5',
-                    timestamp: '2021-10-10T00:00:00.000Z',
-                  },
-                  {
-                    id: '2',
-                    deviceId: '2',
-                    name: 'Device 2',
-                    light: '1',
-                    ph: '2',
-                    temp: '3',
-                    waterTemp: '4',
-                    humidity: '5',
-                    timestamp: '2021-10-10T00:00:00.000Z',
-                  },
-                  {
-                    id: '3',
-                    deviceId: '2',
-                    name: 'Device 2',
-                    light: '1',
-                    ph: '2',
-                    temp: '3',
-                    waterTemp: '4',
-                    humidity: '5',
-                    timestamp: '2021-10-10T00:00:00.000Z',
-                  },
-                  {
-                    id: '4',
-                    deviceId: '2',
-                    name: 'Device 2',
-                    light: '1',
-                    ph: '2',
-                    temp: '3',
-                    waterTemp: '4',
-                    humidity: '5',
-                    timestamp: '2021-10-10T00:00:00.000Z',
-                  },
-                  {
-                    id: '5',
-                    deviceId: '2',
-                    name: 'Device 2',
-                    light: '1',
-                    ph: '2',
-                    temp: '3',
-                    waterTemp: '4',
-                    humidity: '5',
-                    timestamp: '2021-10-10T00:00:00.000Z',
-                  },
-                  {
-                    id: '6',
-                    deviceId: '2',
-                    name: 'Device 2',
-                    light: '1',
-                    ph: '2',
-                    temp: '3',
-                    waterTemp: '4',
-                    humidity: '5',
-                    timestamp: '2021-10-10T00:00:00.000Z',
-                  },
-                ]
+                historicalReadings
+                  ? historicalReadings.map((reading) => {
+                      return {
+                        ...reading,
+                        timestamp: convertTimestampToDate(reading.timestamp),
+                      };
+                    })
+                  : [
+                      {
+                        id: '1',
+                        deviceId: '2',
+                        name: 'Device 2',
+                        light: '1',
+                        ph: '2',
+                        temp: '3',
+                        waterTemp: '4',
+                        humidity: '5',
+                        timestamp: convertTimestampToDate('1697637285'),
+                      },
+                      {
+                        id: '2',
+                        deviceId: '2',
+                        name: 'Device 2',
+                        light: '1',
+                        ph: '2',
+                        temp: '3',
+                        waterTemp: '4',
+                        humidity: '5',
+                        timestamp: '1697637285',
+                      },
+                      {
+                        id: '3',
+                        deviceId: '2',
+                        name: 'Device 2',
+                        light: '1',
+                        ph: '2',
+                        temp: '3',
+                        waterTemp: '4',
+                        humidity: '5',
+                        timestamp: '1697637285',
+                      },
+                      {
+                        id: '4',
+                        deviceId: '2',
+                        name: 'Device 2',
+                        light: '1',
+                        ph: '2',
+                        temp: '3',
+                        waterTemp: '4',
+                        humidity: '5',
+                        timestamp: '1697637285',
+                      },
+                      {
+                        id: '5',
+                        deviceId: '2',
+                        name: 'Device 2',
+                        light: '1',
+                        ph: '2',
+                        temp: '3',
+                        waterTemp: '4',
+                        humidity: '5',
+                        timestamp: '1697637285',
+                      },
+                      {
+                        id: '6',
+                        deviceId: '2',
+                        name: 'Device 2',
+                        light: '1',
+                        ph: '2',
+                        temp: '3',
+                        waterTemp: '4',
+                        humidity: '5',
+                        timestamp: '1697637285',
+                      },
+                    ]
               }
               width={'100%'}
               height={'200px'}
@@ -231,12 +205,8 @@ export const Dashboard = (props: DashboardProps) => {
               user={user}
               showEdit={!!user}
               showDelete={!!user}
-              onUserEditClick={() => {
-                console.log('Edit clicked');
-              }}
-              onDeleteClick={() => {
-                console.log('Delete clicked');
-              }}
+              onUserEditClick={updateUserWithId}
+              onUserDeleteClick={deleteUserWithId}
               height="200px"
               width="100%"
               title={user?.username ?? 'No user authenticated'}

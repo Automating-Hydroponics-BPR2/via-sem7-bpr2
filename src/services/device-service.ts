@@ -3,12 +3,13 @@ import axios from 'axios';
 import {
   DeviceModel,
   deviceEndpoints,
-  setNotification,
+  setSnackbar,
   DeviceReading,
   setCurrentReading,
   setDevice,
   setDeviceIds,
   setHistoricalReadings,
+  setDashboardIsLoading,
 } from '../shared';
 
 const getToken = () => {
@@ -21,6 +22,7 @@ const getToken = () => {
 
 // Create a function to make a POST request to create a new device
 export const createDevice = (deviceData: any) => (dispatch: any) => {
+  dispatch(setDashboardIsLoading(true));
   axios
     .post(deviceEndpoints.create(), JSON.stringify(deviceData), {
       headers: {
@@ -30,7 +32,7 @@ export const createDevice = (deviceData: any) => (dispatch: any) => {
     })
     .then((res: any) => {
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'success',
           message: `Device was created successfully!`,
@@ -39,17 +41,21 @@ export const createDevice = (deviceData: any) => (dispatch: any) => {
     })
     .catch((err: any) => {
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'error',
           message: `Device was not created!`,
         }),
       );
       console.error(err);
+    })
+    .finally(() => {
+      dispatch(setDashboardIsLoading(false));
     });
 };
 
 export const getDeviceWithId = (id: string) => (dispatch: any) => {
+  dispatch(setDashboardIsLoading(true));
   axios
     .get(deviceEndpoints.get(id), {
       headers: {
@@ -61,7 +67,7 @@ export const getDeviceWithId = (id: string) => (dispatch: any) => {
       console.log(res.data);
       dispatch(setDevice(res.data as DeviceModel));
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'success',
           message: `Device was retrieved successfully!`,
@@ -70,17 +76,21 @@ export const getDeviceWithId = (id: string) => (dispatch: any) => {
     })
     .catch((err: any) => {
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'error',
           message: `Device was not retrieved!`,
         }),
       );
       console.error(err);
+    })
+    .finally(() => {
+      dispatch(setDashboardIsLoading(false));
     });
 };
 
 export const updateDeviceWithId = (id: string, deviceData: DeviceModel) => (dispatch: any) => {
+  dispatch(setDashboardIsLoading(true));
   axios
     .patch(deviceEndpoints.update(id), JSON.stringify(deviceData), {
       headers: {
@@ -92,7 +102,7 @@ export const updateDeviceWithId = (id: string, deviceData: DeviceModel) => (disp
       console.log(res.data);
       dispatch(setDevice(res.data as DeviceModel));
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'success',
           message: `Device was updated successfully!`,
@@ -101,17 +111,21 @@ export const updateDeviceWithId = (id: string, deviceData: DeviceModel) => (disp
     })
     .catch((err: any) => {
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'error',
           message: `Device was not updated!`,
         }),
       );
       console.error(err);
+    })
+    .finally(() => {
+      dispatch(setDashboardIsLoading(false));
     });
 };
 
 export const deleteDeviceWithId = (id: string) => (dispatch: any) => {
+  dispatch(setDashboardIsLoading(true));
   axios
     .delete(deviceEndpoints.delete(id), {
       headers: {
@@ -122,7 +136,7 @@ export const deleteDeviceWithId = (id: string) => (dispatch: any) => {
     .then((res: any) => {
       console.log(res.status);
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'success',
           message: `Device was deleted successfully!`,
@@ -131,17 +145,21 @@ export const deleteDeviceWithId = (id: string) => (dispatch: any) => {
     })
     .catch((err: any) => {
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'error',
           message: `Device was not deleted!`,
         }),
       );
       console.error(err);
+    })
+    .finally(() => {
+      dispatch(setDashboardIsLoading(false));
     });
 };
 
 export const getCurrentReading = (id: string) => (dispatch: any) => {
+  dispatch(setDashboardIsLoading(true));
   axios
     .get(deviceEndpoints.getCurrent(id), {
       headers: {
@@ -153,7 +171,7 @@ export const getCurrentReading = (id: string) => (dispatch: any) => {
       console.log(res.data);
       dispatch(setCurrentReading(res.data as DeviceReading));
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'success',
           message: `Successfully retrieved current device data!`,
@@ -162,17 +180,21 @@ export const getCurrentReading = (id: string) => (dispatch: any) => {
     })
     .catch((err: any) => {
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'error',
           message: `Failed to retrieve current device data!`,
         }),
       );
       console.error(err);
+    })
+    .finally(() => {
+      dispatch(setDashboardIsLoading(false));
     });
 };
 
 export const getHistoricalReadings = (id: string, start: string, end: string, type?: string) => (dispatch: any) => {
+  dispatch(setDashboardIsLoading(true));
   axios
     .get(deviceEndpoints.getHistorical(id, start, end, type), {
       headers: {
@@ -184,7 +206,7 @@ export const getHistoricalReadings = (id: string, start: string, end: string, ty
       console.log(res.data);
       dispatch(setHistoricalReadings(res.data as DeviceReading[]));
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'success',
           message: `Successfully retrieved historical device data!`,
@@ -193,17 +215,21 @@ export const getHistoricalReadings = (id: string, start: string, end: string, ty
     })
     .catch((err: any) => {
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'error',
           message: `Failed to retrieve historical device data!`,
         }),
       );
       console.error(err);
+    })
+    .finally(() => {
+      dispatch(setDashboardIsLoading(false));
     });
 };
 
 export const getDeviceIds = () => (dispatch: any) => {
+  dispatch(setDashboardIsLoading(true));
   axios
     .get(deviceEndpoints.getDeviceIds(), {
       headers: {
@@ -215,7 +241,7 @@ export const getDeviceIds = () => (dispatch: any) => {
       console.log(res.data);
       dispatch(setDeviceIds(res.data as string[]));
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'success',
           message: `Successfully retrieved device ids!`,
@@ -224,13 +250,16 @@ export const getDeviceIds = () => (dispatch: any) => {
     })
     .catch((err: any) => {
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'error',
           message: `Failed to retrieve device ids!`,
         }),
       );
       console.error(err);
+    })
+    .finally(() => {
+      dispatch(setDashboardIsLoading(false));
     });
 };
 
