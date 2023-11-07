@@ -5,7 +5,7 @@ import {
   deviceEndpoints,
   setDashboardDevice,
   setNotification,
-  setDasboardCurrentReading,
+  setDashboardCurrentReading,
   DeviceReading,
   setDashboardHistoricalReadings,
   setDashboardDeviceIds,
@@ -151,7 +151,7 @@ export const getCurrentReading = (id: string) => (dispatch: any) => {
     })
     .then((res: any) => {
       console.log(res.data);
-      dispatch(setDasboardCurrentReading(res.data as DeviceReading));
+      dispatch(setDashboardCurrentReading(res.data as DeviceReading));
       dispatch(
         setNotification({
           open: true,

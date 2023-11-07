@@ -6,6 +6,7 @@ import {
   DeviceModel,
   setDashboardDevice,
   setDashboardHistoricalReadings,
+  setDashboardCurrentReading,
   setDashboardThreshold,
   setDashboardIsLoading,
   setDashboardUser,
@@ -16,9 +17,9 @@ import {
   setDashboardType,
   setDashboardSelectedDeviceIdDataTable,
   setDashboardSelectedDeviceIdInformaton,
+  DeviceReading,
 } from '../../shared';
 import { Dashboard } from './dashboard';
-import { DeviceReading } from '../../shared/models/device';
 
 const mapStateToProps = (state: ApplicationState) => ({
   type: state.dashboard.type,
@@ -27,6 +28,7 @@ const mapStateToProps = (state: ApplicationState) => ({
   deviceIds: state.dashboard.deviceIds,
   isLoading: state.dashboard.isLoading,
   threshold: state.dashboard.threshold,
+  currentReading: state.dashboard.currentReading,
   historicalReadings: state.dashboard.historicalReadings,
   selectedDeviceIdChart: state.dashboard.selectedDeviceIdChart,
   selectedDeviceIdDataTable: state.dashboard.selectedDeviceIdDataTable,
@@ -40,6 +42,9 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     },
     setUser: (user: AuthenticatedUser) => {
       dispatch(setDashboardUser(user));
+    },
+    setCurrentReading: (reading: DeviceReading) => {
+      dispatch(setDashboardCurrentReading(reading));
     },
     setHistoricalReadings: (readingsList: DeviceReading[]) => {
       dispatch(setDashboardHistoricalReadings(readingsList));

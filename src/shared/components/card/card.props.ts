@@ -1,9 +1,13 @@
+import { DeviceModel, AuthenticatedUser } from '../../models';
+
 export interface CardProps {
   id: string;
   title: string;
   width: string;
   height: string;
 
+  device?: DeviceModel;
+  user?: AuthenticatedUser;
   imgSource?: string;
   description: string;
   date?: string;
@@ -12,7 +16,8 @@ export interface CardProps {
   showEdit?: boolean;
   showDelete?: boolean;
 
-  onAddClick?: (id: string) => void;
-  onEditClick?: (id: string) => void;
+  onDeviceAddClick?: (device?: DeviceModel) => void;
+  onDeviceEditClick?: (device: DeviceModel) => void;
+  onUserEditClick?: (user: AuthenticatedUser) => void;
   onDeleteClick?: (id: string) => void;
 }

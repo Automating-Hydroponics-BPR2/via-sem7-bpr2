@@ -2,6 +2,12 @@ import { useState } from 'react';
 import { Dialog } from './dialog';
 import { DialogProps } from './dialog.props';
 import { StoryObj } from '@storybook/react';
+import {
+  EditUserDialog,
+  IEditAddDialogDeviceProps,
+  EditAddDeviceDialog,
+  IEditUserDialogProps,
+} from '../../../components';
 
 export default {
   title: 'Dialog',
@@ -85,7 +91,7 @@ export const ConfirmationDialogStory: Story = () => {
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
           magna aliqua.
         </p>
-      </div>
+      </div>,
     ],
     options: ['Confirm', 'Cancel'],
     onOptionClick: (option: string) => {
@@ -110,3 +116,79 @@ export const ConfirmationDialogStory: Story = () => {
 };
 
 ConfirmationDialogStory.storyName = 'Confirmation Dialog';
+
+export const EditAddDeviceDialogStory: Story = () => {
+  const [open, setOpen] = useState(false);
+  const editAddDialogProps: IEditAddDialogDeviceProps = {
+    device: undefined,
+    open,
+    onClose: () => {
+      setOpen(false);
+    },
+    onDeviceEdit: (device) => {
+      alert(JSON.stringify(device));
+      setOpen(false);
+    },
+    onDeviceAdd: (device) => {
+      alert(JSON.stringify(device));
+      setOpen(false);
+    },
+  };
+
+  return (
+    <div>
+      <button
+        onClick={() => {
+          setOpen(true);
+        }}>
+        Edit
+      </button>
+      <button
+        onClick={() => {
+          setOpen(true);
+        }}>
+        Add
+      </button>
+      <EditAddDeviceDialog {...editAddDialogProps} />
+    </div>
+  );
+};
+
+EditAddDeviceDialogStory.storyName = 'Edit/Add Device Dialog';
+
+export const EditUserDialogStory: Story = () => {
+  const [open, setOpen] = useState(false);
+  const editAddDialogProps: IEditUserDialogProps = {
+    user: {
+      id: '1',
+      username: 'test',
+      firstName: 'test',
+      lastName: 'test',
+      email: 'test@testov.abv',
+      iat: 1,
+      exp: 1,
+    },
+    open,
+    onClose: () => {
+      setOpen(false);
+    },
+    onUserEdit: (user) => {
+      alert(JSON.stringify(user));
+      setOpen(false);
+    },
+  };
+
+  return (
+    <div>
+      <button
+        onClick={() => {
+          setOpen(true);
+        }}>
+        Edit
+      </button>
+      <EditUserDialog {...editAddDialogProps} />
+    </div>
+  );
+};
+
+EditUserDialogStory.storyName = 'Edit User Dialog';

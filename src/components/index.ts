@@ -4,3 +4,4 @@ import { ThemeDialogContainer } from './theme-dialog/theme-dialog.container';
 import { ColorPicker } from './theme-dialog/color-picker/color-picker';
 
 export { BottomNav as BottomNavigation, HeaderContainer as Header, ColorPicker, ThemeDialogContainer as ThemeDialog };
+export * from './edit-add-dialog';

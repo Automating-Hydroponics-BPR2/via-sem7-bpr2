@@ -63,7 +63,7 @@ const dashboardSlice = createSlice({
     setDashboardType(state, action: PayloadAction<string>) {
       state.type = action.payload;
     },
-    setDasboardCurrentReading(state, action: PayloadAction<DeviceReading>) {
+    setDashboardCurrentReading(state, action: PayloadAction<DeviceReading>) {
       state.currentReading = action.payload;
     },
     resetDashboard(state) {
@@ -81,7 +81,7 @@ export const {
   setDashboardDeviceIds,
   setDashboardIsLoading,
   setDashboardThreshold,
-  setDasboardCurrentReading,
+  setDashboardCurrentReading,
   setDashboardHistoricalReadings,
   setDashboardSelectedDeviceIdChart,
   setDashboardSelectedDeviceIdDataTable,

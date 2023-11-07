@@ -1,83 +1,79 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { DashboardProps } from './dashboard.props';
-import { Card, Dialog, DialogProps } from '../../shared';
+import { Card, DeviceReading } from '../../shared';
 import { Grid, Skeleton } from '@mui/material';
 import { StyledDashboardGridWrapper } from './dashboard.styles';
-import { Chart } from '../../shared/components/chart/chart';
+import { Chart } from '../../shared/components/chart';
 import { DataTable } from '../../shared/components/dataTable';
 import { SectionHeader } from '../../shared/components/sectionHeader';
 
 export const Dashboard = (props: DashboardProps) => {
   const {
+    user,
     type,
     reset,
+    device,
+    deviceIds,
     threshold,
     isLoading,
     selectedDeviceIdChart,
     selectedDeviceIdDataTable,
     selectedDeviceIdInformaton,
+    historicalReadings,
+    currentReading,
     setType,
     setThreshold,
     setSelectedDeviceIdChart,
     setSelectedDeviceIdDataTable,
     setSelectedDeviceIdInformaton,
   } = props;
+
+  const convertToChartData = (data: DeviceReading) => {
+    return [
+      {
+        name: 'ph',
+        value: data.ph,
+      },
+      {
+        name: 'light',
+        value: data.light,
+      },
+      {
+        name: 'temp',
+        value: data.temp,
+      },
+      {
+        name: 'waterTemp',
+        value: data.waterTemp,
+      },
+      {
+        name: 'humidity',
+        value: data.humidity,
+      },
+    ];
+  };
+
   useEffect(() => {
     return () => {
       reset();
     };
   }, [reset]);
-  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
-
-  const dialogProps: DialogProps = {
-    open: isConfirmationDialogOpen,
-    onClose: () => {
-      setIsConfirmationDialogOpen(false);
-    },
-    title: 'Are you sure you want to delete this device?',
-    children: [
-      <div>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-          magna aliqua.
-        </p>
-      </div>,
-    ],
-    options: ['Confirm', 'Cancel'],
-    onOptionClick: (option: string) => {
-      handleOptionClick(option);
-    },
-    width: '500px',
-    height: '200px',
-  };
-  const handleOptionClick = (option: string) => {
-    switch (option) {
-      case 'Confirm':
-        console.log('Confirm clicked');
-        setIsConfirmationDialogOpen(false);
-        break;
-      case 'Cancel':
-        console.log('Cancel clicked');
-        setIsConfirmationDialogOpen(false);
-        break;
-    }
-  };
 
   return (
     <StyledDashboardGridWrapper container columnSpacing={3}>
       {isLoading ? (
         <>
           <Grid item xs={12} lg={4}>
-            <Skeleton variant="rectangular" width={'100%'} height={200} animation={'wave'} />
+            <Skeleton variant="rectangular" width={'100%'} height={350} animation={'wave'} />
           </Grid>
           <Grid item xs={12} lg={8}>
-            <Skeleton variant="rectangular" width={'100%'} height={200} animation={'wave'} />
+            <Skeleton variant="rectangular" width={'100%'} height={350} animation={'wave'} />
           </Grid>
           <Grid item xs={12} lg={8}>
-            <Skeleton variant="rectangular" width={'100%'} height={200} animation={'wave'} />
+            <Skeleton variant="rectangular" width={'100%'} height={350} animation={'wave'} />
           </Grid>
           <Grid item xs={12} lg={4}>
-            <Skeleton variant="rectangular" width={'100%'} height={200} animation={'wave'} />
+            <Skeleton variant="rectangular" width={'100%'} height={350} animation={'wave'} />
           </Grid>
         </>
       ) : (
@@ -85,34 +81,31 @@ export const Dashboard = (props: DashboardProps) => {
           <Grid item xs={12} md={6} lg={4}>
             <SectionHeader
               selectedDeviceId={selectedDeviceIdInformaton}
-              deviceIds={[
-                'a0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-                'b0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-                'c0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-                'd0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-              ]}
+              deviceIds={deviceIds}
               title="Device information"
               setSelectedDeviceId={setSelectedDeviceIdInformaton}
             />
             <Card
+              device={device}
               showAdd
               showEdit
               showDelete
-              onAddClick={() => {
+              onDeviceAddClick={() => {
                 console.log('Add clicked');
               }}
-              onEditClick={() => {
+              onDeviceEditClick={() => {
                 console.log('Edit clicked');
               }}
               onDeleteClick={() => {
                 console.log('Delete clicked');
-                setIsConfirmationDialogOpen(true);
               }}
               height="200px"
               width="100%"
-              title="Device 1"
-              description="This is the current reading from the device"
-              id={'123'}
+              title={selectedDeviceIdInformaton ?? 'No device selected'}
+              description={`Here you can see information about the device, such as id ${
+                selectedDeviceIdInformaton ?? ''
+              } and/or name ${device?.name ?? ''}. You can edit or add a device here, as well as, delete a device.`}
+              id={selectedDeviceIdInformaton ?? 'No device selected'}
             />
           </Grid>
           <Grid item xs={12} md={6} lg={8}>
@@ -121,22 +114,23 @@ export const Dashboard = (props: DashboardProps) => {
               setSelectedDeviceId={setSelectedDeviceIdChart}
               selectedDeviceId={selectedDeviceIdChart}
               setThreshold={setThreshold}
-              deviceIds={[
-                'a0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-                'b0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-                'c0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-                'd0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-              ]}
+              deviceIds={deviceIds}
               title={'Current Readings'}
             />
             <Chart
-              data={[
-                { name: 'ph', value: '20' },
-                { name: 'light', value: '30' },
-                { name: 'temp', value: '10' },
-                { name: 'waterTemp', value: '40' },
-                { name: 'humidity', value: '55' },
-              ]}
+              data={convertToChartData(
+                currentReading ?? {
+                  id: '1',
+                  deviceId: '2',
+                  name: 'Device 2',
+                  light: '1',
+                  ph: '2',
+                  temp: '3',
+                  waterTemp: '4',
+                  humidity: '5',
+                  timestamp: '2021-10-10T00:00:00.000Z',
+                },
+              )}
               width={100}
               height={200}
               threshold={threshold}
@@ -148,50 +142,80 @@ export const Dashboard = (props: DashboardProps) => {
               setSelectedDeviceId={setSelectedDeviceIdDataTable}
               selectedDeviceId={selectedDeviceIdDataTable}
               setType={setType}
-              deviceIds={[
-                'a0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-                'b0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-                'c0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-                'd0d3b0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a',
-              ]}
-              title={'Current Readings'}
+              deviceIds={deviceIds}
+              title={'Historical Readings'}
             />
             <DataTable
-              data={[
-                {
-                  id: '1',
-                  deviceId: '2',
-                  name: 'Device 2',
-                  light: '1',
-                  ph: '2',
-                  temp: '3',
-                  waterTemp: '4',
-                  humidity: '5',
-                  timestamp: '2021-10-10T00:00:00.000Z',
-                },
-                {
-                  id: '2',
-                  deviceId: '2',
-                  name: 'Device 2',
-                  light: '1',
-                  ph: '2',
-                  temp: '3',
-                  waterTemp: '4',
-                  humidity: '5',
-                  timestamp: '2021-10-10T00:00:00.000Z',
-                },
-                {
-                  id: '3',
-                  deviceId: '2',
-                  name: 'Device 2',
-                  light: '1',
-                  ph: '2',
-                  temp: '3',
-                  waterTemp: '4',
-                  humidity: '5',
-                  timestamp: '2021-10-10T00:00:00.000Z',
-                },
-              ]}
+              data={
+                historicalReadings ?? [
+                  {
+                    id: '1',
+                    deviceId: '2',
+                    name: 'Device 2',
+                    light: '1',
+                    ph: '2',
+                    temp: '3',
+                    waterTemp: '4',
+                    humidity: '5',
+                    timestamp: '2021-10-10T00:00:00.000Z',
+                  },
+                  {
+                    id: '2',
+                    deviceId: '2',
+                    name: 'Device 2',
+                    light: '1',
+                    ph: '2',
+                    temp: '3',
+                    waterTemp: '4',
+                    humidity: '5',
+                    timestamp: '2021-10-10T00:00:00.000Z',
+                  },
+                  {
+                    id: '3',
+                    deviceId: '2',
+                    name: 'Device 2',
+                    light: '1',
+                    ph: '2',
+                    temp: '3',
+                    waterTemp: '4',
+                    humidity: '5',
+                    timestamp: '2021-10-10T00:00:00.000Z',
+                  },
+                  {
+                    id: '4',
+                    deviceId: '2',
+                    name: 'Device 2',
+                    light: '1',
+                    ph: '2',
+                    temp: '3',
+                    waterTemp: '4',
+                    humidity: '5',
+                    timestamp: '2021-10-10T00:00:00.000Z',
+                  },
+                  {
+                    id: '5',
+                    deviceId: '2',
+                    name: 'Device 2',
+                    light: '1',
+                    ph: '2',
+                    temp: '3',
+                    waterTemp: '4',
+                    humidity: '5',
+                    timestamp: '2021-10-10T00:00:00.000Z',
+                  },
+                  {
+                    id: '6',
+                    deviceId: '2',
+                    name: 'Device 2',
+                    light: '1',
+                    ph: '2',
+                    temp: '3',
+                    waterTemp: '4',
+                    humidity: '5',
+                    timestamp: '2021-10-10T00:00:00.000Z',
+                  },
+                ]
+              }
               width={'100%'}
               height={'200px'}
             />
@@ -199,24 +223,23 @@ export const Dashboard = (props: DashboardProps) => {
           <Grid item xs={12} md={6} lg={4}>
             <SectionHeader title="User information" />
             <Card
+              user={user}
               showEdit
               showDelete
-              onEditClick={() => {
+              onUserEditClick={() => {
                 console.log('Edit clicked');
               }}
               onDeleteClick={() => {
                 console.log('Delete clicked');
-                setIsConfirmationDialogOpen(true);
               }}
               height="200px"
               width="100%"
-              title="username"
-              description="This is information for the current user"
-              id={'123'}
+              title={user?.username ?? 'No user authenticated'}
+              description="You can edit your information here, as well as delete your current account."
+              id={user?.id ?? 'No user authenticated'}
               padding={'0'}
             />
           </Grid>
-          <Dialog {...dialogProps} />
         </>
       )}
     </StyledDashboardGridWrapper>
