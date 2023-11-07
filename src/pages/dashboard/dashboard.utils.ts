@@ -1,4 +1,4 @@
-import { DeviceReading } from "../../shared";
+import { DeviceReading } from '../../shared';
 
 export const convertToChartData = (data: DeviceReading) => {
   return [

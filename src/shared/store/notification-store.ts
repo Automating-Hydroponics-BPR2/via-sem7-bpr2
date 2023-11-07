@@ -33,9 +33,4 @@ const notificationSlice = createSlice({
 });
 
 export default notificationSlice.reducer;
-export const {
-  setSnackbar,
-  setSnackbarVisibility,
-  setSnackbarMessage,
-  setSnackbarType,
-} = notificationSlice.actions;
+export const { setSnackbar, setSnackbarVisibility, setSnackbarMessage, setSnackbarType } = notificationSlice.actions;
