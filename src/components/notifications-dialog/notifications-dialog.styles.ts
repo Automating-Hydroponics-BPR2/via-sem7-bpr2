@@ -51,7 +51,7 @@ export const StyledNotificationTitle = styled(Typography)`
 `;
 
 export const StyledNotificationDescription = styled(Typography)`
-  font-size: .875rem;
+  font-size: 0.875rem;
   text-align: left;
   display: -webkit-box;
   text-overflow: ellipsis;
