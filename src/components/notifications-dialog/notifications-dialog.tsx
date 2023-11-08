@@ -2,7 +2,7 @@ import { useTheme } from '@mui/material/styles';
 import { INotificationsDialogProps } from './notifications-dialog.props';
 import { Dialog, DialogProps } from '../../shared';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
-import { CssBaseline, Avatar, Box, Tooltip } from '@mui/material';
+import { CssBaseline, Avatar, Box, Tooltip, Typography } from '@mui/material';
 import {
   NotificationsList,
   NotificationItem,
@@ -38,55 +38,59 @@ export const NotificationDialog = (props: INotificationsDialogProps) => {
           <CircleNotificationsIcon />
         </Avatar>
         <NotificationsList>
-          {notifications
-            .sort((a, b) => {
-              if (a.priority === Priority.HIGH && b.priority !== Priority.HIGH) {
-                return -1; // 'a' comes first (HIGH priority)
-              }
-              if (a.priority !== Priority.HIGH && b.priority === Priority.HIGH) {
-                return 1; // 'b' comes first (HIGH priority)
-              }
-              return 0; // no change in order
-            })
-            .map((notification) => (
-              <NotificationItem
-                key={notification.id}
-                read={notification.read}
-                onMouseEnter={() => {
-                  if (!notification.read) {
-                    onMarkAsRead(notification.id);
-                  }
-                }}>
-                <StyledNotificationLeftSide>
-                  <StyledNotificationTitleWrapper>
-                    <StyledNotificationTitle variant="h6">{notification.title}</StyledNotificationTitle>
-                  </StyledNotificationTitleWrapper>
-                  <Tooltip title={notification.description} arrow placement="left">
-                    <StyledNotificationDescription>{notification.description}</StyledNotificationDescription>
-                  </Tooltip>
-                </StyledNotificationLeftSide>
-                <StyledNotificationRightSide>
-                  <StyledNotificationDate className="notification-date">
-                    {notification.date.toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                      hour: 'numeric',
-                      minute: 'numeric',
-                    })}
-                  </StyledNotificationDate>
-                  <StyledNotificationPriority isHighPriority={notification.priority === Priority.HIGH}>
-                    {notification.priority === Priority.HIGH ? 'High' : 'Low'}
-                  </StyledNotificationPriority>
-                  <TrashcanIcon
-                    onClick={() => {
-                      onDelete(notification.id);
-                    }}>
-                    &#128465;
-                  </TrashcanIcon>
-                </StyledNotificationRightSide>
-              </NotificationItem>
-            ))}
+          {notifications.length > 0 ? (
+            notifications
+              .sort((a, b) => {
+                if (a.priority === Priority.HIGH && b.priority !== Priority.HIGH) {
+                  return -1; // 'a' comes first (HIGH priority)
+                }
+                if (a.priority !== Priority.HIGH && b.priority === Priority.HIGH) {
+                  return 1; // 'b' comes first (HIGH priority)
+                }
+                return 0; // no change in order
+              })
+              .map((notification) => (
+                <NotificationItem
+                  key={notification.id}
+                  read={notification.read}
+                  onMouseEnter={() => {
+                    if (!notification.read) {
+                      onMarkAsRead(notification.id);
+                    }
+                  }}>
+                  <StyledNotificationLeftSide>
+                    <StyledNotificationTitleWrapper>
+                      <StyledNotificationTitle variant="h6">{notification.title}</StyledNotificationTitle>
+                    </StyledNotificationTitleWrapper>
+                    <Tooltip title={notification.description} arrow placement="left">
+                      <StyledNotificationDescription>{notification.description}</StyledNotificationDescription>
+                    </Tooltip>
+                  </StyledNotificationLeftSide>
+                  <StyledNotificationRightSide>
+                    <StyledNotificationDate className="notification-date">
+                      {notification.date.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric',
+                      })}
+                    </StyledNotificationDate>
+                    <StyledNotificationPriority isHighPriority={notification.priority === Priority.HIGH}>
+                      {notification.priority === Priority.HIGH ? 'High' : 'Low'}
+                    </StyledNotificationPriority>
+                    <TrashcanIcon
+                      onClick={() => {
+                        onDelete(notification.id);
+                      }}>
+                      &#128465;
+                    </TrashcanIcon>
+                  </StyledNotificationRightSide>
+                </NotificationItem>
+              ))
+          ) : (
+            <Typography variant="body1">No notifications</Typography>
+          )}
         </NotificationsList>
       </Box>
     ),

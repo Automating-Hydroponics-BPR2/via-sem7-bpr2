@@ -26,7 +26,7 @@ import { useNavigate } from 'react-router-dom';
 import { type NavItem } from '../../shared';
 import { ThemeDialogContainer } from '../theme-dialog/theme-dialog.container';
 import { HeaderProps } from './header.props';
-import { Logo, StyledLink } from './header.styles';
+import { Logo, StyledLink, StyledNotificationIcon, StyledNumberOfNotifications } from './header.styles';
 import { NotificationDialog } from '../notifications-dialog';
 
 const Search = styled('div')(({ theme }) => ({
@@ -167,7 +167,7 @@ export const Header = (props: HeaderProps) => {
               <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
             </Search>
             <Divider />
-            <IconButton
+            <StyledNotificationIcon
               size="large"
               aria-label="notification button"
               edge="end"
@@ -175,10 +175,13 @@ export const Header = (props: HeaderProps) => {
                 setOpenNotificationDialog(true);
               }}
               color={'inherit'}
-              sx={{ ml: 2, pt: 2, display: { xs: 'none', lg: 'block' } }}>
+              sx={{ display: { xs: 'none', lg: 'block' } }}>
               <CircleNotificationsIcon />
-            </IconButton>
-            <IconButton
+              <StyledNumberOfNotifications>
+                {props.notifications.filter((n) => !n.read).length}
+              </StyledNumberOfNotifications>
+            </StyledNotificationIcon>
+            <StyledNotificationIcon
               size="large"
               aria-label="theming button"
               edge="end"
@@ -186,10 +189,9 @@ export const Header = (props: HeaderProps) => {
                 setOpenThemeDialog(true);
               }}
               color={'inherit'}
-              sx={{ ml: 2, pt: 2, display: { xs: 'none', lg: 'block' } }}>
+              sx={{ display: { xs: 'none', lg: 'block' } }}>
               <ThemeIcon />
-            </IconButton>
-
+            </StyledNotificationIcon>
             <IconButton
               color="inherit"
               aria-label="open drawer"

@@ -17,6 +17,7 @@ import {
 } from './card.styles';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { EditUserDialog, EditAddDeviceDialog } from '../../../components';
+import { Typography } from '@mui/material';
 
 export const Card = React.memo((props: CardProps) => {
   const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
@@ -96,15 +97,13 @@ export const Card = React.memo((props: CardProps) => {
         }}
         title={'Confirm deletion?'}
         children={[
-          <div>
-            <p>{`${
-              props.device
-                ? 'Are you sure you want to delete this device'
-                : props.user
-                ? 'Are you sure you want to delete your account'
-                : 'Confirm and proceed with selected action'
-            }?`}</p>
-          </div>,
+          <Typography variant="body1" mt={2}>{`${
+            props.device
+              ? 'Are you sure you want to delete this device'
+              : props.user
+              ? 'Are you sure you want to delete your account'
+              : 'Confirm and proceed with selected action'
+          }?`}</Typography>,
         ]}
         options={['Confirm', 'Cancel']}
         onOptionClick={(option: string) => {

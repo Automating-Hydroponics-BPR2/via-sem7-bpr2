@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
   type ApplicationState,
@@ -12,6 +13,8 @@ import {
   DeviceModel,
   setDashboardIsLoading,
   User,
+  addANotification,
+  Priority,
 } from '../../shared';
 import { Dashboard } from './dashboard';
 import { deviceService, userService } from '../../services';
@@ -34,6 +37,16 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
   return {
     setThreshold: (threshold: number) => {
       dispatch(setDashboardThreshold(threshold));
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Threshold changed',
+          description: `You have successfully changed the threshold to ${threshold}!`,
+          read: false,
+          priority: Priority.LOW,
+          date: new Date(),
+        }),
+      );
     },
     setSelectedDeviceIdChart: (deviceId: string) => {
       dispatch(setDashboardSelectedDeviceIdChart(deviceId));
@@ -46,6 +59,16 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     },
     setType: (type: string) => {
       dispatch(setDashboardType(type));
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Type changed',
+          description: `You have successfully changed the type to ${type}!`,
+          read: false,
+          priority: Priority.LOW,
+          date: new Date(),
+        }),
+      );
     },
     reset() {
       dispatch(resetDashboardStore());

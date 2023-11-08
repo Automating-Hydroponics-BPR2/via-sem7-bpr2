@@ -1,3 +1,4 @@
+import { IconButton } from '@mui/material';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -13,4 +14,21 @@ export const StyledLink = styled(Link)<{ isInverted?: boolean }>`
   text-decoration: none;
   color: ${({ theme, isInverted }) =>
     isInverted ? theme.palette.primary.contrastText : theme.palette.text.primary}; };
+`;
+
+export const StyledNotificationIcon = styled(IconButton)`
+  margin-left: ${({ theme }) => theme.spacing(2)};
+  padding-top: ${({ theme }) => theme.spacing(2)};
+`;
+
+export const StyledNumberOfNotifications = styled.span`
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.20rem 0.4rem;
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.palette.background.default};
+  color: ${({ theme }) => theme.palette.text.main};
 `;

@@ -1,5 +1,6 @@
 // device-service.ts
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 import {
   DeviceModel,
   deviceEndpoints,
@@ -10,6 +11,8 @@ import {
   setDeviceIds,
   setHistoricalReadings,
   setDashboardIsLoading,
+  addANotification,
+  Priority,
 } from '../shared';
 
 const getToken = () => {
@@ -21,7 +24,7 @@ const getToken = () => {
 };
 
 // Create a function to make a POST request to create a new device
-export const createDevice = (deviceData: any) => (dispatch: any) => {
+export const createDevice = (deviceData: DeviceModel) => (dispatch: any) => {
   dispatch(setDashboardIsLoading(true));
   axios
     .post(deviceEndpoints.create(), JSON.stringify(deviceData), {
@@ -31,6 +34,16 @@ export const createDevice = (deviceData: any) => (dispatch: any) => {
       },
     })
     .then((res: any) => {
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'You have created a device',
+          description: `You have successfully created a new device with id ${deviceData.id}!`,
+          read: false,
+          priority: Priority.LOW,
+          date: new Date(),
+        }),
+      );
       dispatch(
         setSnackbar({
           open: true,
@@ -100,7 +113,16 @@ export const updateDeviceWithId = (id: string, deviceData: DeviceModel) => (disp
     })
     .then((res: any) => {
       console.log(res.data);
-      dispatch(setDevice(res.data as DeviceModel));
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'You have updated a device',
+          description: `You have successfully updated a device with id ${id}!`,
+          read: false,
+          priority: Priority.LOW,
+          date: new Date(),
+        }),
+      );
       dispatch(
         setSnackbar({
           open: true,
@@ -108,6 +130,7 @@ export const updateDeviceWithId = (id: string, deviceData: DeviceModel) => (disp
           message: `Device was updated successfully!`,
         }),
       );
+      dispatch(setDevice(res.data as DeviceModel));
     })
     .catch((err: any) => {
       dispatch(
@@ -135,6 +158,16 @@ export const deleteDeviceWithId = (id: string) => (dispatch: any) => {
     })
     .then((res: any) => {
       console.log(res.status);
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'You have deleted a device',
+          description: `You have successfully deleted a device with id ${id}!`,
+          read: false,
+          priority: Priority.LOW,
+          date: new Date(),
+        }),
+      );
       dispatch(
         setSnackbar({
           open: true,

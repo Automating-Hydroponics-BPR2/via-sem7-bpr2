@@ -9,6 +9,7 @@ import {
   userEndpoints,
   setDashboardIsLoading,
   addANotification,
+  reset,
 } from '../shared';
 import { Priority } from '../shared/models/notification';
 import { v4 as uuidv4 } from 'uuid';
@@ -18,7 +19,8 @@ const getToken = () => {
   if (!token) {
     throw new Error('No token found');
   }
-  return token;
+  const username = (jwtDecode(token) as AuthenticatedUser).username;
+  return { token, username };
 };
 
 // #region login
@@ -130,10 +132,20 @@ export const deleteUserWithId = () => (dispatch: any) => {
     .delete(userEndpoints.delete(), {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${getToken()}`,
+        Authorization: `Bearer ${getToken().token}`,
       },
     })
     .then((res: any) => {
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'User deleted',
+          description: `You have successfully deleted a user with username ${getToken().username}!`,
+          read: false,
+          priority: Priority.LOW,
+          date: new Date(),
+        }),
+      );
       dispatch(
         setSnackbar({
           open: true,
@@ -141,6 +153,7 @@ export const deleteUserWithId = () => (dispatch: any) => {
           message: `User was deleted successfully!`,
         }),
       );
+      dispatch(reset());
     })
     .catch((err: any) => {
       dispatch(
@@ -166,12 +179,21 @@ export const updateUserWithId = (userData: User) => (dispatch: any) => {
     .patch(userEndpoints.update(), JSON.stringify(userData), {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${getToken()}`,
+        Authorization: `Bearer ${getToken().token}`,
       },
     })
     .then((res: any) => {
       console.log(res.data);
-      dispatch(setUser(res.data as AuthenticatedUser));
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'User updated',
+          description: `You have successfully updated a user with username ${getToken().username}!`,
+          read: false,
+          priority: Priority.LOW,
+          date: new Date(),
+        }),
+      );
       dispatch(
         setSnackbar({
           open: true,
@@ -179,6 +201,7 @@ export const updateUserWithId = (userData: User) => (dispatch: any) => {
           message: `User was updated successfully!`,
         }),
       );
+      dispatch(setUser(res.data as AuthenticatedUser));
     })
     .catch((err: any) => {
       dispatch(
