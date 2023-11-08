@@ -1,17 +1,20 @@
 import * as React from 'react';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import HomeIcon from '@mui/icons-material/Home';
 import BedtimeIcon from '@mui/icons-material/Bedtime';
+import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import { useTheme } from '@mui/material/styles';
 import { ThemeDialogContainer } from '../theme-dialog/theme-dialog.container';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import { NotificationDialog } from '../notifications-dialog';
+import { IBottomNavigationProps } from './bottom-navigation.props';
 
-export const BottomNav = () => {
+export const BottomNav = (props: IBottomNavigationProps) => {
   const location = useLocation();
   const [openThemeDialog, setOpenThemeDialog] = React.useState(false);
+  const [openNotificationDialog, setOpenNotificationDialog] = React.useState(false);
   const [value, setValue] = React.useState(location.pathname.split('/')[1]);
   const theme = useTheme();
   const navigate = useNavigate();
@@ -24,7 +27,7 @@ export const BottomNav = () => {
     setValue(newValue);
     switch (newValue) {
       case 'favorites':
-        alert('Favorites');
+        setOpenNotificationDialog(true);
         break;
       case 'home':
         navigate('/');
@@ -45,9 +48,9 @@ export const BottomNav = () => {
       onChange={handleChange}>
       <BottomNavigationAction
         style={{ color: theme.palette.text.primary }}
-        label="Favorites"
-        value="favorites"
-        icon={<FavoriteIcon style={{ color: theme.palette.text.primary }} />}
+        label="Notifications"
+        value="Notifications"
+        icon={<CircleNotificationsIcon style={{ color: theme.palette.text.primary }} />}
       />
       <BottomNavigationAction
         style={{ color: theme.palette.text.primary }}
@@ -66,6 +69,15 @@ export const BottomNav = () => {
         onClose={() => {
           setOpenThemeDialog(false);
         }}
+      />
+      <NotificationDialog
+        open={openNotificationDialog}
+        onClose={() => {
+          setOpenNotificationDialog(false);
+        }}
+        notifications={props.notifications}
+        onDelete={props.onDeleteNotification}
+        onMarkAsRead={props.onMarkNotificationAsRead}
       />
     </BottomNavigation>
   );
