@@ -3,6 +3,7 @@ import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import HomeIcon from '@mui/icons-material/Home';
 import BedtimeIcon from '@mui/icons-material/Bedtime';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import { useTheme } from '@mui/material/styles';
 import { ThemeDialogContainer } from '../theme-dialog/theme-dialog.container';
@@ -10,6 +11,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { NotificationDialog } from '../notifications-dialog';
 import { IBottomNavigationProps } from './bottom-navigation.props';
+import { StyledNumberOfNotifications } from './bottom-navigation.styles';
 
 export const BottomNav = (props: IBottomNavigationProps) => {
   const location = useLocation();
@@ -24,13 +26,17 @@ export const BottomNav = (props: IBottomNavigationProps) => {
   }, [location.pathname]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
     switch (newValue) {
-      case 'favorites':
+      case 'notifications':
         setOpenNotificationDialog(true);
         break;
       case 'home':
+        setValue(newValue);
         navigate('/');
+        break;
+      case 'dashboard':
+        setValue(newValue);
+        navigate('/dashboard');
         break;
       case 'theme':
         setOpenThemeDialog(true);
@@ -47,18 +53,37 @@ export const BottomNav = (props: IBottomNavigationProps) => {
       value={value}
       onChange={handleChange}>
       <BottomNavigationAction
+        key={'notifications'}
         style={{ color: theme.palette.text.primary }}
         label="Notifications"
-        value="Notifications"
-        icon={<CircleNotificationsIcon style={{ color: theme.palette.text.primary }} />}
+        showLabel
+        value="notifications"
+        icon={
+          <div>
+            <CircleNotificationsIcon style={{ color: theme.palette.text.primary }} />
+            <StyledNumberOfNotifications>
+              {props.notifications.filter((n) => !n.read).length}
+            </StyledNumberOfNotifications>
+          </div>
+        }
       />
       <BottomNavigationAction
+        key={'home'}
         style={{ color: theme.palette.text.primary }}
         label="Home"
         value="home"
         icon={<HomeIcon style={{ color: theme.palette.text.primary }} />}
       />
       <BottomNavigationAction
+        key={'dashboard'}
+        style={{ color: theme.palette.text.primary }}
+        label="Dashboard"
+        value="dashboard"
+        icon={<DashboardIcon style={{ color: theme.palette.text.primary }} />}
+      />
+      <BottomNavigationAction
+        showLabel
+        key={'theme'}
         style={{ color: theme.palette.text.primary }}
         label="Theme"
         value="theme"

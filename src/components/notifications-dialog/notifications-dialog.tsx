@@ -94,6 +94,8 @@ export const NotificationDialog = (props: INotificationsDialogProps) => {
         </NotificationsList>
       </Box>
     ),
+    options: ['Close'],
+    onOptionClick: onClose,
     width: '500px',
   };
   return (

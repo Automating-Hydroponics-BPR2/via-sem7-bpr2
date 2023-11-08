@@ -1,4 +1,4 @@
-import { TNotification } from "../../shared";
+import { TNotification } from '../../shared';
 
 export interface IBottomNavigationProps {
   notifications: TNotification[];

@@ -1,11 +1,6 @@
 import { connect } from 'react-redux';
 
-import {
-  type ApplicationState,
-  type AppDispatch,
-  markANotificationAsRead,
-  removeANotification,
-} from '../../shared';
+import { type ApplicationState, type AppDispatch, markANotificationAsRead, removeANotification } from '../../shared';
 import { BottomNav } from './bottom-navigation';
 
 const mapStateToProps = (state: ApplicationState) => ({
