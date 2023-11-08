@@ -16,7 +16,7 @@ import {
   ItemDate,
 } from './card.styles';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
-import { EditAddDeviceDialog, EditUserDialog } from '../../../components';
+import { EditUserDialog, EditAddDeviceDialog } from '../../../components';
 
 export const Card = React.memo((props: CardProps) => {
   const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);

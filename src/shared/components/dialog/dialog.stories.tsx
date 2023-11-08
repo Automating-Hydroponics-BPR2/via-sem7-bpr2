@@ -5,9 +5,12 @@ import { StoryObj } from '@storybook/react';
 import {
   EditUserDialog,
   IEditAddDialogDeviceProps,
-  EditAddDeviceDialog,
+  NotificationDialog,
   IEditUserDialogProps,
+  INotificationsDialogProps,
+  EditAddDeviceDialog,
 } from '../../../components';
+import { Priority } from '../../models/notification';
 
 export default {
   title: 'Dialog',
@@ -192,3 +195,109 @@ export const EditUserDialogStory: Story = () => {
 };
 
 EditUserDialogStory.storyName = 'Edit User Dialog';
+
+export const NotificationDialogStory: Story = () => {
+  const [open, setOpen] = useState(false);
+  const [notifications, setNotifications] = useState([
+    {
+      id: '1',
+      title: 'test',
+      description: 'This is a test notification, by the way!',
+      priority: Priority.LOW,
+      date: new Date(),
+      read: false,
+    },
+    {
+      id: '2',
+      title: 'test',
+      description: 'This is a test notification, by the way!',
+      priority: Priority.HIGH,
+      date: new Date(),
+      read: false,
+    },
+    {
+      id: '3',
+      title: 'test',
+      description: 'This is a test notification, by the way!',
+      priority: Priority.LOW,
+      date: new Date(),
+      read: false,
+    },
+    {
+      id: '4',
+      title: 'test',
+      description: 'This is a test notification, by the way!',
+      priority: Priority.HIGH,
+      date: new Date(),
+      read: false,
+    },
+    {
+      id: '5',
+      title: 'test',
+      description:
+        'This is a test notifThis is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!ication, by the way!',
+      priority: Priority.LOW,
+      date: new Date(),
+      read: false,
+    },
+    {
+      id: '6',
+      title: 'test',
+      description: 'This is a test notification, by the way!',
+      priority: Priority.HIGH,
+      date: new Date(),
+      read: false,
+    },
+    {
+      id: '7',
+      title: 'test',
+      description:
+        'This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!',
+      priority: Priority.HIGH,
+      date: new Date(),
+      read: false,
+    },
+    {
+      id: '8',
+      title: 'test',
+      description:
+        'This is a test notifThis is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!ication, by the way!',
+      priority: Priority.HIGH,
+      date: new Date(),
+      read: false,
+    },
+  ]);
+  const notificationDialogProps: INotificationsDialogProps = {
+    notifications,
+    open,
+    onClose: () => {
+      setOpen(false);
+    },
+    onMarkAsRead: (id) => {
+      const newNotifications = [...notifications];
+      const index = newNotifications.findIndex((notification) => notification.id === id);
+      newNotifications[index].read = true;
+      setNotifications(newNotifications);
+    },
+    onDelete: (id) => {
+      const newNotifications = [...notifications];
+      const index = newNotifications.findIndex((notification) => notification.id === id);
+      newNotifications.splice(index, 1);
+      setNotifications(newNotifications);
+    },
+  };
+
+  return (
+    <div>
+      <button
+        onClick={() => {
+          setOpen(true);
+        }}>
+        Open
+      </button>
+      <NotificationDialog {...notificationDialogProps} />
+    </div>
+  );
+};
+
+NotificationDialogStory.storyName = 'Notification Dialog';

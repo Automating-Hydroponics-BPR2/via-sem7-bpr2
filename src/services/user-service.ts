@@ -8,7 +8,10 @@ import {
   setUser,
   userEndpoints,
   setDashboardIsLoading,
+  addANotification,
 } from '../shared';
+import { Priority } from '../shared/models/notification';
+import { v4 as uuidv4 } from 'uuid';
 
 const getToken = () => {
   const token = localStorage.getItem('token');
@@ -36,7 +39,18 @@ export const login = (username: string, password: string) => (dispatch: any) => 
     )
     .then((res: any) => {
       localStorage.setItem('token', res.data.token as string);
-      dispatch(setUser(jwtDecode(res.data.token as string) as AuthenticatedUser));
+      const user = jwtDecode(res.data.token as string) as AuthenticatedUser;
+      dispatch(setUser(user));
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Login successful',
+          description: `You have successfully logged in as ${user.username}!`,
+          read: false,
+          priority: Priority.LOW,
+          date: new Date(),
+        }),
+      );
       dispatch(
         setSnackbar({
           open: true,
@@ -73,7 +87,18 @@ export const register = (user: User) => (dispatch: any) => {
     })
     .then((res: any) => {
       localStorage.setItem('token', res.data.token as string);
-      dispatch(setUser(jwtDecode(res.data.token as string) as AuthenticatedUser));
+      const user = jwtDecode(res.data.token as string) as AuthenticatedUser;
+      dispatch(setUser(user));
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Registration successful',
+          description: `You have successfully registered as ${user.username}!`,
+          read: false,
+          priority: Priority.LOW,
+          date: new Date(),
+        }),
+      );
       dispatch(
         setSnackbar({
           open: true,

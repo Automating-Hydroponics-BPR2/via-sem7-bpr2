@@ -27,6 +27,7 @@ import { type NavItem } from '../../shared';
 import { ThemeDialogContainer } from '../theme-dialog/theme-dialog.container';
 import { HeaderProps } from './header.props';
 import { Logo, StyledLink } from './header.styles';
+import { NotificationDialog } from '../notifications-dialog';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -205,6 +206,15 @@ export const Header = (props: HeaderProps) => {
         onClose={() => {
           setOpenThemeDialog(false);
         }}
+      />
+      <NotificationDialog
+        open={openNotificationDialog}
+        onClose={() => {
+          setOpenNotificationDialog(false);
+        }}
+        notifications={[]}
+        onDelete={props.onRemoveANotification}
+        onMarkAsRead={props.onMarkANotificationAsRead}
       />
       <Box component="nav">
         <Drawer
