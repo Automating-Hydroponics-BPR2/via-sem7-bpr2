@@ -3,11 +3,13 @@ import { AuthenticatedUser } from '../models/user';
 
 export interface UserStore {
   user?: AuthenticatedUser;
+  token?: string;
   isLoading: boolean;
 }
 
 const initialState: UserStore = {
   user: undefined,
+  token: localStorage.getItem('token') ?? undefined,
   isLoading: false,
 };
 

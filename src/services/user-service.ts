@@ -1,6 +1,27 @@
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
-import { AuthenticatedUser, User, setIsLoading, setNotification, setUser, userEndpoints } from '../shared';
+import {
+  AuthenticatedUser,
+  User,
+  setIsLoading,
+  setSnackbar,
+  setUser,
+  userEndpoints,
+  setDashboardIsLoading,
+  addANotification,
+  reset,
+} from '../shared';
+import { Priority } from '../shared/models/notification';
+import { v4 as uuidv4 } from 'uuid';
+
+const getToken = () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('No token found');
+  }
+  const username = (jwtDecode(token) as AuthenticatedUser).username;
+  return { token, username };
+};
 
 // #region login
 export const login = (username: string, password: string) => (dispatch: any) => {
@@ -19,11 +40,21 @@ export const login = (username: string, password: string) => (dispatch: any) => 
       },
     )
     .then((res: any) => {
-      console.log(res.data);
       localStorage.setItem('token', res.data.token as string);
-      dispatch(setUser(jwtDecode(res.data.token as string) as AuthenticatedUser));
+      const user = jwtDecode(res.data.token as string) as AuthenticatedUser;
+      dispatch(setUser(user));
       dispatch(
-        setNotification({
+        addANotification({
+          id: uuidv4(),
+          title: 'Login successful',
+          description: `You have successfully logged in as ${user.username}!`,
+          read: false,
+          priority: Priority.LOW,
+          date: new Date(),
+        }),
+      );
+      dispatch(
+        setSnackbar({
           open: true,
           type: 'success',
           message: `User was signed in successfully!`,
@@ -32,7 +63,7 @@ export const login = (username: string, password: string) => (dispatch: any) => 
     })
     .catch((err: any) => {
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'error',
           message: `User was not signed in!`,
@@ -50,7 +81,6 @@ export const login = (username: string, password: string) => (dispatch: any) => 
 // #region register
 export const register = (user: User) => (dispatch: any) => {
   dispatch(setIsLoading(true));
-  console.log(user);
   axios
     .post(userEndpoints.register(), JSON.stringify(user), {
       headers: {
@@ -59,9 +89,20 @@ export const register = (user: User) => (dispatch: any) => {
     })
     .then((res: any) => {
       localStorage.setItem('token', res.data.token as string);
-      dispatch(setUser(jwtDecode(res.data.token as string) as AuthenticatedUser));
+      const user = jwtDecode(res.data.token as string) as AuthenticatedUser;
+      dispatch(setUser(user));
       dispatch(
-        setNotification({
+        addANotification({
+          id: uuidv4(),
+          title: 'Registration successful',
+          description: `You have successfully registered as ${user.username}!`,
+          read: false,
+          priority: Priority.LOW,
+          date: new Date(),
+        }),
+      );
+      dispatch(
+        setSnackbar({
           open: true,
           type: 'success',
           message: `User was signed up successfully!`,
@@ -70,7 +111,7 @@ export const register = (user: User) => (dispatch: any) => {
     })
     .catch((err: any) => {
       dispatch(
-        setNotification({
+        setSnackbar({
           open: true,
           type: 'error',
           message: `User was not signed up!`,
@@ -82,4 +123,99 @@ export const register = (user: User) => (dispatch: any) => {
       dispatch(setIsLoading(false));
     });
 };
+// #endregion
+
+// #region deleteUserWithId
+export const deleteUserWithId = () => (dispatch: any) => {
+  dispatch(setDashboardIsLoading(true));
+  axios
+    .delete(userEndpoints.delete(), {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken().token}`,
+      },
+    })
+    .then((res: any) => {
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'User deleted',
+          description: `You have successfully deleted a user with username ${getToken().username}!`,
+          read: false,
+          priority: Priority.LOW,
+          date: new Date(),
+        }),
+      );
+      dispatch(
+        setSnackbar({
+          open: true,
+          type: 'success',
+          message: `User was deleted successfully!`,
+        }),
+      );
+      dispatch(reset());
+    })
+    .catch((err: any) => {
+      dispatch(
+        setSnackbar({
+          open: true,
+          type: 'error',
+          message: `User was not deleted!`,
+        }),
+      );
+      console.error(err);
+    })
+    .finally(() => {
+      dispatch(setDashboardIsLoading(false));
+    });
+};
+
+// #endregion
+
+// #region updateUserWithId
+export const updateUserWithId = (userData: User) => (dispatch: any) => {
+  dispatch(setDashboardIsLoading(true));
+  axios
+    .patch(userEndpoints.update(), JSON.stringify(userData), {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken().token}`,
+      },
+    })
+    .then((res: any) => {
+      console.log(res.data);
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'User updated',
+          description: `You have successfully updated a user with username ${getToken().username}!`,
+          read: false,
+          priority: Priority.LOW,
+          date: new Date(),
+        }),
+      );
+      dispatch(
+        setSnackbar({
+          open: true,
+          type: 'success',
+          message: `User was updated successfully!`,
+        }),
+      );
+      dispatch(setUser(res.data as AuthenticatedUser));
+    })
+    .catch((err: any) => {
+      dispatch(
+        setSnackbar({
+          open: true,
+          type: 'error',
+          message: `User was not updated!`,
+        }),
+      );
+      console.error(err);
+    })
+    .finally(() => {
+      dispatch(setDashboardIsLoading(false));
+    });
+};
+
 // #endregion

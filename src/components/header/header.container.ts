@@ -1,20 +1,29 @@
 import { connect } from 'react-redux';
-import { bindActionCreators } from '@reduxjs/toolkit';
 
-import { type ApplicationState, type AppDispatch, reset } from '../../shared';
+import {
+  type ApplicationState,
+  type AppDispatch,
+  reset,
+  markANotificationAsRead,
+  removeANotification,
+} from '../../shared';
 import { Header } from './header';
 
 const mapStateToProps = (state: ApplicationState) => ({
+  notifications: state.notifications.notifications,
   user: state.user.user,
 });
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
-  return bindActionCreators(
-    {
-      onLogout: reset,
+  return {
+    onLogout: () => dispatch(reset()),
+    onMarkANotificationAsRead: (id: string) => {
+      dispatch(markANotificationAsRead(id));
     },
-    dispatch,
-  );
+    onRemoveANotification: (id: string) => {
+      dispatch(removeANotification(id));
+    },
+  };
 };
 
 export const HeaderContainer = connect(mapStateToProps, mapDispatchToProps)(Header);

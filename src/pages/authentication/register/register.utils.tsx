@@ -1,5 +1,5 @@
 export const isEmailValid = (email: string) => {
-  let errorMessage = '';
+  let errorMessage = 'Email can be inserted';
 
   if (email) {
     const isValidEmail =

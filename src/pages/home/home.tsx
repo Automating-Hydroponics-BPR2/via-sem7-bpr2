@@ -1,15 +1,79 @@
-import { connect } from 'react-redux';
-import { bindActionCreators } from '@reduxjs/toolkit';
+// home.tsx
+import React, { useState } from 'react';
+import {
+  StyledHomeDescription,
+  StyledHomeTitle,
+  StyledHomeWrapper,
+  StyledCheckpointInfo,
+  StyledLink,
+  StyledCheckpointInfoWrapper,
+} from './home.styles'; // Import StyledBox
+import { LinearProgressBar } from '../../shared';
+import { IHomeProps } from './home.props';
+import { Box, Tooltip } from '@mui/material';
 
-import { type ApplicationState, type AppDispatch } from '../../shared';
-import { Home } from './home.container';
+export const Home = (props: IHomeProps) => {
+  const { title } = props;
+  const [activeCheckpoint, setActiveCheckpoint] = useState(0);
 
-const mapStateToProps = (state: ApplicationState) => ({
-  title: 'Home',
-});
+  const handleCheckpointClick = (index: number) => {
+    setActiveCheckpoint(index);
+  };
 
-const mapDispatchToProps = (dispatch: AppDispatch) => {
-  return bindActionCreators({}, dispatch);
+  return (
+    <StyledHomeWrapper>
+      <StyledHomeTitle>{title}</StyledHomeTitle>
+      <StyledHomeDescription>
+        This project is part of the BPR2 or, in other words, Bachelor project for the last semester in Software
+        Engineering at the VIA University College.
+      </StyledHomeDescription>
+      <LinearProgressBar activeCheckpoint={activeCheckpoint} />
+      <Tooltip title="Click to read more!" placement="top" arrow>
+        <StyledCheckpointInfoWrapper>
+          {activeCheckpoint === 0 && (
+            <StyledCheckpointInfo
+              onClick={() => {
+                handleCheckpointClick(activeCheckpoint + 1);
+              }}>
+              Implemented with React, MUI, Redux, Typescript, AWS Amplify & More.
+            </StyledCheckpointInfo>
+          )}
+          {activeCheckpoint === 1 && (
+            <StyledCheckpointInfo
+              onClick={() => {
+                handleCheckpointClick(activeCheckpoint + 1);
+              }}>
+              Developed by Stefan Georgiev & Yoana Miteva
+            </StyledCheckpointInfo>
+          )}
+          {activeCheckpoint === 2 && (
+            <StyledCheckpointInfo
+              onClick={() => {
+                handleCheckpointClick(activeCheckpoint + 1);
+              }}>
+              Deployed on AWS Amplify with CI/CD through Github
+            </StyledCheckpointInfo>
+          )}
+          {activeCheckpoint === 3 && (
+            <StyledCheckpointInfo
+              onClick={() => {
+                handleCheckpointClick(0);
+              }}>
+              {' '}
+              Check out more of our projects on Github!! :) <br />
+              <Box>
+                <StyledLink>
+                  <a href="https://github.com/NoHop3">Stefan's GitHub</a>
+                </StyledLink>
+                {'&'}
+                <StyledLink>
+                  <a href="https://github.com/YoyoMy">Yoana's GitHub</a>
+                </StyledLink>
+              </Box>
+            </StyledCheckpointInfo>
+          )}
+        </StyledCheckpointInfoWrapper>
+      </Tooltip>
+    </StyledHomeWrapper>
+  );
 };
-
-export const HomeContainer = connect(mapStateToProps, mapDispatchToProps)(Home);

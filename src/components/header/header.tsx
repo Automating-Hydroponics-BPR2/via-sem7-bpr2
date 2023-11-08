@@ -2,6 +2,7 @@ import * as React from 'react';
 import ThemeIcon from '@mui/icons-material/Brightness6';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import {
   AppBar,
   Button,
@@ -25,7 +26,8 @@ import { useNavigate } from 'react-router-dom';
 import { type NavItem } from '../../shared';
 import { ThemeDialogContainer } from '../theme-dialog/theme-dialog.container';
 import { HeaderProps } from './header.props';
-import { Logo, StyledLink } from './header.styles';
+import { Logo, StyledLink, StyledNotificationIcon, StyledNumberOfNotifications } from './header.styles';
+import { NotificationDialog } from '../notifications-dialog';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -84,6 +86,7 @@ function HideOnScroll(props: HeaderProps) {
 
 export const Header = (props: HeaderProps) => {
   const [openThemeDialog, setOpenThemeDialog] = React.useState(false);
+  const [openNotificationDialog, setOpenNotificationDialog] = React.useState(false);
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const theme = useTheme();
@@ -91,6 +94,7 @@ export const Header = (props: HeaderProps) => {
   const drawerWidth = 240;
   const navItems: NavItem[] = [
     { name: 'Home', path: '/' },
+    { name: 'Dashboard', path: '/dashboard' },
     props.user ? { name: 'Logout', path: '/logout' } : { name: 'Login', path: '/login' },
   ];
 
@@ -111,7 +115,7 @@ export const Header = (props: HeaderProps) => {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        SEP6
+        BPR2 - STGDEV
       </Typography>
       <Divider />
       <List>
@@ -134,7 +138,6 @@ export const Header = (props: HeaderProps) => {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      {/* eslint-disable-next-line */}
       <HideOnScroll {...props}>
         <AppBar
           component="nav"
@@ -143,7 +146,11 @@ export const Header = (props: HeaderProps) => {
             color: theme.palette.text.primary,
           }}>
           <Toolbar>
-            <Box sx={{ flexGrow: 1 }}>
+            <Box
+              sx={{ flexGrow: 1, cursor: 'pointer' }}
+              onClick={() => {
+                navigate('/');
+              }}>
               <Logo src="/images/stgdev__logo__dark.png" />
             </Box>
             <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
@@ -160,7 +167,21 @@ export const Header = (props: HeaderProps) => {
               <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
             </Search>
             <Divider />
-            <IconButton
+            <StyledNotificationIcon
+              size="large"
+              aria-label="notification button"
+              edge="end"
+              onClick={() => {
+                setOpenNotificationDialog(true);
+              }}
+              color={'inherit'}
+              sx={{ display: { xs: 'none', lg: 'block' } }}>
+              <CircleNotificationsIcon />
+              <StyledNumberOfNotifications>
+                {props.notifications.filter((n) => !n.read).length}
+              </StyledNumberOfNotifications>
+            </StyledNotificationIcon>
+            <StyledNotificationIcon
               size="large"
               aria-label="theming button"
               edge="end"
@@ -168,10 +189,9 @@ export const Header = (props: HeaderProps) => {
                 setOpenThemeDialog(true);
               }}
               color={'inherit'}
-              sx={{ ml: 2, pt: 2, display: { xs: 'none', lg: 'block' } }}>
+              sx={{ display: { xs: 'none', lg: 'block' } }}>
               <ThemeIcon />
-            </IconButton>
-
+            </StyledNotificationIcon>
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -188,6 +208,15 @@ export const Header = (props: HeaderProps) => {
         onClose={() => {
           setOpenThemeDialog(false);
         }}
+      />
+      <NotificationDialog
+        open={openNotificationDialog}
+        onClose={() => {
+          setOpenNotificationDialog(false);
+        }}
+        notifications={[]}
+        onDelete={props.onRemoveANotification}
+        onMarkAsRead={props.onMarkANotificationAsRead}
       />
       <Box component="nav">
         <Drawer

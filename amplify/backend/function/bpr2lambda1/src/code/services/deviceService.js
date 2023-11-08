@@ -211,10 +211,66 @@ const getCurrentReadings = async (deviceId, userId) => {
   }
 };
 
+const getDeviceIdsForUser = async (userId) => {
+  try {
+    const data = await dynamoDb.send(
+      new ScanCommand({
+        TableName: process.env.DYNAMODB_TABLE_NAME_DEVICES,
+        FilterExpression: 'userId = :userId',
+        ExpressionAttributeValues: marshall({
+          ':userId': userId,
+        }),
+      }),
+    );
+
+    console.log(data);
+
+    if (!data)
+      throw new NotFoundError(
+        `Could not get data. No devices found for user with id ${userId}`,
+        'src/services/deviceService.js - getAllDevices',
+      );
+
+    const devicesToReturn = {
+      devices: data.Items.map((item) => unmarshall(item)),
+      count: data.Count,
+      lastEvaluatedKey: data.LastEvaluatedKey && unmarshall(data.LastEvaluatedKey),
+    };
+
+    return devicesToReturn;
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    throw new DynamoDBError(error, 'src/services/deviceService.js - getAllDevices');
+  }
+};
+
+const getDeviceInformationForId = async (deviceId, userId) => {
+  try {
+    // Check if the device belongs to the user
+    const device = await checkIfDeviceExistsAndBelongsToUser(deviceId, userId, true, true);
+
+    console.log(device);
+
+    if (!device) {
+      throw new NotFoundError(
+        `Could not get device information for device with id ${deviceId}, no device found`,
+        'src/services/deviceService.js - getDeviceInformation',
+      );
+    }
+
+    return device;
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    throw new DynamoDBError(error, 'src/services/deviceService.js - getDeviceInformation');
+  }
+};
+
 export const deviceServices = {
   createDevice,
   updateDeviceById,
   deleteDeviceById,
   getHistoricalReadings,
   getCurrentReadings,
+  getDeviceIdsForUser,
+  getDeviceInformationForId,
 };

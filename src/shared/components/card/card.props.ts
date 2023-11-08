@@ -1,13 +1,24 @@
+import { DeviceModel, AuthenticatedUser, User } from '../../models';
+
 export interface CardProps {
-  id: number;
+  id: string;
   title: string;
+  width: string;
+  height: string;
+
+  device?: DeviceModel;
+  user?: AuthenticatedUser;
   imgSource?: string;
   description: string;
   date?: string;
-  isFavorite?: boolean;
-  showFavorite?: boolean;
-  disabledFavoriteButton?: boolean;
+  padding?: string;
+  showAdd?: boolean;
+  showEdit?: boolean;
+  showDelete?: boolean;
 
-  onAddToFavoritesClick?: (id: number) => void;
-  onCardClick?: (id: number) => void;
+  onDeviceAddClick?: (device: DeviceModel) => void;
+  onDeviceEditClick?: (id: string, device: DeviceModel) => void;
+  onDeviceDeleteClick?: (id: string) => void;
+  onUserEditClick?: (user: User) => void;
+  onUserDeleteClick?: () => void;
 }

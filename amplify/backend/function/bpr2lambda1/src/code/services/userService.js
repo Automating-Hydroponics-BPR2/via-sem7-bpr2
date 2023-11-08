@@ -169,7 +169,7 @@ const updateUserById = async (user, userId) => {
 
     // include the attributes that were not updated except the password if it existed in the request body
     const { password, ...userToReturn } = { ...unmarshall(updatedUser), ...user };
-
+    console.log(userToReturn);
     return userToReturn;
   } catch (error) {
     if (error.name === 'ConditionalCheckFailedException')

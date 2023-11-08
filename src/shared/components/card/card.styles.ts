@@ -13,14 +13,14 @@ export const ItemImageWrapper = styled.div`
 `;
 
 export const ImageContainer = styled.div`
-  width: 250px;
+  width: 150px;
   height: 150px;
-  background-color: ${({ theme }) => theme.palette.background.paper};
+  background-color: ${({ theme }) => theme.palette.background.default};
   border-radius: 5px;
 
   ${mediaUpTo('tablet')} {
-    width: 140px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
   }
 
   img {
@@ -29,18 +29,17 @@ export const ImageContainer = styled.div`
     height: 100%;
     object-fit: cover;
     object-position: cover;
-    border-radius: 5px;
+    border-radius: 50%;
   }
 
   [data-no-image] {
-    border-radius: 5px;
+    border-radius: 50%;
   }
 `;
 
 export const ContentHolder = styled.div`
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
 `;
 
 export const ItemTitleHolder = styled.div`
@@ -100,10 +99,18 @@ export const ItemDescription = styled.div`
   }
 `;
 
-export const AddToFavoritesButton = styled.button<{ disabled?: boolean }>`
+export const CardButton = styled.button<{
+  disabled?: boolean;
+  top?: string;
+  right?: string;
+  left?: string;
+  bottom?: string;
+}>`
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: ${({ top }) => top ?? 'auto'};
+  right: ${({ right }) => right ?? 'auto'};
+  left: ${({ left }) => left ?? 'auto'};
+  bottom: ${({ bottom }) => bottom ?? 'auto'};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -112,7 +119,7 @@ export const AddToFavoritesButton = styled.button<{ disabled?: boolean }>`
   border-radius: 50%;
   font-size: 14px;
   border: none;
-  color: ${({ theme }) => theme.palette.primary.contrastText};
+  color: ${({ theme }) => theme.palette.primary.contrastText ?? theme.palette.text.primary};
   background: ${({ theme }) => hexWithAlpha(theme.palette.primary.main, 70)};
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
@@ -136,21 +143,10 @@ export const AddToFavoritesButton = styled.button<{ disabled?: boolean }>`
 
   ${mediaUpTo('tablet')} {
     position: absolute;
-    top: 5px;
-    left: 5px;
-    width: 28px;
-    height: 28px;
-    font-size: 14px;
-    background: ${({ theme }) => theme.palette.background.default};
-
-    &:hover,
-    &:active {
-      background: ${({ theme }) => theme.palette.background.default};
-    }
-
-    &:active {
-      transform: scale(1.1);
-    }
+    top: ${({ top }) => top ?? 'auto'};
+    left: ${({ left }) => left ?? 'auto'};
+    right: ${({ right }) => right ?? 'auto'};
+    bottom: ${({ bottom }) => bottom ?? 'auto'};
 
     &::after {
       content: '';
@@ -163,19 +159,15 @@ export const AddToFavoritesButton = styled.button<{ disabled?: boolean }>`
   }
 `;
 
-export const CardWrapper = styled.div`
+export const CardWrapper = styled.div<{ width: string; height: string; padding?: string }>`
+  max-width: ${({ width }) => width};
+  max-height: ${({ height }) => height};
   display: flex;
-  padding: 24px 0;
-  border-top: 1px solid ${({ theme }) => theme.palette.divider};
-  cursor: pointer;
+  padding: ${({ padding }) => padding ?? '24px 0'};
+  margin-bottom: 1rem;
 
   &:hover {
     background-color: ${({ theme }) => hexWithAlpha(theme.palette.background.default, 10)};
-    border-color: transparent;
-
-    & + * {
-      border-color: transparent;
-    }
 
     [data-search-result-faux-button] {
       opacity: 1;
