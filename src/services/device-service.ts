@@ -361,8 +361,8 @@ export const getDeviceIds = () => (dispatch: any) => {
       },
     })
     .then((res: any) => {
-      console.log(res.data);
-      dispatch(setDeviceIds(res.data as string[]));
+      console.log(res.data.ids);
+      dispatch(setDeviceIds(res.data.ids as string[]));
       dispatch(
         setSnackbar({
           open: true,
