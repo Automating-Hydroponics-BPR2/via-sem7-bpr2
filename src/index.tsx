@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 
 import { Amplify } from 'aws-amplify';
 import awsExports from './aws-exports';
-import { AppContainer } from './app';
+import { AppContainer } from './App';
 import { StyledEngineProvider } from '@mui/material';
 import { Provider } from 'react-redux';
 import { configureAppStore } from './shared';

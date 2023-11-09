@@ -20,7 +20,7 @@ import {
 import { Home, Error, Login, Register, Dashboard } from './pages';
 import { Header, BottomNavigation } from './components';
 
-interface AppProps {
+interface IAppProps {
   snackbar: TSnackbar;
   user?: AuthenticatedUser;
 
@@ -28,7 +28,7 @@ interface AppProps {
   setSnackbarVisibility: (visibility: boolean) => void;
 }
 
-function App(props: AppProps) {
+const App = (props: IAppProps) => {
   // Set background color for the root element
   const root = document.getElementById('root') as HTMLElement;
   const theme = useCustomTheme();
