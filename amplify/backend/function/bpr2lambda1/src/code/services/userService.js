@@ -122,7 +122,6 @@ const loginUser = async (user) => {
 };
 
 const deleteUserById = async (userId) => {
-  await checkIfUserWithUsernameExists(userId, true);
   try {
     await dynamoDb.send(
       new DeleteItemCommand({
@@ -141,7 +140,7 @@ const deleteUserById = async (userId) => {
 
 const updateUserById = async (user, userId) => {
   try {
-    await checkIfUserWithUsernameExists(userId, true);
+    await checkIfUserWithUsernameExists(user.username, true);
 
     // more information > https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/dynamodb/command/UpdateItemCommand/
     const userAttributes = Object.keys(user);

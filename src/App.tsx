@@ -37,7 +37,9 @@ const App = (props: IAppProps) => {
   const { snackbar, setSnackbarVisibility } = props;
 
   useEffect(() => {
-    props.onInit();
+    if (!props.user) {
+      props.onInit();
+    }
   }, []);
 
   return (
@@ -76,7 +78,7 @@ const App = (props: IAppProps) => {
       </ScThemeProvider>
     </ThemeProvider>
   );
-}
+};
 
 const mapStateToProps = (state: ApplicationState) => ({
   snackbar: state.notifications.snackbar,
@@ -89,7 +91,6 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
       const token = localStorage.getItem('token');
       if (token) {
         const decoded = jwtDecode(token) as AuthenticatedUser;
-        console.log('decoded', decoded);
         if (decoded && decoded.exp >= Date.now() / 1000) {
           // Dispatch setUser if a valid token exists
           dispatch(setUser(decoded));

@@ -11,7 +11,19 @@ import {
 } from './sectionHeader.styles';
 
 export const SectionHeader = (props: ISectionHeaderProps) => {
-  const { threshold, setSelectedDeviceId, selectedDeviceId, setThreshold, title, deviceIds, type, setType } = props;
+  const {
+    threshold,
+    setSelectedDeviceId,
+    selectedDeviceId,
+    setThreshold,
+    title,
+    deviceIds,
+    type,
+    setType,
+    setDateFilter,
+    dateFilterLabel,
+    setDateFilterLabel,
+  } = props;
 
   const handleDeviceChange = (e: SelectChangeEvent<unknown>) => {
     const newDeviceId = e.target.value as string;
@@ -26,6 +38,28 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
   const handleTypeChange = (e: SelectChangeEvent<unknown>) => {
     const newType = e.target.value as string;
     setType?.(newType);
+  };
+
+  const handleDateFilterChange = (e: SelectChangeEvent<unknown>) => {
+    const newDateFilter = e.target.value as string;
+    const start = new Date().getTime();
+    let end = 0;
+    switch (newDateFilter) {
+      case 'Today':
+        end = new Date().setHours(0, 0, 0, 0);
+        break;
+      case 'Last 3 days':
+        end = new Date().setHours(0, 0, 0, 0) - 259200000;
+        break;
+      case 'Last 7 days':
+        end = new Date().setHours(0, 0, 0, 0) - 604800000;
+        break;
+      default:
+        end = new Date().setHours(0, 0, 0, 0) - 604800000;
+        break;
+    }
+    setDateFilterLabel?.(newDateFilter);
+    setDateFilter?.({ start, end });
   };
 
   // this cannot go more than 80 and less than 10 and each option is 10 apart
@@ -82,6 +116,25 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
             </StyledHeaderSelect>
           </StyledHeaderCategory>
         ) : null}
+        {dateFilterLabel && (
+          <StyledHeaderCategory>
+            <StyledHeaderLabel>Date:</StyledHeaderLabel>
+            <StyledHeaderSelect width="8rem" value={dateFilterLabel} onChange={handleDateFilterChange}>
+              <StyledMenuItem key={'Choose a date'} value={dateFilterLabel} disabled>
+                Choose a date
+              </StyledMenuItem>
+              <StyledMenuItem key={'Today'} value={'Today'}>
+                Today
+              </StyledMenuItem>
+              <StyledMenuItem key={'Last 3 days'} value={'Last 3 days'}>
+                Last 3 days
+              </StyledMenuItem>
+              <StyledMenuItem key={'Last 7 days'} value={'Last 7 days'}>
+                Last 7 days
+              </StyledMenuItem>
+            </StyledHeaderSelect>
+          </StyledHeaderCategory>
+        )}
       </StyledHeaderCategoryWrapper>
     </StyledHeaderWrapper>
   );

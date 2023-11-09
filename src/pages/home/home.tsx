@@ -35,7 +35,7 @@ export const Home = (props: IHomeProps) => {
               onClick={() => {
                 handleCheckpointClick(activeCheckpoint + 1);
               }}>
-              Implemented with React, MUI, Redux, Typescript, AWS Amplify & More.
+              Implemented with React, MUI, Redux, Typescript, AWS Amplify & so many other cool technologies!! 😎
             </StyledCheckpointInfo>
           )}
           {activeCheckpoint === 1 && (
@@ -43,7 +43,7 @@ export const Home = (props: IHomeProps) => {
               onClick={() => {
                 handleCheckpointClick(activeCheckpoint + 1);
               }}>
-              Developed by Stefan Georgiev & Yoana Miteva
+              Developed by Stefan Georgiev & Yoana Miteva 🤓
             </StyledCheckpointInfo>
           )}
           {activeCheckpoint === 2 && (
@@ -51,7 +51,7 @@ export const Home = (props: IHomeProps) => {
               onClick={() => {
                 handleCheckpointClick(activeCheckpoint + 1);
               }}>
-              Deployed on AWS Amplify with CI/CD through Github
+              Deployed on AWS Amplify with CI/CD through Github Actions 🚀
             </StyledCheckpointInfo>
           )}
           {activeCheckpoint === 3 && (
@@ -60,7 +60,7 @@ export const Home = (props: IHomeProps) => {
                 handleCheckpointClick(0);
               }}>
               {' '}
-              Check out more of our projects on Github!! :) <br />
+              Check out more of our projects on Github!! 🤗 <br />
               <Box>
                 <StyledLink>
                   <a href="https://github.com/NoHop3">Stefan's GitHub</a>

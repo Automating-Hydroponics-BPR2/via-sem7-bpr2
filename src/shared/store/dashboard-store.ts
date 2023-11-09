@@ -1,18 +1,26 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { DateFilter } from '../models';
 
 export interface DashboardStore {
-  isLoading: boolean;
-  threshold: number;
   type: string;
+  threshold: number;
+  isLoading: boolean;
+  dateFilter: DateFilter;
+  dateFilterLabel: string;
   selectedDeviceIdChart?: string;
   selectedDeviceIdDataTable?: string;
   selectedDeviceIdInformaton?: string;
 }
 
 const initialState: DashboardStore = {
-  type: 'Choose a type',
-  isLoading: false,
   threshold: 60,
+  isLoading: false,
+  type: 'Choose a type',
+  dateFilter: {
+    start: new Date().getTime(),
+    end: new Date().setHours(0, 0, 0, 0) - 604800000,
+  },
+  dateFilterLabel: 'Choose a date',
   selectedDeviceIdChart: undefined,
   selectedDeviceIdDataTable: undefined,
   selectedDeviceIdInformaton: undefined,
@@ -40,6 +48,12 @@ const dashboardSlice = createSlice({
     setDashboardType(state, action: PayloadAction<string>) {
       state.type = action.payload;
     },
+    setDashboardDateFilterLabel(state, action: PayloadAction<string>) {
+      state.dateFilterLabel = action.payload;
+    },
+    setDashboardDateFilter(state, action: PayloadAction<DateFilter>) {
+      state.dateFilter = action.payload;
+    },
     resetDashboardStore(state) {
       state = initialState;
     },
@@ -52,6 +66,8 @@ export const {
   setDashboardType,
   setDashboardIsLoading,
   setDashboardThreshold,
+  setDashboardDateFilter,
+  setDashboardDateFilterLabel,
   setDashboardSelectedDeviceIdChart,
   setDashboardSelectedDeviceIdDataTable,
   setDashboardSelectedDeviceIdInformaton,

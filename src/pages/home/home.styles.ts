@@ -56,6 +56,7 @@ export const StyledCheckpointInfoWrapper = styled(Box)`
 
 export const StyledCheckpointInfo = styled(Box)`
   display: flex;
+  padding: 1rem;
   flex-direction: column;
   min-height: 6rem;
   justify-content: center;

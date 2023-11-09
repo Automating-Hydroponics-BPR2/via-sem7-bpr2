@@ -65,10 +65,10 @@ export const StyledNotificationDate = styled(Typography)`
   color: grey;
 `;
 
-export const StyledNotificationPriority = styled(Typography)<{ isHighPriority: boolean }>`
+export const StyledNotificationPriority = styled(Typography)<{ prioritized: boolean }>`
   margin-top: ${({ theme }) => theme.spacing(1)};
   font-size: 12px;
-  color: ${({ isHighPriority }) => (isHighPriority ? '#ef5350' : '#000')};
+  color: ${({ prioritized }) => (prioritized ? '#ef5350' : '#000')};
 `;
 
 export const TrashcanIcon = styled.span`

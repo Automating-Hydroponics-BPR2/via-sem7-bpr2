@@ -15,6 +15,9 @@ import {
   User,
   addANotification,
   Priority,
+  setDashboardDateFilterLabel,
+  setDashboardDateFilter,
+  DateFilter,
 } from '../../shared';
 import { Dashboard } from './dashboard';
 import { deviceService, userService } from '../../services';
@@ -24,9 +27,11 @@ const mapStateToProps = (state: ApplicationState) => ({
   user: state.user.user,
   device: state.device.device,
   deviceIds: state.device.deviceIds,
-  isLoading: state.dashboard.isLoading,
   threshold: state.dashboard.threshold,
+  isLoading: state.dashboard.isLoading,
+  dateFilter: state.dashboard.dateFilter,
   currentReading: state.device.currentReading,
+  dateFilterLabel: state.dashboard.dateFilterLabel,
   historicalReadings: state.device.historicalReadings,
   selectedDeviceIdChart: state.dashboard.selectedDeviceIdChart,
   selectedDeviceIdDataTable: state.dashboard.selectedDeviceIdDataTable,
@@ -70,16 +75,19 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
         }),
       );
     },
+    setDateFilterLabel: (dateFilterLabel: string) => {
+      dispatch(setDashboardDateFilterLabel(dateFilterLabel));
+    },
+    setDateFilter: (dateFilter: DateFilter) => {
+      dispatch(setDashboardDateFilter(dateFilter));
+    },
+    setDashboardIsLoading: (isLoading: boolean) => {
+      dispatch(setDashboardIsLoading(isLoading));
+    },
     reset() {
       dispatch(resetDashboardStore());
     },
 
-    // Services
-    onInit: () => {
-      dispatch(setDashboardIsLoading(true));
-      dispatch(deviceService.getDeviceIds());
-      dispatch(setDashboardIsLoading(false));
-    },
     // Device
     getDeviceIds: () => {
       dispatch(deviceService.getDeviceIds());
@@ -89,6 +97,9 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     },
     getCurrentReading: (id: string) => {
       dispatch(deviceService.getCurrentReading(id));
+    },
+    getHistoricalReadings: (id: string, start: string, end: string, type?: string) => {
+      dispatch(deviceService.getHistoricalReadings(id, start, end, type));
     },
     createDevice: (deviceData: DeviceModel) => {
       dispatch(deviceService.createDevice(deviceData));

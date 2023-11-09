@@ -9,29 +9,54 @@ export const Dashboard = (props: DashboardProps) => {
   const {
     user,
     type,
-    reset,
     device,
     deviceIds,
     threshold,
     isLoading,
+    dateFilter,
+    dateFilterLabel,
     selectedDeviceIdChart,
     selectedDeviceIdDataTable,
     selectedDeviceIdInformaton,
     historicalReadings,
     currentReading,
+
+    reset,
     setType,
     setThreshold,
+    setDateFilter,
+    setDateFilterLabel,
+    setDashboardIsLoading,
     setSelectedDeviceIdChart,
     setSelectedDeviceIdDataTable,
     setSelectedDeviceIdInformaton,
-    deleteDeviceWithId,
+
+    getDeviceIds,
     createDevice,
-    deleteUserWithId,
-    updateDeviceWithId,
+    getDeviceWithId,
     updateUserWithId,
+    deleteUserWithId,
+    getCurrentReading,
+    deleteDeviceWithId,
+    updateDeviceWithId,
+    getHistoricalReadings,
   } = props;
 
+  const onInit = () => {
+    setDashboardIsLoading(true);
+    getDeviceIds();
+    if (deviceIds && deviceIds.length > 0) {
+      getDeviceWithId(deviceIds[0]);
+      getCurrentReading(deviceIds[0]);
+      getHistoricalReadings(deviceIds[0], dateFilter?.start.toString(), dateFilter.end.toString(), type);
+    }
+
+    setDashboardIsLoading(false);
+  };
+
   useEffect(() => {
+    onInit();
+
     return () => {
       reset();
     };
@@ -111,10 +136,13 @@ export const Dashboard = (props: DashboardProps) => {
           <Grid item xs={12} md={6} lg={8}>
             <SectionHeader
               type={type}
-              setSelectedDeviceId={setSelectedDeviceIdDataTable}
-              selectedDeviceId={selectedDeviceIdDataTable}
               setType={setType}
               deviceIds={deviceIds}
+              setDateFilter={setDateFilter}
+              dateFilterLabel={dateFilterLabel}
+              setDateFilterLabel={setDateFilterLabel}
+              selectedDeviceId={selectedDeviceIdDataTable}
+              setSelectedDeviceId={setSelectedDeviceIdDataTable}
               title={'Historical Readings'}
             />
             <DataTable
@@ -136,7 +164,7 @@ export const Dashboard = (props: DashboardProps) => {
                         temp: '3',
                         waterTemp: '4',
                         humidity: '5',
-                        timestamp: convertTimestampToDate('1697637285'),
+                        timestamp: convertTimestampToDate('1699536060144'),
                       },
                       {
                         id: '2',

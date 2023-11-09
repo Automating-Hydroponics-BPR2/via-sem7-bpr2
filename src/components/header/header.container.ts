@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
   type ApplicationState,
@@ -6,6 +7,8 @@ import {
   reset,
   markANotificationAsRead,
   removeANotification,
+  addANotification,
+  Priority,
 } from '../../shared';
 import { Header } from './header';
 
@@ -16,7 +19,19 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
   return {
-    onLogout: () => dispatch(reset()),
+    onLogout: () => {
+      dispatch(reset());
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Logout',
+          description: 'You have been logged out.',
+          priority: Priority.LOW,
+          read: false,
+          date: new Date(),
+        }),
+      );
+    },
     onMarkANotificationAsRead: (id: string) => {
       dispatch(markANotificationAsRead(id));
     },

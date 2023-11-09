@@ -28,7 +28,7 @@ const userSlice = createSlice({
     },
     reset(state) {
       localStorage.removeItem('token');
-      state = initialState;
+      Object.assign(state, initialState);
     },
   },
 });

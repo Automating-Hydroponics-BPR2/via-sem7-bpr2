@@ -61,6 +61,16 @@ export const createDevice = (deviceData: DeviceModel) => (dispatch: any) => {
         }),
       );
       console.error(err);
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Device creation failed',
+          description: `You have failed to create a new device with id ${deviceData.id}!`,
+          read: false,
+          priority: Priority.HIGH,
+          date: new Date(),
+        }),
+      );
     })
     .finally(() => {
       dispatch(setDashboardIsLoading(false));
@@ -86,6 +96,16 @@ export const getDeviceWithId = (id: string) => (dispatch: any) => {
           message: `Device was retrieved successfully!`,
         }),
       );
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Device retrieved',
+          description: `You have successfully retrieved a device with id ${id}!`,
+          read: false,
+          priority: Priority.LOW,
+          date: new Date(),
+        }),
+      );
     })
     .catch((err: any) => {
       dispatch(
@@ -96,6 +116,16 @@ export const getDeviceWithId = (id: string) => (dispatch: any) => {
         }),
       );
       console.error(err);
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Device retrieval failed',
+          description: `You have failed to retrieve a device with id ${id}!`,
+          read: false,
+          priority: Priority.HIGH,
+          date: new Date(),
+        }),
+      );
     })
     .finally(() => {
       dispatch(setDashboardIsLoading(false));
@@ -141,6 +171,16 @@ export const updateDeviceWithId = (id: string, deviceData: DeviceModel) => (disp
         }),
       );
       console.error(err);
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Device update failed',
+          description: `You have failed to update a device with id ${id}!`,
+          read: false,
+          priority: Priority.HIGH,
+          date: new Date(),
+        }),
+      );
     })
     .finally(() => {
       dispatch(setDashboardIsLoading(false));
@@ -185,6 +225,16 @@ export const deleteDeviceWithId = (id: string) => (dispatch: any) => {
         }),
       );
       console.error(err);
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Device deletion failed',
+          description: `You have failed to delete a device with id ${id}!`,
+          read: false,
+          priority: Priority.HIGH,
+          date: new Date(),
+        }),
+      );
     })
     .finally(() => {
       dispatch(setDashboardIsLoading(false));
@@ -210,6 +260,16 @@ export const getCurrentReading = (id: string) => (dispatch: any) => {
           message: `Successfully retrieved current device data!`,
         }),
       );
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Current device data retrieved',
+          description: `You have successfully retrieved current device data for device with id ${id}!`,
+          read: false,
+          priority: Priority.LOW,
+          date: new Date(),
+        }),
+      );
     })
     .catch((err: any) => {
       dispatch(
@@ -220,6 +280,16 @@ export const getCurrentReading = (id: string) => (dispatch: any) => {
         }),
       );
       console.error(err);
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Current device data retrieval failed',
+          description: `You have failed to retrieve current device data for device with id ${id}!`,
+          read: false,
+          priority: Priority.HIGH,
+          date: new Date(),
+        }),
+      );
     })
     .finally(() => {
       dispatch(setDashboardIsLoading(false));
@@ -245,6 +315,16 @@ export const getHistoricalReadings = (id: string, start: string, end: string, ty
           message: `Successfully retrieved historical device data!`,
         }),
       );
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Historical device data retrieved',
+          description: `You have successfully retrieved historical device data for device with id ${id}!`,
+          read: false,
+          priority: Priority.LOW,
+          date: new Date(),
+        }),
+      );
     })
     .catch((err: any) => {
       dispatch(
@@ -255,6 +335,16 @@ export const getHistoricalReadings = (id: string, start: string, end: string, ty
         }),
       );
       console.error(err);
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Historical device data retrieval failed',
+          description: `You have failed to retrieve historical device data for device with id ${id}!`,
+          read: false,
+          priority: Priority.HIGH,
+          date: new Date(),
+        }),
+      );
     })
     .finally(() => {
       dispatch(setDashboardIsLoading(false));
@@ -280,6 +370,16 @@ export const getDeviceIds = () => (dispatch: any) => {
           message: `Successfully retrieved device ids!`,
         }),
       );
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Device ids retrieved',
+          description: `You have successfully retrieved device ids!`,
+          read: false,
+          priority: Priority.LOW,
+          date: new Date(),
+        }),
+      );
     })
     .catch((err: any) => {
       dispatch(
@@ -290,6 +390,16 @@ export const getDeviceIds = () => (dispatch: any) => {
         }),
       );
       console.error(err);
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Device ids retrieval failed',
+          description: `You have failed to retrieve device ids!`,
+          read: false,
+          priority: Priority.HIGH,
+          date: new Date(),
+        }),
+      );
     })
     .finally(() => {
       dispatch(setDashboardIsLoading(false));

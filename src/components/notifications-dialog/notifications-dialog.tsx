@@ -15,7 +15,7 @@ import {
   StyledNotificationPriority,
   StyledNotificationTitle,
 } from './notifications-dialog.styles';
-import { Priority } from '../../shared/models/notification';
+import { Priority, TNotification } from '../../shared/models/notification';
 
 export const NotificationDialog = (props: INotificationsDialogProps) => {
   const theme = useTheme();
@@ -38,9 +38,15 @@ export const NotificationDialog = (props: INotificationsDialogProps) => {
           <CircleNotificationsIcon />
         </Avatar>
         <NotificationsList>
-          {notifications.length > 0 ? (
-            notifications
+          {notifications && notifications.length > 0 ? (
+            [...notifications]
               .sort((a, b) => {
+                if (!a.read && b.read) {
+                  return -1; // 'a' is unread
+                }
+                if (a.read && !b.read) {
+                  return 1; // 'b' is unread
+                }
                 if (a.priority === Priority.HIGH && b.priority !== Priority.HIGH) {
                   return -1; // 'a' comes first (HIGH priority)
                 }
@@ -49,7 +55,7 @@ export const NotificationDialog = (props: INotificationsDialogProps) => {
                 }
                 return 0; // no change in order
               })
-              .map((notification) => (
+              .map((notification: TNotification) => (
                 <NotificationItem
                   key={notification.id}
                   read={notification.read}
@@ -76,7 +82,7 @@ export const NotificationDialog = (props: INotificationsDialogProps) => {
                         minute: 'numeric',
                       })}
                     </StyledNotificationDate>
-                    <StyledNotificationPriority isHighPriority={notification.priority === Priority.HIGH}>
+                    <StyledNotificationPriority prioritized={notification.priority === Priority.HIGH}>
                       {notification.priority === Priority.HIGH ? 'High' : 'Low'}
                     </StyledNotificationPriority>
                     <TrashcanIcon

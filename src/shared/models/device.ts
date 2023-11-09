@@ -14,3 +14,8 @@ export interface DeviceReading {
   light: string;
   timestamp: string;
 }
+
+export interface DateFilter {
+  start: number;
+  end: number;
+}

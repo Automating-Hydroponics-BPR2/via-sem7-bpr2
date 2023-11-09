@@ -104,7 +104,6 @@ export const Header = (props: HeaderProps) => {
 
   const handleDrawerClick = (path: string) => {
     if (path === '/logout') {
-      console.log('logout');
       props.onLogout?.();
       navigate('/');
     } else {
@@ -214,7 +213,7 @@ export const Header = (props: HeaderProps) => {
         onClose={() => {
           setOpenNotificationDialog(false);
         }}
-        notifications={[]}
+        notifications={props.notifications}
         onDelete={props.onRemoveANotification}
         onMarkAsRead={props.onMarkANotificationAsRead}
       />

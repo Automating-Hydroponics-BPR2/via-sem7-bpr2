@@ -69,6 +69,16 @@ export const login = (username: string, password: string) => (dispatch: any) => 
           message: `User was not signed in!`,
         }),
       );
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Login failed',
+          description: `You have failed to login as ${username}!`,
+          read: false,
+          priority: Priority.HIGH,
+          date: new Date(),
+        }),
+      );
       console.error(err);
     })
     .finally(() => {
@@ -110,6 +120,16 @@ export const register = (user: User) => (dispatch: any) => {
       );
     })
     .catch((err: any) => {
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'Registration failed',
+          description: `You have failed to register as ${user.username}!`,
+          read: false,
+          priority: Priority.HIGH,
+          date: new Date(),
+        }),
+      );
       dispatch(
         setSnackbar({
           open: true,
@@ -163,6 +183,16 @@ export const deleteUserWithId = () => (dispatch: any) => {
           message: `User was not deleted!`,
         }),
       );
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'User deletion failed',
+          description: `You have failed to delete a user with username ${getToken().username}!`,
+          read: false,
+          priority: Priority.HIGH,
+          date: new Date(),
+        }),
+      );
       console.error(err);
     })
     .finally(() => {
@@ -209,6 +239,16 @@ export const updateUserWithId = (userData: User) => (dispatch: any) => {
           open: true,
           type: 'error',
           message: `User was not updated!`,
+        }),
+      );
+      dispatch(
+        addANotification({
+          id: uuidv4(),
+          title: 'User update failed',
+          description: `You have failed to update a user with username ${getToken().username}!`,
+          read: false,
+          priority: Priority.HIGH,
+          date: new Date(),
         }),
       );
       console.error(err);

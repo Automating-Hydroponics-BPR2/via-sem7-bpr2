@@ -1,5 +1,5 @@
 import { AuthenticatedUser, DeviceModel, User } from '../../shared';
-import { DeviceReading } from '../../shared/models/device';
+import { DateFilter, DeviceReading } from '../../shared/models/device';
 
 export interface DashboardProps {
   threshold: number;
@@ -8,6 +8,8 @@ export interface DashboardProps {
   type?: string;
   device?: DeviceModel;
   deviceIds?: string[];
+  dateFilter: DateFilter;
+  dateFilterLabel: string;
   user?: AuthenticatedUser;
   currentReading?: DeviceReading;
   historicalReadings?: DeviceReading[];
@@ -19,6 +21,9 @@ export interface DashboardProps {
   reset: () => void;
   setType: (type: string) => void;
   setThreshold: (treshold: number) => void;
+  setDateFilter: (dateFilter: DateFilter) => void;
+  setDateFilterLabel: (dateFilter: string) => void;
+  setDashboardIsLoading: (isLoading: boolean) => void;
   setSelectedDeviceIdChart: (deviceId: string) => void;
   setSelectedDeviceIdDataTable: (deviceId: string) => void;
   setSelectedDeviceIdInformaton: (deviceId: string) => void;
@@ -28,9 +33,10 @@ export interface DashboardProps {
   getDeviceIds: () => void;
   getDeviceWithId: (id: string) => void;
   getCurrentReading: (id: string) => void;
+  deleteDeviceWithId: (id: string) => void;
   createDevice: (deviceData: DeviceModel) => void;
   updateDeviceWithId: (id: string, deviceData: DeviceModel) => void;
-  deleteDeviceWithId: (id: string) => void;
+  getHistoricalReadings: (id: string, start: string, end: string, type?: string) => void;
 
   // User
   deleteUserWithId: () => void;

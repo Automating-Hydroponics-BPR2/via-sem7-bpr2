@@ -38,7 +38,7 @@ export const updateUserById = async (req, res, next) => {
   } catch (error) {
     if (error instanceof ApiError) next(error);
     else {
-      next(new InternalServerError(error, 'src/controllers/userController.js - loginUser'));
+      next(new InternalServerError(error, 'src/controllers/userController.js - updateUserById'));
     }
   }
 };
