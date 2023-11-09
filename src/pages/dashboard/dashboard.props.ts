@@ -18,12 +18,10 @@ export interface DashboardProps {
   selectedDeviceIdInformaton?: string;
 
   // Actions
-  reset: () => void;
   setType: (type: string) => void;
   setThreshold: (treshold: number) => void;
   setDateFilter: (dateFilter: DateFilter) => void;
   setDateFilterLabel: (dateFilter: string) => void;
-  setDashboardIsLoading: (isLoading: boolean) => void;
   setSelectedDeviceIdChart: (deviceId: string) => void;
   setSelectedDeviceIdDataTable: (deviceId: string) => void;
   setSelectedDeviceIdInformaton: (deviceId: string) => void;

@@ -6,12 +6,10 @@ import {
   type AppDispatch,
   setDashboardThreshold,
   setDashboardSelectedDeviceIdChart,
-  resetDashboardStore,
   setDashboardType,
   setDashboardSelectedDeviceIdDataTable,
   setDashboardSelectedDeviceIdInformaton,
   DeviceModel,
-  setDashboardIsLoading,
   User,
   addANotification,
   Priority,
@@ -54,12 +52,14 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
       );
     },
     setSelectedDeviceIdChart: (deviceId: string) => {
+      dispatch(deviceService.getCurrentReading(deviceId));
       dispatch(setDashboardSelectedDeviceIdChart(deviceId));
     },
     setSelectedDeviceIdDataTable: (deviceId: string) => {
       dispatch(setDashboardSelectedDeviceIdDataTable(deviceId));
     },
     setSelectedDeviceIdInformaton: (deviceId: string) => {
+      dispatch(deviceService.getDeviceWithId(deviceId));
       dispatch(setDashboardSelectedDeviceIdInformaton(deviceId));
     },
     setType: (type: string) => {
@@ -80,12 +80,6 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     },
     setDateFilter: (dateFilter: DateFilter) => {
       dispatch(setDashboardDateFilter(dateFilter));
-    },
-    setDashboardIsLoading: (isLoading: boolean) => {
-      dispatch(setDashboardIsLoading(isLoading));
-    },
-    reset() {
-      dispatch(resetDashboardStore());
     },
 
     // Device

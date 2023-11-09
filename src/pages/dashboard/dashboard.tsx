@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { DashboardProps } from './dashboard.props';
-import { Card, Chart, DataTable, SectionHeader } from '../../shared';
+import { Backdrop, Card, Chart, DataTable, SectionHeader } from '../../shared';
 import { Grid, Skeleton } from '@mui/material';
 import { StyledDashboardGridWrapper } from './dashboard.styles';
 import { convertToChartData, convertTimestampToDate } from './dashboard.utils';
@@ -21,62 +21,52 @@ export const Dashboard = (props: DashboardProps) => {
     historicalReadings,
     currentReading,
 
-    reset,
     setType,
     setThreshold,
     setDateFilter,
     setDateFilterLabel,
-    setDashboardIsLoading,
     setSelectedDeviceIdChart,
     setSelectedDeviceIdDataTable,
     setSelectedDeviceIdInformaton,
 
     getDeviceIds,
     createDevice,
-    getDeviceWithId,
     updateUserWithId,
     deleteUserWithId,
-    getCurrentReading,
     deleteDeviceWithId,
     updateDeviceWithId,
     getHistoricalReadings,
   } = props;
 
-  const onInit = () => {
-    setDashboardIsLoading(true);
-    getDeviceIds();
-    if (deviceIds && deviceIds.length > 0) {
-      getDeviceWithId(deviceIds[0]);
-      getCurrentReading(deviceIds[0]);
-      getHistoricalReadings(deviceIds[0], dateFilter?.start.toString(), dateFilter.end.toString(), type);
-    }
-
-    setDashboardIsLoading(false);
-  };
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    onInit();
+    if (!initialized) {
+      getDeviceIds();
+      setInitialized(true);
+    }
 
-    return () => {
-      reset();
-    };
-  }, [reset]);
+    if (selectedDeviceIdDataTable && dateFilter) {
+      getHistoricalReadings(selectedDeviceIdDataTable, dateFilter.start.toString(), dateFilter.end.toString(), type);
+    }
+  }, [initialized, selectedDeviceIdDataTable, dateFilter, type]);
 
   return (
     <StyledDashboardGridWrapper container columnSpacing={3}>
       {isLoading ? (
         <>
+          {<Backdrop />}
           <Grid item xs={12} lg={4}>
-            <Skeleton variant="rectangular" width={'100%'} height={350} animation={'wave'} />
+            <Skeleton variant="rectangular" width={'100%'} height={350} animation={'wave'} sx={{ m: 1 }} />
           </Grid>
           <Grid item xs={12} lg={8}>
-            <Skeleton variant="rectangular" width={'100%'} height={350} animation={'wave'} />
+            <Skeleton variant="rectangular" width={'100%'} height={350} animation={'wave'} sx={{ m: 1 }} />
           </Grid>
           <Grid item xs={12} lg={8}>
-            <Skeleton variant="rectangular" width={'100%'} height={350} animation={'wave'} />
+            <Skeleton variant="rectangular" width={'100%'} height={350} animation={'wave'} sx={{ m: 1 }} />
           </Grid>
           <Grid item xs={12} lg={4}>
-            <Skeleton variant="rectangular" width={'100%'} height={350} animation={'wave'} />
+            <Skeleton variant="rectangular" width={'100%'} height={350} animation={'wave'} sx={{ m: 1 }} />
           </Grid>
         </>
       ) : (

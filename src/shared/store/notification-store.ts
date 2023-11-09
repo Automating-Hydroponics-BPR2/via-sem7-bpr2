@@ -46,7 +46,7 @@ const notificationSlice = createSlice({
       state.snackbar.open = action.payload;
     },
     addANotification(state, action: PayloadAction<TNotification>) {
-      state.notifications.push(action.payload);
+      state.notifications.unshift(action.payload);
     },
     markANotificationAsRead(state, action: PayloadAction<string>) {
       const notification = state.notifications.find((notification) => notification.id === action.payload);
