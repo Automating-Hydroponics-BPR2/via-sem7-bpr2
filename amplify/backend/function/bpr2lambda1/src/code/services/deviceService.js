@@ -213,6 +213,7 @@ const getCurrentReadings = async (deviceId, userId) => {
 
 const getDeviceIdsForUser = async (userId) => {
   try {
+    console.log("point of debug 1', userId");
     const data = await dynamoDb.send(
       new ScanCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_DEVICES,

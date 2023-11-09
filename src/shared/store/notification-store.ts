@@ -12,7 +12,8 @@ const initialState: NotificationStore = {
     {
       id: uuidv4(),
       title: 'Hi there!',
-      description: 'Welcome to the Smart Home App! This is a notification example. If you are seeing this message you are probably reading the tooltip and you already marked this notification as read. This happens by hovering over the notification. You can also delete it by clicking on the trash icon that appears by hovering as well.',
+      description:
+        'Welcome to the Smart Home App! This is a notification example. If you are seeing this message you are probably reading the tooltip and you already marked this notification as read. This happens by hovering over the notification. You can also delete it by clicking on the trash icon that appears by hovering as well.',
       priority: Priority.LOW,
       read: false,
       date: new Date(),

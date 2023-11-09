@@ -87,6 +87,7 @@ export const getDeviceIdsForUser = async (req, res, next) => {
     const {
       user: { id: userId },
     } = req;
+    console.log(userId);
     const deviceIds = await deviceServices.getDeviceIdsForUser(userId);
     res.status(200).json(deviceIds);
   } catch (error) {
