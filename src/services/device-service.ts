@@ -78,10 +78,10 @@ export const createDevice = (deviceData: DeviceModel) => (dispatch: any) => {
     });
 };
 
-export const getDeviceWithId = (id: string) => (dispatch: any) => {
+export const getDeviceWithId = (deviceId: string) => (dispatch: any) => {
   dispatch(setDashboardIsLoading(true));
   axios
-    .get(deviceEndpoints.get(id), {
+    .get(deviceEndpoints.get(deviceId), {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${getToken()}`,
@@ -101,7 +101,7 @@ export const getDeviceWithId = (id: string) => (dispatch: any) => {
         addANotification({
           id: uuidv4(),
           title: 'Device retrieved',
-          description: `You have successfully retrieved a device with id ${id}!`,
+          description: `You have successfully retrieved a device with id ${deviceId}!`,
           read: false,
           priority: Priority.LOW,
           date: new Date(),
@@ -121,7 +121,7 @@ export const getDeviceWithId = (id: string) => (dispatch: any) => {
         addANotification({
           id: uuidv4(),
           title: 'Device retrieval failed',
-          description: `You have failed to retrieve a device with id ${id}!`,
+          description: `You have failed to retrieve a device with id ${deviceId}!`,
           read: false,
           priority: Priority.HIGH,
           date: new Date(),
@@ -176,7 +176,7 @@ export const updateDeviceWithId = (id: string, deviceData: DeviceModel) => (disp
         addANotification({
           id: uuidv4(),
           title: 'Device update failed',
-          description: `You have failed to update a device with id ${id}!`,
+          description: `You have failed to update a device with deviceId ${deviceData.deviceId}. Keep in mind that this request can fail if you are trying to add a device with an existing deviceId. Check your current device ids in the dashboard under selected device id dropdown to see if you have already used a deviceId you tried!`,
           read: false,
           priority: Priority.HIGH,
           date: new Date(),
@@ -265,7 +265,7 @@ export const getCurrentReading = (id: string) => (dispatch: any) => {
         addANotification({
           id: uuidv4(),
           title: 'Current device data retrieved',
-          description: `You have successfully retrieved current device data for device with id ${id}!`,
+          description: `You have successfully retrieved current device data for device with deviceId ${id}!`,
           read: false,
           priority: Priority.LOW,
           date: new Date(),

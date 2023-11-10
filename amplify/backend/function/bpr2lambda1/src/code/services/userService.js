@@ -12,6 +12,34 @@ import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { NotFoundError, DynamoDBError, BadRequestError, UnauthorizedError, ApiError } from '../helpers/apiError.js';
 const dynamoDb = new DynamoDBClient({ region: 'eu-central-1' });
 
+const checkIfUsernameIsTaken = async (username) => {
+  try {
+    const { Items } = await dynamoDb.send(
+      new QueryCommand({
+        TableName: process.env.DYNAMODB_TABLE_NAME_USERS,
+        IndexName: 'username-index',
+        KeyConditionExpression: '#username = :username', // Use :username as a placeholder
+        ExpressionAttributeValues: marshall({
+          ':username': username, // Use :username as a placeholder with a colon
+        }),
+        ExpressionAttributeNames: {
+          '#username': 'username', // Map the placeholder to the actual attribute name
+        },
+      }),
+    );
+
+    if (Items.length !== 0) {
+      throw new BadRequestError(
+        `User with username ${username} already exists. Try another username.`,
+        'src/services/userService.js - checkIfUsernameExists',
+      );
+    }
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    else throw new DynamoDBError(error, `src/services/userService.js - ${username} - checkIfUsernameExists`);
+  }
+};
+
 const checkIfUserWithUsernameExists = async (username, shouldUserExist, isReturnSpecified) => {
   try {
     const { Items } = await dynamoDb.send(
@@ -140,7 +168,7 @@ const deleteUserById = async (userId) => {
 
 const updateUserById = async (user, userId) => {
   try {
-    await checkIfUserWithUsernameExists(user.username, true);
+    await checkIfUsernameIsTaken(user.username);
 
     // more information > https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/dynamodb/command/UpdateItemCommand/
     const userAttributes = Object.keys(user);

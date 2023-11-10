@@ -5,7 +5,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import {
   AppBar,
-  Button,
   Divider,
   Drawer,
   InputBase,
@@ -25,7 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import { type NavItem } from '../../shared';
 import { ThemeDialogContainer } from '../theme-dialog/theme-dialog.container';
 import { HeaderProps } from './header.props';
-import { Logo, StyledLink, StyledIcon, StyledNumberOfNotifications } from './header.styles';
+import { Logo, StyledLinkText, StyledIcon, StyledNumberOfNotifications, StyledLinkButtonIcon, StyledLinkButton } from './header.styles';
 import { NotificationDialog } from '../notifications-dialog';
 
 const Search = styled('div')(({ theme }) => ({
@@ -101,7 +100,7 @@ export const Header = (props: HeaderProps) => {
     setMobileOpen(!mobileOpen);
   };
 
-  const handleDrawerClick = (path: string) => {
+  const handleLinkButtonClick = (path: string) => {
     if (path === '/logout') {
       props.onLogout?.();
       navigate('/');
@@ -122,7 +121,7 @@ export const Header = (props: HeaderProps) => {
             <ListItemButton
               sx={{ textAlign: 'center' }}
               onClick={() => {
-                handleDrawerClick(item.path);
+                handleLinkButtonClick(item.path);
               }}>
               <ListItemText primary={item.name}>{item.name}</ListItemText>
             </ListItemButton>
@@ -153,9 +152,16 @@ export const Header = (props: HeaderProps) => {
             </Box>
             <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
               {navItems.map((item) => (
-                <Button key={item.name}>
-                  <StyledLink to={item.path}>{item.name}</StyledLink>
-                </Button>
+                <StyledLinkButton
+                  key={item.name}
+                  onClick={() => {
+                    handleLinkButtonClick(item.path);
+                  }}>
+                  <StyledLinkText>{item.name}</StyledLinkText>
+                  <StyledLinkButtonIcon>
+                    <CircleNotificationsIcon />
+                  </StyledLinkButtonIcon>
+                </StyledLinkButton>
               ))}
             </Box>
             <Search sx={{ width: 250 }}>

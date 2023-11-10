@@ -1,19 +1,43 @@
-import { IconButton } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { IconButton, Typography, Button } from '@mui/material';
 import styled from 'styled-components';
 
 export const Logo = styled.img`
   display: block;
-  width: 10rem;
-  height: 3rem;
+  width: 9rem;
+  height: 2rem;
   margin-right: 1rem;
 `;
 
-export const StyledLink = styled(Link)<{ isInverted?: boolean }>`
-  list-style: none;
-  text-decoration: none;
+export const StyledLinkText = styled(Typography)<{ isInverted?: boolean }>`
+  opacity: 1;
+  font-size: 1rem;
   color: ${({ theme, isInverted }) =>
     isInverted ? theme.palette.primary.contrastText : theme.palette.text.primary}; };
+`;
+
+export const StyledLinkButton = styled(Button)`
+  text-transform: uppercase;
+  transition: opacity 0.3s;
+
+  &:hover {
+    ${StyledLinkText} {
+      opacity: 0;
+    }
+  }
+`;
+
+export const StyledLinkButtonIcon = styled(IconButton)`
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  color: ${({ theme }) => theme.palette.text.primary};
+  opacity: 0;
+  transition: opacity 0.2s;
+  cursor: pointer;
+
+  ${StyledLinkButton}:hover & {
+    opacity: 1;
+  }
 `;
 
 export const StyledIcon = styled(IconButton)`

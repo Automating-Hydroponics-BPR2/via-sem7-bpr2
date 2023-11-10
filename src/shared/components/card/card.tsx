@@ -113,8 +113,8 @@ export const Card = React.memo((props: CardProps) => {
         onOptionClick={(option: string) => {
           switch (option) {
             case 'Confirm':
-              if (props.device?.deviceId) {
-                props.onDeviceDeleteClick?.(props.device.deviceId);
+              if (props.device?.id) {
+                props.onDeviceDeleteClick?.(props.device.id);
               } else props.onUserDeleteClick?.();
               break;
             case 'Cancel':

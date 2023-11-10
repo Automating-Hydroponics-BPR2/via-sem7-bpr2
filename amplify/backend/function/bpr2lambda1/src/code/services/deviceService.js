@@ -11,7 +11,7 @@ import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { NotFoundError, DynamoDBError, BadRequestError, InternalServerError, ApiError } from '../helpers/apiError.js';
 const dynamoDb = new DynamoDBClient({ region: 'eu-central-1' });
 
-const checkIfDeviceExistsAndBelongsToUser = async (deviceId, userId, shouldDeviceExist, isReturnSpecified) => {
+const checkIfDeviceIdIsTaken = async (deviceId) => {
   try {
     const { Items } = await dynamoDb.send(
       new QueryCommand({
@@ -19,7 +19,40 @@ const checkIfDeviceExistsAndBelongsToUser = async (deviceId, userId, shouldDevic
         IndexName: 'deviceId-index',
         KeyConditionExpression: '#deviceId = :deviceId', // Use :deviceId as a placeholder
         ExpressionAttributeValues: marshall({
-          ':deviceId': deviceId, // Use :username as a placeholder with a colon
+          ':deviceId': deviceId, // Use :deviceId as a placeholder with a colon
+        }),
+        ExpressionAttributeNames: {
+          '#deviceId': 'deviceId', // Map the placeholder to the actual attribute name
+        },
+        /*
+                  {
+            removeUndefinedValues: true,
+          },
+        */
+      }),
+    );
+
+    if (Items.length !== 0) {
+      throw new BadRequestError(
+        `Device with id ${deviceId} already exists. Try another id.`,
+        'src/services/deviceService.js - checkIfDeviceIdExists',
+      );
+    }
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    else throw new DynamoDBError(error, `src/services/deviceService.js - ${deviceId} - checkIfDeviceIdExists`);
+  }
+};
+
+const checkIfDeviceIdExistsAndBelongsToUser = async (deviceId, userId, shouldDeviceExist, isReturnSpecified) => {
+  try {
+    const { Items } = await dynamoDb.send(
+      new QueryCommand({
+        TableName: process.env.DYNAMODB_TABLE_NAME_DEVICES,
+        IndexName: 'deviceId-index',
+        KeyConditionExpression: '#deviceId = :deviceId', // Use :deviceId as a placeholder
+        ExpressionAttributeValues: marshall({
+          ':deviceId': deviceId, // Use :deviceId as a placeholder with a colon
         }),
         ExpressionAttributeNames: {
           '#deviceId': 'deviceId', // Map the placeholder to the actual attribute name
@@ -61,11 +94,12 @@ const checkIfDeviceExistsAndBelongsToUser = async (deviceId, userId, shouldDevic
 
 const createDevice = async (device, userId) => {
   try {
-    await checkIfDeviceExistsAndBelongsToUser(device.deviceId, userId);
+    await checkIfDeviceIdIsTaken(device.deviceId);
+    console.log('point of debug 1', device);
 
     const deviceToCreate = {
       id: uuidv4(),
-      deviceId: device.id,
+      deviceId: device.deviceId,
       name: device.name ? device.name : 'Unnamed Device',
       userId,
     };
@@ -84,14 +118,12 @@ const createDevice = async (device, userId) => {
   }
 };
 
-const deleteDeviceById = async (deviceId, userId) => {
+const deleteDeviceById = async (id, userId) => {
   try {
-    const deviceToDelete = await checkIfDeviceExistsAndBelongsToUser(deviceId, userId, true, true);
-
     await dynamoDb.send(
       new DeleteItemCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_DEVICES,
-        Key: marshall({ id: deviceToDelete.Id }),
+        Key: marshall({ id }),
       }),
     );
   } catch (error) {
@@ -100,11 +132,10 @@ const deleteDeviceById = async (deviceId, userId) => {
   }
 };
 
-const updateDeviceById = async (deviceId, userId, device) => {
+const updateDeviceById = async (id, userId, device) => {
   try {
-    // Check if the device belongs to the user
-    console.log('point of debug 1', deviceId);
-    const deviceToUpdate = await checkIfDeviceExistsAndBelongsToUser(deviceId, userId, true, true);
+    console.log('point of debug 1', id);
+    await checkIfDeviceIdIsTaken(device.deviceId);
     console.log('point of debug 2', userId);
 
     const deviceToUpdateKeys = Object.keys(device);
@@ -115,10 +146,12 @@ const updateDeviceById = async (deviceId, userId, device) => {
       deviceToUpdateKeys.reduce((acc, key) => ({ ...acc, [`:${key}`]: device[key] }), {}),
     );
 
+    console.log('point of debug 3', updateExpression, expressionAttributeNames, expressionAttributeValues);
+
     const { Attributes: updatedDevice } = await dynamoDb.send(
       new UpdateItemCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_DEVICES,
-        Key: marshall({ id: deviceToUpdate.deviceId }),
+        Key: marshall({ id }),
         UpdateExpression: updateExpression,
         ExpressionAttributeNames: expressionAttributeNames,
         ExpressionAttributeValues: expressionAttributeValues,
@@ -140,8 +173,9 @@ const updateDeviceById = async (deviceId, userId, device) => {
 
 const getHistoricalReadings = async (deviceId, userId, start, end) => {
   try {
+    // TODO still cannot get historical readings
     console.log('point of debug 1 historical readings', deviceId);
-    await checkIfDeviceExistsAndBelongsToUser(deviceId, userId, true);
+    await checkIfDeviceIdExistsAndBelongsToUser(deviceId, userId, true);
 
     console.log('point of debug 2 historical readings', deviceId, start, end);
 
@@ -149,16 +183,16 @@ const getHistoricalReadings = async (deviceId, userId, start, end) => {
       new QueryCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_READINGS,
         IndexName: 'deviceId-timestamp-index', // Use the name of your Global Secondary Index
-        KeyConditionExpression: '#deviceId = :deviceId AND #timestamp BETWEEN :end AND :start',
+        KeyConditionExpression: '#deviceId = :deviceId AND #t BETWEEN :e AND :s',
         ExpressionAttributeNames: {
           '#deviceId': 'deviceId',
-          '#timestamp': 'timestamp',
+          '#t': 'timestamp',
         },
         ExpressionAttributeValues: marshall(
           {
             ':deviceId': deviceId,
-            ':start': start,
-            ':end': end,
+            ':s': start,
+            ':e': end,
           },
           {
             removeUndefinedValues: true,
@@ -193,7 +227,7 @@ const getCurrentReadings = async (deviceId, userId) => {
   console.log('point of debug 1 current readings', deviceId);
   try {
     // Check if the device belongs to the user
-    await checkIfDeviceExistsAndBelongsToUser(deviceId, userId, true);
+    await checkIfDeviceIdExistsAndBelongsToUser(deviceId, userId, true);
 
     console.log('point of debug 2 current readings', deviceId);
     // Retrieve all items for the specified deviceId
@@ -269,7 +303,7 @@ const getDeviceIdsForUser = async (userId) => {
 const getDeviceInformationForId = async (deviceId, userId) => {
   try {
     // Check if the device belongs to the user
-    const device = await checkIfDeviceExistsAndBelongsToUser(deviceId, userId, true, true);
+    const device = await checkIfDeviceIdExistsAndBelongsToUser(deviceId, userId, true, true);
 
     console.log(device);
 
