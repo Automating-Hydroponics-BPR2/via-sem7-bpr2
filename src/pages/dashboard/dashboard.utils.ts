@@ -1,4 +1,4 @@
-import { DeviceReading } from '../../shared';
+import { DeviceReading, FilterType, FilteredDeviceReading } from '../../shared';
 
 export const convertToChartData = (data: DeviceReading) => {
   return [
@@ -33,5 +33,17 @@ export const convertTimestampToDate = (timestamp: number) => {
     day: 'numeric',
     hour: 'numeric',
     minute: 'numeric',
+  });
+};
+
+export const filterDataTableDataForType = (type: FilterType, data: DeviceReading[]) => {
+  return data.map((item: DeviceReading) => {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    const filteredItem = {
+      timestamp: convertTimestampToDate(item.timestamp as number),
+      [type]: item[type],
+    } as FilteredDeviceReading;
+
+    return filteredItem;
   });
 };

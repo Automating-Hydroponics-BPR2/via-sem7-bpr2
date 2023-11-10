@@ -143,13 +143,13 @@ const getHistoricalReadings = async (deviceId, userId, start, end) => {
     console.log('point of debug 1 historical readings', deviceId);
     await checkIfDeviceExistsAndBelongsToUser(deviceId, userId, true);
 
-    console.log('point of debug 2 historical readings', deviceId);
+    console.log('point of debug 2 historical readings', deviceId, start, end);
 
     const data = await dynamoDb.send(
       new QueryCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_READINGS,
         IndexName: 'deviceId-timestamp-index', // Use the name of your Global Secondary Index
-        KeyConditionExpression: '#deviceId = :deviceId AND #timestamp BETWEEN :start AND :end',
+        KeyConditionExpression: '#deviceId = :deviceId AND #timestamp BETWEEN :end AND :start',
         ExpressionAttributeNames: {
           '#deviceId': 'deviceId',
           '#timestamp': 'timestamp',
@@ -164,6 +164,7 @@ const getHistoricalReadings = async (deviceId, userId, start, end) => {
             removeUndefinedValues: true,
           },
         ),
+        ScanIndexForward: false,
       }),
     );
 
@@ -172,7 +173,7 @@ const getHistoricalReadings = async (deviceId, userId, start, end) => {
     if (!data)
       throw new NotFoundError(
         `Could not get data. No readings found for device with id ${deviceId} between ${start} and ${end}`,
-        'src/services/deviceService.js - getAllDevices',
+        'src/services/deviceService.js - getHistoricalReadings',
       );
 
     const devicesToReturn = {
@@ -184,7 +185,7 @@ const getHistoricalReadings = async (deviceId, userId, start, end) => {
     return devicesToReturn;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    throw new DynamoDBError(error, 'src/services/deviceService.js - getAllDevices');
+    throw new DynamoDBError(error, 'src/services/deviceService.js - getHistoricalReadings');
   }
 };
 
@@ -213,6 +214,7 @@ const getCurrentReadings = async (deviceId, userId) => {
           },
         ),
         Limit: 1,
+        ScanIndexForward: false,
       }),
     );
 

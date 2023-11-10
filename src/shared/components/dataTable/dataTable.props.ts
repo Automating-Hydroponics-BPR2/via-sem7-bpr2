@@ -1,7 +1,8 @@
-import { DeviceReading } from '../../models/device';
+import { DeviceReading, FilteredDeviceReading } from '../../models/device';
 
 export interface IDataTableProps {
-  data: DeviceReading[];
+  data: DeviceReading[] | FilteredDeviceReading[];
+  filterType?: string;
   height: string;
   width: string;
 }

@@ -40,7 +40,7 @@ export const StyledNotificationRightSide = styled(Box)`
 `;
 
 export const StyledNotificationTitle = styled(Typography)`
-font-size: 1rem;
+  font-size: 1rem;
   text-align: left;
   display: -webkit-box;
   text-overflow: ellipsis;

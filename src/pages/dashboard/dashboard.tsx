@@ -1,11 +1,79 @@
 import { useEffect, useState } from 'react';
 import { DashboardProps } from './dashboard.props';
-import { Backdrop, Card, Chart, DataTable, SectionHeader } from '../../shared';
+import { Backdrop, Card, Chart, DataTable, FilterType, SectionHeader } from '../../shared';
 import { Grid, Skeleton } from '@mui/material';
 import { StyledDashboardGridWrapper } from './dashboard.styles';
-import { convertToChartData, convertTimestampToDate } from './dashboard.utils';
+import { convertToChartData, convertTimestampToDate, filterDataTableDataForType } from './dashboard.utils';
 
 export const Dashboard = (props: DashboardProps) => {
+  const hardCodedDataTableData = [
+    {
+      id: '1',
+      deviceId: '2',
+      name: 'Device 2',
+      light: '1',
+      ph: '2',
+      temp: '3',
+      waterTemp: '4',
+      humidity: '5',
+      timestamp: 1697637285,
+    },
+    {
+      id: '2',
+      deviceId: '2',
+      name: 'Device 2',
+      light: '1',
+      ph: '2',
+      temp: '3',
+      waterTemp: '4',
+      humidity: '5',
+      timestamp: 1697637285,
+    },
+    {
+      id: '3',
+      deviceId: '2',
+      name: 'Device 2',
+      light: '1',
+      ph: '2',
+      temp: '3',
+      waterTemp: '4',
+      humidity: '5',
+      timestamp: 1697637285,
+    },
+    {
+      id: '4',
+      deviceId: '2',
+      name: 'Device 2',
+      light: '1',
+      ph: '2',
+      temp: '3',
+      waterTemp: '4',
+      humidity: '5',
+      timestamp: 1697637285,
+    },
+    {
+      id: '5',
+      deviceId: '2',
+      name: 'Device 2',
+      light: '1',
+      ph: '2',
+      temp: '3',
+      waterTemp: '4',
+      humidity: '5',
+      timestamp: 1697637285,
+    },
+    {
+      id: '6',
+      deviceId: '2',
+      name: 'Device 2',
+      light: '1',
+      ph: '2',
+      temp: '3',
+      waterTemp: '4',
+      humidity: '5',
+      timestamp: 1697637285,
+    },
+  ];
   const {
     user,
     type,
@@ -49,7 +117,7 @@ export const Dashboard = (props: DashboardProps) => {
     if (selectedDeviceIdDataTable && dateFilter) {
       getHistoricalReadings(selectedDeviceIdDataTable, dateFilter.start, dateFilter.end);
     }
-  }, [initialized, selectedDeviceIdDataTable, dateFilter, type]);
+  }, [initialized, selectedDeviceIdDataTable, dateFilter]);
 
   return (
     <StyledDashboardGridWrapper container columnSpacing={3}>
@@ -89,9 +157,9 @@ export const Dashboard = (props: DashboardProps) => {
               height="200px"
               width="100%"
               title={selectedDeviceIdInformaton ?? 'No device selected'}
-              description={`Here you can see information about the device, such as id ${
+              description={`Here you can see information about the device, such as ${
                 selectedDeviceIdInformaton ?? ''
-              } and/or name ${device?.name ?? ''}. You can edit or add a device here, as well as, delete a device.`}
+              } {id} ${device?.name ? `and ${device.name} {name}` : ''}. You can edit, add or delete a device.`}
               id={selectedDeviceIdInformaton ?? 'No device selected'}
             />
           </Grid>
@@ -109,7 +177,6 @@ export const Dashboard = (props: DashboardProps) => {
                 currentReading ?? {
                   id: '1',
                   deviceId: '2',
-                  name: 'Device 2',
                   light: '15',
                   ph: '20',
                   temp: '33',
@@ -138,81 +205,29 @@ export const Dashboard = (props: DashboardProps) => {
             <DataTable
               data={
                 historicalReadings
-                  ? historicalReadings.map((reading) => {
+                  ? type === 'Choose a type'
+                    ? historicalReadings.map((reading) => {
+                        return {
+                          ...reading,
+                          timestamp: convertTimestampToDate(reading.timestamp as number),
+                        };
+                      })
+                    : filterDataTableDataForType(type as FilterType, historicalReadings).map((reading) => {
+                        return {
+                          ...reading,
+                          timestamp: convertTimestampToDate(reading.timestamp as number),
+                        };
+                      })
+                  : type === 'Choose a type'
+                  ? hardCodedDataTableData.map((reading) => {
                       return {
                         ...reading,
                         timestamp: convertTimestampToDate(reading.timestamp as number),
                       };
                     })
-                  : [
-                      {
-                        id: '1',
-                        deviceId: '2',
-                        name: 'Device 2',
-                        light: '1',
-                        ph: '2',
-                        temp: '3',
-                        waterTemp: '4',
-                        humidity: '5',
-                        timestamp: convertTimestampToDate(1699536060144),
-                      },
-                      {
-                        id: '2',
-                        deviceId: '2',
-                        name: 'Device 2',
-                        light: '1',
-                        ph: '2',
-                        temp: '3',
-                        waterTemp: '4',
-                        humidity: '5',
-                        timestamp: 1697637285,
-                      },
-                      {
-                        id: '3',
-                        deviceId: '2',
-                        name: 'Device 2',
-                        light: '1',
-                        ph: '2',
-                        temp: '3',
-                        waterTemp: '4',
-                        humidity: '5',
-                        timestamp: 1697637285,
-                      },
-                      {
-                        id: '4',
-                        deviceId: '2',
-                        name: 'Device 2',
-                        light: '1',
-                        ph: '2',
-                        temp: '3',
-                        waterTemp: '4',
-                        humidity: '5',
-                        timestamp: 1697637285,
-                      },
-                      {
-                        id: '5',
-                        deviceId: '2',
-                        name: 'Device 2',
-                        light: '1',
-                        ph: '2',
-                        temp: '3',
-                        waterTemp: '4',
-                        humidity: '5',
-                        timestamp: 1697637285,
-                      },
-                      {
-                        id: '6',
-                        deviceId: '2',
-                        name: 'Device 2',
-                        light: '1',
-                        ph: '2',
-                        temp: '3',
-                        waterTemp: '4',
-                        humidity: '5',
-                        timestamp: 1697637285,
-                      },
-                    ]
+                  : filterDataTableDataForType(type as FilterType, hardCodedDataTableData)
               }
+              filterType={type !== 'Choose a type' ? (type as FilterType) : undefined}
               width={'100%'}
               height={'200px'}
             />

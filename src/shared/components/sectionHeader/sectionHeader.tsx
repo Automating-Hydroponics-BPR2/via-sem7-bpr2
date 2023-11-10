@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ISectionHeaderProps } from './sectionHeader.props';
-import { SelectChangeEvent } from '@mui/material';
+import { SelectChangeEvent, Tooltip } from '@mui/material';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import {
   StyledHeaderWrapper,
@@ -15,8 +15,6 @@ import {
 import { DateFilter } from '../../models';
 
 export const SectionHeader = (props: ISectionHeaderProps) => {
-  const [localDateFilter, setLocalDateFilter] = useState<DateFilter>();
-  const [localType, setLocalType] = useState<string>();
   const {
     threshold,
     setSelectedDeviceId,
@@ -30,10 +28,16 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
     dateFilterLabel,
     setDateFilterLabel,
   } = props;
+  const [localDateFilter, setLocalDateFilter] = useState<DateFilter>();
+  const [localType, setLocalType] = useState<string>(type ?? 'Choose a type');
+  const [localSelectedDeviceId, setLocalSelectedDeviceId] = useState<string>(selectedDeviceId ?? 'Choose a device');
 
   const handleDeviceChange = (e: SelectChangeEvent<unknown>) => {
     const newDeviceId = e.target.value as string;
-    setSelectedDeviceId?.(newDeviceId);
+    setLocalSelectedDeviceId?.(newDeviceId);
+    if (threshold ?? !type) {
+      setSelectedDeviceId?.(newDeviceId);
+    }
   };
 
   const handleThresholdChange = (e: SelectChangeEvent<unknown>) => {
@@ -43,6 +47,8 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
 
   const handleTypeChange = (e: SelectChangeEvent<unknown>) => {
     const newType = e.target.value as string;
+
+    setType?.(newType);
     setLocalType?.(newType);
   };
 
@@ -69,9 +75,14 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
   };
 
   const handleFilterClick = () => {
-    if (localDateFilter && localType) {
-      setDateFilter?.(localDateFilter);
-      setType?.(localType);
+    if (localSelectedDeviceId) {
+      setSelectedDeviceId?.(localSelectedDeviceId);
+      if (localDateFilter) {
+        setDateFilter?.(localDateFilter);
+      }
+      if (localType !== 'Choose a type') {
+        setType?.(localType);
+      }
     }
   };
 
@@ -88,7 +99,7 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
             <StyledHeaderLabel>Device:</StyledHeaderLabel>
             <StyledHeaderSelect
               width="10rem"
-              value={selectedDeviceId ?? 'Choose a device'}
+              value={localSelectedDeviceId ?? 'Choose a device'}
               onChange={handleDeviceChange}
               label={'Device Id'}>
               <StyledMenuItem key={'Choose a device'} value={'Choose a device'} disabled>
@@ -128,10 +139,10 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
             <StyledHeaderLabel>{threshold ? 'Threshold:' : 'Type:'}</StyledHeaderLabel>
             <StyledHeaderSelect
               width="8rem"
-              value={threshold ?? type}
+              value={threshold ?? localType}
               onChange={threshold ? handleThresholdChange : handleTypeChange}>
               {type && (
-                <StyledMenuItem key={'Choose a type'} value={'Choose a type'} disabled>
+                <StyledMenuItem key={'Choose a type'} value={'Choose a type'}>
                   {'Choose a type'}
                 </StyledMenuItem>
               )}
@@ -151,15 +162,20 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
         ) : null}
 
         {dateFilterLabel && type && (
-          <StyledIcon
-            size="large"
-            aria-label="theming button"
-            edge="end"
-            onClick={handleFilterClick}
-            color={'inherit'}
-            sx={{ display: { xs: 'none', lg: 'block' } }}>
-            <FilterAltIcon />
-          </StyledIcon>
+          <Tooltip
+            title="The type can always be applied even without clicking the filter button as it is only affecting current data. However, in order for changed selected device id or date filter to take effect, you must click the filter button."
+            placement="top"
+            arrow>
+            <StyledIcon
+              size="large"
+              aria-label="theming button"
+              edge="end"
+              onClick={handleFilterClick}
+              color={'inherit'}
+              sx={{ display: { xs: 'none', lg: 'block' } }}>
+              <FilterAltIcon />
+            </StyledIcon>
+          </Tooltip>
         )}
       </StyledHeaderCategoryWrapper>
     </StyledHeaderWrapper>

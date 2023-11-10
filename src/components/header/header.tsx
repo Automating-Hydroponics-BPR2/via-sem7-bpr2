@@ -195,7 +195,7 @@ export const Header = (props: HeaderProps) => {
               aria-label="open drawer"
               edge="end"
               onClick={handleDrawerToggle}
-              sx={{  display: { lg: 'none' } }}>
+              sx={{ display: { lg: 'none' } }}>
               <MenuIcon />
             </StyledIcon>
           </Toolbar>
