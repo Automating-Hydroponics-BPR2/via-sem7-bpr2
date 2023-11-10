@@ -31,8 +31,7 @@ export const StyledNotificationLeftSide = styled(Box)`
   max-width: 16rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: space-around;
 `;
 
 export const StyledNotificationRightSide = styled(Box)`
@@ -41,6 +40,7 @@ export const StyledNotificationRightSide = styled(Box)`
 `;
 
 export const StyledNotificationTitle = styled(Typography)`
+font-size: 1rem;
   text-align: left;
   display: -webkit-box;
   text-overflow: ellipsis;
@@ -51,7 +51,7 @@ export const StyledNotificationTitle = styled(Typography)`
 `;
 
 export const StyledNotificationDescription = styled(Typography)`
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   text-align: left;
   display: -webkit-box;
   text-overflow: ellipsis;

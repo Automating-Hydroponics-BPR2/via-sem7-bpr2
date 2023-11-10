@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 
@@ -20,14 +20,16 @@ import { EditUserDialog, EditAddDeviceDialog } from '../../../components';
 import { Typography } from '@mui/material';
 
 export const Card = React.memo((props: CardProps) => {
-  const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
-  const [openEditUserDialog, setOpenEditUserDialog] = React.useState(false);
-  const [openEditAddDeviceDialog, setOpenEditAddDeviceDialog] = React.useState(false);
-  const [isHovering, setIsHovering] = React.useState(false);
+  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+  const [openEditUserDialog, setOpenEditUserDialog] = useState(false);
+  const [openEditAddDeviceDialog, setOpenEditAddDeviceDialog] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const [isAddDeviceClicked, setIsAddDeviceClicked] = useState(false);
   const { width, height, padding } = props;
   return (
     <>
       <CardWrapper
+        key={props.id}
         width={width}
         height={height}
         padding={padding}
@@ -49,6 +51,7 @@ export const Card = React.memo((props: CardProps) => {
                   right="-6px"
                   type="button"
                   onClick={(e: React.MouseEvent) => {
+                    setIsAddDeviceClicked(false);
                     props.user ? setOpenEditUserDialog(true) : setOpenEditAddDeviceDialog(true);
                     e.stopPropagation();
                   }}>
@@ -73,6 +76,7 @@ export const Card = React.memo((props: CardProps) => {
                   right="-6px"
                   type="button"
                   onClick={(e: React.MouseEvent) => {
+                    setIsAddDeviceClicked(true);
                     setOpenEditAddDeviceDialog(true);
                     e.stopPropagation();
                   }}>
@@ -109,8 +113,8 @@ export const Card = React.memo((props: CardProps) => {
         onOptionClick={(option: string) => {
           switch (option) {
             case 'Confirm':
-              if (props.device?.id) {
-                props.onDeviceDeleteClick?.(props.device.id);
+              if (props.device?.deviceId) {
+                props.onDeviceDeleteClick?.(props.device.deviceId);
               } else props.onUserDeleteClick?.();
               break;
             case 'Cancel':
@@ -137,6 +141,7 @@ export const Card = React.memo((props: CardProps) => {
           setOpenEditAddDeviceDialog(false);
         }}
         device={props.device ? props.device : undefined}
+        isAddDevice={isAddDeviceClicked}
         onDeviceEdit={props.onDeviceEditClick}
         onDeviceAdd={props.onDeviceAddClick}
       />

@@ -1,6 +1,7 @@
+import { v4 as uuidv4 } from 'uuid';
 import {
   DynamoDBClient,
-  GetItemCommand,
+  QueryCommand,
   PutItemCommand,
   DeleteItemCommand,
   UpdateItemCommand,
@@ -12,21 +13,28 @@ const dynamoDb = new DynamoDBClient({ region: 'eu-central-1' });
 
 const checkIfDeviceExistsAndBelongsToUser = async (deviceId, userId, shouldDeviceExist, isReturnSpecified) => {
   try {
-    const { Item } = await dynamoDb.send(
-      new GetItemCommand({
+    const { Items } = await dynamoDb.send(
+      new QueryCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_DEVICES,
-        Key: marshall({ id: deviceId }),
+        IndexName: 'deviceId-index',
+        KeyConditionExpression: '#deviceId = :deviceId', // Use :deviceId as a placeholder
+        ExpressionAttributeValues: marshall({
+          ':deviceId': deviceId, // Use :username as a placeholder with a colon
+        }),
+        ExpressionAttributeNames: {
+          '#deviceId': 'deviceId', // Map the placeholder to the actual attribute name
+        },
       }),
     );
 
     if (shouldDeviceExist) {
-      if (!Item) {
+      if (Items.length === 0) {
         throw new NotFoundError(
           `Device with id ${deviceId} does not exist. Please create it first.`,
           'src/services/deviceService.js - checkIfDeviceBelongsToUser',
         );
       } else {
-        const device = unmarshall(Item);
+        const device = unmarshall(Items[0]);
         // Check if the device belongs to the user
         if (device.userId !== userId) {
           throw new BadRequestError(
@@ -38,7 +46,7 @@ const checkIfDeviceExistsAndBelongsToUser = async (deviceId, userId, shouldDevic
         }
       }
     } else {
-      if (Item) {
+      if (Items.length !== 0) {
         throw new BadRequestError(
           `Device with id ${deviceId} already exists. Try another id.`,
           'src/services/deviceService.js - checkIfDeviceBelongsToUser',
@@ -53,10 +61,11 @@ const checkIfDeviceExistsAndBelongsToUser = async (deviceId, userId, shouldDevic
 
 const createDevice = async (device, userId) => {
   try {
-    await checkIfDeviceExistsAndBelongsToUser(device.id, userId);
+    await checkIfDeviceExistsAndBelongsToUser(device.deviceId, userId);
 
     const deviceToCreate = {
-      id: device.id,
+      id: uuidv4(),
+      deviceId: device.id,
       name: device.name ? device.name : 'Unnamed Device',
       userId,
     };
@@ -77,12 +86,12 @@ const createDevice = async (device, userId) => {
 
 const deleteDeviceById = async (deviceId, userId) => {
   try {
-    await checkIfDeviceExistsAndBelongsToUser(deviceId, userId, true);
+    const deviceToDelete = await checkIfDeviceExistsAndBelongsToUser(deviceId, userId, true, true);
 
     await dynamoDb.send(
       new DeleteItemCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_DEVICES,
-        Key: marshall({ id: deviceId }),
+        Key: marshall({ id: deviceToDelete.Id }),
       }),
     );
   } catch (error) {
@@ -95,8 +104,8 @@ const updateDeviceById = async (deviceId, userId, device) => {
   try {
     // Check if the device belongs to the user
     console.log('point of debug 1', deviceId);
+    const deviceToUpdate = await checkIfDeviceExistsAndBelongsToUser(deviceId, userId, true, true);
     console.log('point of debug 2', userId);
-    await checkIfDeviceExistsAndBelongsToUser(deviceId, userId, true);
 
     const deviceToUpdateKeys = Object.keys(device);
 
@@ -109,7 +118,7 @@ const updateDeviceById = async (deviceId, userId, device) => {
     const { Attributes: updatedDevice } = await dynamoDb.send(
       new UpdateItemCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_DEVICES,
-        Key: marshall({ id: deviceId }),
+        Key: marshall({ id: deviceToUpdate.deviceId }),
         UpdateExpression: updateExpression,
         ExpressionAttributeNames: expressionAttributeNames,
         ExpressionAttributeValues: expressionAttributeValues,
@@ -129,24 +138,27 @@ const updateDeviceById = async (deviceId, userId, device) => {
   }
 };
 
-const getHistoricalReadings = async (deviceId, userId, start, end, type) => {
+const getHistoricalReadings = async (deviceId, userId, start, end) => {
   try {
+    console.log('point of debug 1 historical readings', deviceId);
     await checkIfDeviceExistsAndBelongsToUser(deviceId, userId, true);
 
+    console.log('point of debug 2 historical readings', deviceId);
+
     const data = await dynamoDb.send(
-      new ScanCommand({
+      new QueryCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_READINGS,
-        FilterExpression: !type
-          ? '#timestamp BETWEEN :start AND :end'
-          : '#timestamp BETWEEN :start AND :end AND #type = :type',
+        IndexName: 'deviceId-timestamp-index', // Use the name of your Global Secondary Index
+        KeyConditionExpression: '#deviceId = :deviceId AND #timestamp BETWEEN :start AND :end',
         ExpressionAttributeNames: {
+          '#deviceId': 'deviceId',
           '#timestamp': 'timestamp',
         },
         ExpressionAttributeValues: marshall(
           {
+            ':deviceId': deviceId,
             ':start': start,
             ':end': end,
-            ':type': type,
           },
           {
             removeUndefinedValues: true,
@@ -154,8 +166,6 @@ const getHistoricalReadings = async (deviceId, userId, start, end, type) => {
         ),
       }),
     );
-
-    console.log(start, end, type);
 
     console.log(data);
 
@@ -179,23 +189,32 @@ const getHistoricalReadings = async (deviceId, userId, start, end, type) => {
 };
 
 const getCurrentReadings = async (deviceId, userId) => {
+  console.log('point of debug 1 current readings', deviceId);
   try {
     // Check if the device belongs to the user
     await checkIfDeviceExistsAndBelongsToUser(deviceId, userId, true);
 
-    // Retrieve the item with the latest timestamp from TABEL_NAME_READINGS
+    console.log('point of debug 2 current readings', deviceId);
+    // Retrieve all items for the specified deviceId
     const data = await dynamoDb.send(
-      new ScanCommand({
+      new QueryCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_READINGS,
-        FilterExpression: 'deviceId = :deviceId',
-        ExpressionAttributeValues: marshall({
-          ':deviceId': deviceId,
-        }),
-        Limit: 1, // Limit to one result
+        IndexName: 'deviceId-timestamp-index', // Use the name of your Global Secondary Index
+        KeyConditionExpression: '#deviceId = :deviceId',
+        ExpressionAttributeNames: {
+          '#deviceId': 'deviceId',
+        },
+        ExpressionAttributeValues: marshall(
+          {
+            ':deviceId': deviceId,
+          },
+          {
+            removeUndefinedValues: true,
+          },
+        ),
+        Limit: 1,
       }),
     );
-
-    console.log(data);
 
     if (!data || !data.Items || data.Items.length === 0) {
       throw new NotFoundError(
@@ -204,7 +223,9 @@ const getCurrentReadings = async (deviceId, userId) => {
       );
     }
 
-    return unmarshall(data.Items[0]);
+    console.log(data.Items[0]);
+
+    return unmarshall(data.Items[0]); // Return the item with the latest timestamp
   } catch (error) {
     if (error instanceof ApiError) throw error;
     throw new DynamoDBError(error, 'src/services/deviceService.js - getCurrentReadings');
@@ -232,7 +253,7 @@ const getDeviceIdsForUser = async (userId) => {
       );
 
     const devicesToReturn = {
-      ids: data.Items.map((item) => unmarshall(item).id),
+      ids: data.Items.map((item) => unmarshall(item).deviceId),
       lastEvaluatedKey: data.LastEvaluatedKey && unmarshall(data.LastEvaluatedKey),
     };
 

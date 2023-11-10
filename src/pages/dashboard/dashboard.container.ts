@@ -92,17 +92,20 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     getCurrentReading: (id: string) => {
       dispatch(deviceService.getCurrentReading(id));
     },
-    getHistoricalReadings: (id: string, start: string, end: string, type?: string) => {
-      dispatch(deviceService.getHistoricalReadings(id, start, end, type));
+    getHistoricalReadings: (id: string, start: number, end: number) => {
+      dispatch(deviceService.getHistoricalReadings(id, start, end));
     },
     createDevice: (deviceData: DeviceModel) => {
       dispatch(deviceService.createDevice(deviceData));
+      dispatch(deviceService.getDeviceIds());
     },
     updateDeviceWithId: (id: string, deviceData: DeviceModel) => {
       dispatch(deviceService.updateDeviceWithId(id, deviceData));
+      dispatch(deviceService.getDeviceIds());
     },
     deleteDeviceWithId: (id: string) => {
       dispatch(deviceService.deleteDeviceWithId(id));
+      dispatch(deviceService.getDeviceIds());
     },
 
     // User

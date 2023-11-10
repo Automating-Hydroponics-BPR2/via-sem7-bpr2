@@ -16,9 +16,9 @@ export const StyledLink = styled(Link)<{ isInverted?: boolean }>`
     isInverted ? theme.palette.primary.contrastText : theme.palette.text.primary}; };
 `;
 
-export const StyledNotificationIcon = styled(IconButton)`
+export const StyledIcon = styled(IconButton)`
   margin-left: ${({ theme }) => theme.spacing(2)};
-  padding-top: ${({ theme }) => theme.spacing(2)};
+  padding-bottom: ${({ theme }) => theme.spacing(0.5)};
 `;
 
 export const StyledNumberOfNotifications = styled.span`

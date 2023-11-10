@@ -8,7 +8,6 @@ import {
   Button,
   Divider,
   Drawer,
-  IconButton,
   InputBase,
   List,
   ListItem,
@@ -26,7 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import { type NavItem } from '../../shared';
 import { ThemeDialogContainer } from '../theme-dialog/theme-dialog.container';
 import { HeaderProps } from './header.props';
-import { Logo, StyledLink, StyledNotificationIcon, StyledNumberOfNotifications } from './header.styles';
+import { Logo, StyledLink, StyledIcon, StyledNumberOfNotifications } from './header.styles';
 import { NotificationDialog } from '../notifications-dialog';
 
 const Search = styled('div')(({ theme }) => ({
@@ -166,7 +165,7 @@ export const Header = (props: HeaderProps) => {
               <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
             </Search>
             <Divider />
-            <StyledNotificationIcon
+            <StyledIcon
               size="large"
               aria-label="notification button"
               edge="end"
@@ -179,8 +178,8 @@ export const Header = (props: HeaderProps) => {
               <StyledNumberOfNotifications>
                 {props.notifications.filter((n) => !n.read).length}
               </StyledNumberOfNotifications>
-            </StyledNotificationIcon>
-            <StyledNotificationIcon
+            </StyledIcon>
+            <StyledIcon
               size="large"
               aria-label="theming button"
               edge="end"
@@ -190,15 +189,15 @@ export const Header = (props: HeaderProps) => {
               color={'inherit'}
               sx={{ display: { xs: 'none', lg: 'block' } }}>
               <ThemeIcon />
-            </StyledNotificationIcon>
-            <IconButton
+            </StyledIcon>
+            <StyledIcon
               color="inherit"
               aria-label="open drawer"
               edge="end"
               onClick={handleDrawerToggle}
-              sx={{ ml: 2, display: { lg: 'none' } }}>
+              sx={{  display: { lg: 'none' } }}>
               <MenuIcon />
-            </IconButton>
+            </StyledIcon>
           </Toolbar>
         </AppBar>
       </HideOnScroll>

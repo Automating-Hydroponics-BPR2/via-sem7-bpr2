@@ -44,7 +44,7 @@ export const SectionHeaderWithTypeStory: Story = () => {
     setSelectedDeviceId: (deviceId: string) => {
       alert(deviceId);
     },
-    type: 'light',
+    type: 'Choose a type',
     setType: (type: string) => {
       alert(type);
     },
@@ -67,13 +67,16 @@ export const SectionHeaderWithDateFilterStory: Story = () => {
     setSelectedDeviceId: (deviceId: string) => {
       alert(deviceId);
     },
-    type: 'light',
+    type: 'Choose a type',
     setType: (type: string) => {
-      alert(type);
+      console.log(type);
     },
     dateFilterLabel: 'Choose a date',
     setDateFilterLabel: (dateFilter: string) => {
-      alert(dateFilter);
+      console.log(dateFilter);
+    },
+    setDateFilter: (dateFilter: { start: number; end: number }) => {
+      console.log(dateFilter);
     },
   };
 

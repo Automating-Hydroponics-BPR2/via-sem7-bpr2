@@ -47,7 +47,7 @@ export const Dashboard = (props: DashboardProps) => {
     }
 
     if (selectedDeviceIdDataTable && dateFilter) {
-      getHistoricalReadings(selectedDeviceIdDataTable, dateFilter.start.toString(), dateFilter.end.toString(), type);
+      getHistoricalReadings(selectedDeviceIdDataTable, dateFilter.start, dateFilter.end);
     }
   }, [initialized, selectedDeviceIdDataTable, dateFilter, type]);
 
@@ -115,7 +115,7 @@ export const Dashboard = (props: DashboardProps) => {
                   temp: '33',
                   waterTemp: '40',
                   humidity: '50',
-                  timestamp: '1697637285',
+                  timestamp: 1697637285,
                 },
               )}
               width={100}
@@ -141,7 +141,7 @@ export const Dashboard = (props: DashboardProps) => {
                   ? historicalReadings.map((reading) => {
                       return {
                         ...reading,
-                        timestamp: convertTimestampToDate(reading.timestamp),
+                        timestamp: convertTimestampToDate(reading.timestamp as number),
                       };
                     })
                   : [
@@ -154,7 +154,7 @@ export const Dashboard = (props: DashboardProps) => {
                         temp: '3',
                         waterTemp: '4',
                         humidity: '5',
-                        timestamp: convertTimestampToDate('1699536060144'),
+                        timestamp: convertTimestampToDate(1699536060144),
                       },
                       {
                         id: '2',
@@ -165,7 +165,7 @@ export const Dashboard = (props: DashboardProps) => {
                         temp: '3',
                         waterTemp: '4',
                         humidity: '5',
-                        timestamp: '1697637285',
+                        timestamp: 1697637285,
                       },
                       {
                         id: '3',
@@ -176,7 +176,7 @@ export const Dashboard = (props: DashboardProps) => {
                         temp: '3',
                         waterTemp: '4',
                         humidity: '5',
-                        timestamp: '1697637285',
+                        timestamp: 1697637285,
                       },
                       {
                         id: '4',
@@ -187,7 +187,7 @@ export const Dashboard = (props: DashboardProps) => {
                         temp: '3',
                         waterTemp: '4',
                         humidity: '5',
-                        timestamp: '1697637285',
+                        timestamp: 1697637285,
                       },
                       {
                         id: '5',
@@ -198,7 +198,7 @@ export const Dashboard = (props: DashboardProps) => {
                         temp: '3',
                         waterTemp: '4',
                         humidity: '5',
-                        timestamp: '1697637285',
+                        timestamp: 1697637285,
                       },
                       {
                         id: '6',
@@ -209,7 +209,7 @@ export const Dashboard = (props: DashboardProps) => {
                         temp: '3',
                         waterTemp: '4',
                         humidity: '5',
-                        timestamp: '1697637285',
+                        timestamp: 1697637285,
                       },
                     ]
               }

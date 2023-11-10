@@ -25,8 +25,8 @@ export const convertToChartData = (data: DeviceReading) => {
   ];
 };
 
-export const convertTimestampToDate = (timestamp: string) => {
-  const date = new Date(parseInt(timestamp) * 1000);
+export const convertTimestampToDate = (timestamp: number) => {
+  const date = new Date(timestamp * 1000);
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',

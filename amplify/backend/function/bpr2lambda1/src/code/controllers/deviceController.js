@@ -69,10 +69,10 @@ export const getCurrentReadings = async (req, res, next) => {
 export const getHistoricalReadings = async (req, res, next) => {
   try {
     const {
-      query: { id, type, start, end },
+      query: { id, start, end },
       user: { id: userId },
     } = req;
-    const historicalReadings = await deviceServices.getHistoricalReadings(id, userId, start, end, type);
+    const historicalReadings = await deviceServices.getHistoricalReadings(id, userId, start, end);
     res.status(200).json(historicalReadings);
   } catch (error) {
     if (error instanceof ApiError) next(error);

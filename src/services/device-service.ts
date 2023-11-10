@@ -13,6 +13,7 @@ import {
   setDashboardIsLoading,
   addANotification,
   Priority,
+  CreatedDeviceModel,
 } from '../shared';
 
 const getToken = () => {
@@ -38,7 +39,7 @@ export const createDevice = (deviceData: DeviceModel) => (dispatch: any) => {
         addANotification({
           id: uuidv4(),
           title: 'You have created a device',
-          description: `You have successfully created a new device with id ${deviceData.id}!`,
+          description: `You have successfully created a new device with id ${deviceData.deviceId}!`,
           read: false,
           priority: Priority.LOW,
           date: new Date(),
@@ -65,7 +66,7 @@ export const createDevice = (deviceData: DeviceModel) => (dispatch: any) => {
         addANotification({
           id: uuidv4(),
           title: 'Device creation failed',
-          description: `You have failed to create a new device with id ${deviceData.id}!`,
+          description: `You have failed to create a new device with id ${deviceData.deviceId}!`,
           read: false,
           priority: Priority.HIGH,
           date: new Date(),
@@ -88,7 +89,7 @@ export const getDeviceWithId = (id: string) => (dispatch: any) => {
     })
     .then((res: any) => {
       console.log(res.data);
-      dispatch(setDevice(res.data as DeviceModel));
+      dispatch(setDevice(res.data as CreatedDeviceModel));
       dispatch(
         setSnackbar({
           open: true,
@@ -160,7 +161,7 @@ export const updateDeviceWithId = (id: string, deviceData: DeviceModel) => (disp
           message: `Device was updated successfully!`,
         }),
       );
-      dispatch(setDevice(res.data as DeviceModel));
+      dispatch(setDevice(res.data as CreatedDeviceModel));
     })
     .catch((err: any) => {
       dispatch(
@@ -296,10 +297,10 @@ export const getCurrentReading = (id: string) => (dispatch: any) => {
     });
 };
 
-export const getHistoricalReadings = (id: string, start: string, end: string, type?: string) => (dispatch: any) => {
+export const getHistoricalReadings = (id: string, start: number, end: number) => (dispatch: any) => {
   dispatch(setDashboardIsLoading(true));
   axios
-    .get(deviceEndpoints.getHistorical(id, start, end, type), {
+    .get(deviceEndpoints.getHistorical(id, start, end), {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${getToken()}`,

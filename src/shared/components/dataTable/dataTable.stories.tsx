@@ -9,6 +9,7 @@ export default {
 type Story = StoryObj<typeof DataTable>;
 
 export const DataTableStory: Story = () => {
+  const unixTimestamp = 1633824000000;
   const data = [
     {
       id: '1',
@@ -19,7 +20,7 @@ export const DataTableStory: Story = () => {
       temp: '3',
       waterTemp: '4',
       humidity: '5',
-      timestamp: '2021-10-10T00:00:00.000Z',
+      timestamp: unixTimestamp,
     },
     {
       id: '2',
@@ -30,7 +31,7 @@ export const DataTableStory: Story = () => {
       temp: '3',
       waterTemp: '4',
       humidity: '5',
-      timestamp: '2021-10-10T00:00:00.000Z',
+      timestamp: unixTimestamp,
     },
     {
       id: '3',
@@ -41,7 +42,7 @@ export const DataTableStory: Story = () => {
       temp: '3',
       waterTemp: '4',
       humidity: '5',
-      timestamp: '2021-10-10T00:00:00.000Z',
+      timestamp: unixTimestamp,
     },
     {
       id: '4',
@@ -52,7 +53,7 @@ export const DataTableStory: Story = () => {
       temp: '3',
       waterTemp: '4',
       humidity: '5',
-      timestamp: '2021-10-10T00:00:00.000Z',
+      timestamp: unixTimestamp,
     },
     {
       id: '5',
@@ -63,7 +64,7 @@ export const DataTableStory: Story = () => {
       temp: '3',
       waterTemp: '4',
       humidity: '5',
-      timestamp: '2021-10-10T00:00:00.000Z',
+      timestamp: unixTimestamp,
     },
     {
       id: '6',
@@ -74,7 +75,7 @@ export const DataTableStory: Story = () => {
       temp: '3',
       waterTemp: '4',
       humidity: '5',
-      timestamp: '2021-10-10T00:00:00.000Z',
+      timestamp: unixTimestamp,
     },
     {
       id: '7',
@@ -85,7 +86,7 @@ export const DataTableStory: Story = () => {
       temp: '3',
       waterTemp: '4',
       humidity: '5',
-      timestamp: '2021-10-10T00:00:00.000Z',
+      timestamp: unixTimestamp,
     },
     {
       id: '8',
@@ -96,7 +97,7 @@ export const DataTableStory: Story = () => {
       temp: '3',
       waterTemp: '4',
       humidity: '5',
-      timestamp: '2021-10-10T00:00:00.000Z',
+      timestamp: unixTimestamp,
     },
     {
       id: '9',
@@ -107,7 +108,7 @@ export const DataTableStory: Story = () => {
       temp: '3',
       waterTemp: '4',
       humidity: '5',
-      timestamp: '2021-10-10T00:00:00.000Z',
+      timestamp: unixTimestamp,
     },
     {
       id: '10',
@@ -118,7 +119,7 @@ export const DataTableStory: Story = () => {
       temp: '3',
       waterTemp: '4',
       humidity: '5',
-      timestamp: '2021-10-10T00:00:00.000Z',
+      timestamp: unixTimestamp,
     },
   ];
   return (

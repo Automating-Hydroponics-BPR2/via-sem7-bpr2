@@ -1,9 +1,9 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { DeviceModel, DeviceReading } from '../models/device';
+import { CreatedDeviceModel, DeviceReading } from '../models/device';
 
 export interface DeviceStore {
   deviceIds?: string[];
-  device?: DeviceModel;
+  device?: CreatedDeviceModel;
   historicalReadings?: DeviceReading[];
   currentReading?: DeviceReading;
 }
@@ -19,7 +19,7 @@ const deviceSlice = createSlice({
   name: 'device',
   initialState,
   reducers: {
-    setDevice(state, action: PayloadAction<DeviceModel>) {
+    setDevice(state, action: PayloadAction<CreatedDeviceModel>) {
       state.device = action.payload;
     },
     setHistoricalReadings(state, action: PayloadAction<DeviceReading[]>) {

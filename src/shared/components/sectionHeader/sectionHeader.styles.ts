@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Box, Typography, Select, MenuItem } from '@mui/material';
+import { Box, Typography, Select, MenuItem, IconButton } from '@mui/material';
 
 export const StyledHeaderWrapper = styled(Box)`
   display: flex;
@@ -61,4 +61,8 @@ export const StyledMenuItem = styled(MenuItem)`
     font-weight: 500;
     color: ${({ theme }) => theme.palette.text.primary};
   }
+`;
+
+export const StyledIcon = styled(IconButton)`
+  padding-bottom: ${({ theme }) => theme.spacing(0.5)};
 `;

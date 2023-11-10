@@ -8,10 +8,10 @@ import { Container, CssBaseline, Avatar, Box, Typography, TextField } from '@mui
 
 export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
   const theme = useTheme();
-  const { open, onClose, device, onDeviceEdit } = props;
+  const { open, onClose, device, isAddDevice, onDeviceEdit, onDeviceAdd } = props;
   const [formState, setFormState] = useState({
-    id: device?.id ?? '',
-    name: device?.name ?? '',
+    deviceId: isAddDevice ? '' : device?.deviceId ?? '',
+    name: isAddDevice ? '' : device?.name ?? '',
   });
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormState({
@@ -21,9 +21,14 @@ export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
   };
   const handleSave = () => {
     if (validateForm()) {
-      if (onDeviceEdit) {
-        onDeviceEdit(formState.id, {
-          id: formState.id,
+      if (!isAddDevice && onDeviceEdit) {
+        onDeviceEdit(formState.deviceId, {
+          deviceId: formState.deviceId,
+          name: formState.name,
+        });
+      } else if (isAddDevice && onDeviceAdd) {
+        onDeviceAdd({
+          deviceId: formState.deviceId,
           name: formState.name,
         });
       }
@@ -32,9 +37,9 @@ export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
   };
   const validateForm = () => {
     return (
-      formState.id.match(/^[a-zA-Z0-9-]+$/) &&
-      formState.id.length >= 10 &&
-      formState.id.length <= 20 &&
+      formState.deviceId.match(/^[a-zA-Z0-9-]+$/) &&
+      formState.deviceId.length >= 10 &&
+      formState.deviceId.length <= 20 &&
       (formState.name === '' ||
         (formState.name.match(/^[a-zA-Z0-9 ]+$/) && formState.name.length >= 10 && formState.name.length <= 20))
     );
@@ -42,7 +47,7 @@ export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
   const dialogProps: DialogProps = {
     open,
     onClose,
-    title: device ? 'Edit device dialog' : 'Add device dialog',
+    title: isAddDevice ? 'Add a new device' : 'Edit device',
     children: (
       <Container
         component="main"
@@ -60,10 +65,10 @@ export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
             alignItems: 'center',
           }}>
           <Avatar sx={{ m: 1, bgcolor: theme.palette.text.primary }}>
-            {device ? <ModeEditOutlineOutlinedIcon /> : <AddCircleOutlineOutlinedIcon />}
+            {!isAddDevice ? <ModeEditOutlineOutlinedIcon /> : <AddCircleOutlineOutlinedIcon />}
           </Avatar>
           <Typography component="h1" variant="h5">
-            {device ? `${device.id}` : 'Add a new device'}
+            {!isAddDevice ? (device ? `${device.deviceId}` : '') : 'Add a new device'}
           </Typography>
           <Box component="form" sx={{ mt: 1 }}>
             <TextField
@@ -71,18 +76,22 @@ export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
               margin="normal"
               required
               fullWidth
-              id="id"
-              label="Id"
-              name="id"
-              defaultValue={device?.id ?? ''}
+              id="deviceId"
+              label="Device id"
+              name="deviceId"
+              defaultValue={!isAddDevice ? device?.deviceId ?? '' : ''}
               autoFocus
               error={
-                formState.id !== '' &&
-                (!formState.id.match(/^[a-zA-Z0-9-]+$/) || formState.id.length < 10 || formState.id.length > 20)
+                formState.deviceId !== '' &&
+                (!formState.deviceId.match(/^[a-zA-Z0-9-]+$/) ||
+                  formState.deviceId.length < 10 ||
+                  formState.deviceId.length > 20)
               }
               helperText={
-                formState.id !== ''
-                  ? formState.id.match(/^[a-zA-Z0-9-]+$/) && formState.id.length >= 10 && formState.id.length <= 20
+                formState.deviceId !== ''
+                  ? formState.deviceId.match(/^[a-zA-Z0-9-]+$/) &&
+                    formState.deviceId.length >= 10 &&
+                    formState.deviceId.length <= 20
                     ? 'Id can be inserted'
                     : 'Cannot be less than 10 characters, contain special characters or be more than 20 characters'
                   : 'This field is required'
@@ -95,7 +104,7 @@ export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
               id="name"
               label="Name"
               name="name"
-              defaultValue={device?.name ?? ''}
+              defaultValue={!isAddDevice ? device?.name ?? '' : ''}
               autoFocus
               error={
                 formState.name !== '' &&
@@ -115,7 +124,7 @@ export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
         </Box>
       </Container>
     ),
-    options: [device ? 'Save' : 'Add', 'Cancel'],
+    options: [!isAddDevice ? 'Save' : 'Add', 'Cancel'],
     onOptionClick: (option: string) => {
       switch (option) {
         case 'Save':

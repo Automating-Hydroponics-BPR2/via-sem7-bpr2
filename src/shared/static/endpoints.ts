@@ -17,10 +17,8 @@ export const deviceEndpoints = {
   update: (id: string) => `${baseUrl}/device?id=${id}`,
   delete: (id: string) => `${baseUrl}/device?id=${id}`,
   getCurrent: (id: string) => `${baseUrl}/device/current?id=${id}`,
-  getHistorical: (id: string, start: string, end: string, type?: string) =>
-    type
-      ? `${baseUrl}/device/historical?id=${id}&start=${start}&end=${end}&type=${type}`
-      : `${baseUrl}/device/historical?id=${id}&start=${start}&end=${end}`,
+  getHistorical: (id: string, start: number, end: number) =>
+    `${baseUrl}/device/historical?id=${id}&start=${start}&end=${end}`,
   getDeviceIds: () => `${baseUrl}/device/all`,
 };
 // #endregion

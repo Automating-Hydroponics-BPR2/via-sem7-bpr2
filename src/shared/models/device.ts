@@ -1,6 +1,10 @@
 export interface DeviceModel {
-  id: string;
+  deviceId: string;
   name: string;
+}
+
+export interface CreatedDeviceModel extends DeviceModel {
+  id: string;
 }
 
 export interface DeviceReading {
@@ -12,7 +16,7 @@ export interface DeviceReading {
   ph: string;
   waterTemp: string;
   light: string;
-  timestamp: string;
+  timestamp: number | string;
 }
 
 export interface DateFilter {

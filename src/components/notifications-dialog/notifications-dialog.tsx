@@ -41,11 +41,11 @@ export const NotificationDialog = (props: INotificationsDialogProps) => {
           {notifications && notifications.length > 0 ? (
             [...notifications]
               .sort((a, b) => {
-                if (!a.read && b.read) {
-                  return -1; // 'a' is unread
+                if (a.date > b.date) {
+                  return -1; // 'a' comes first (more recent)
                 }
-                if (a.read && !b.read) {
-                  return 1; // 'b' is unread
+                if (a.date < b.date) {
+                  return 1; // 'b' comes first (more recent)
                 }
                 if (a.priority === Priority.HIGH && b.priority !== Priority.HIGH) {
                   return -1; // 'a' comes first (HIGH priority)

@@ -35,26 +35,6 @@ export const DialogStory: Story = () => {
       <div key="4">Dialog body</div>,
       <div key="5">Dialog body</div>,
       <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="6">Dialog body</div>,
-      <div key="7">Dialog body</div>,
-      <div key="8">Dialog body</div>,
     ],
     options: ['Save', 'Close'],
     onOptionClick: (option: string) => {
@@ -120,10 +100,47 @@ export const ConfirmationDialogStory: Story = () => {
 
 ConfirmationDialogStory.storyName = 'Confirmation Dialog';
 
-export const EditAddDeviceDialogStory: Story = () => {
+export const AddDeviceDialogStory: Story = () => {
   const [open, setOpen] = useState(false);
-  const editAddDialogProps: IEditAddDialogDeviceProps = {
+  const addDialogProps: IEditAddDialogDeviceProps = {
     device: undefined,
+    open,
+    onClose: () => {
+      setOpen(false);
+    },
+    onDeviceEdit: (device) => {
+      alert(JSON.stringify(device));
+      setOpen(false);
+    },
+    onDeviceAdd: (device) => {
+      alert(JSON.stringify(device));
+      setOpen(false);
+    },
+  };
+
+  return (
+    <div>
+      <button
+        onClick={() => {
+          setOpen(true);
+        }}>
+        Add
+      </button>
+      <EditAddDeviceDialog {...addDialogProps} />
+    </div>
+  );
+};
+
+AddDeviceDialogStory.storyName = 'Add Device Dialog';
+
+export const EditDeviceDialogStory: Story = () => {
+  const [open, setOpen] = useState(false);
+  const editDialogProps: IEditAddDialogDeviceProps = {
+    device: {
+      id: '16ff7a57-2ff3-4dd5-9214-f9826473dd05',
+      deviceId: '1',
+      name: 'test',
+    },
     open,
     onClose: () => {
       setOpen(false);
@@ -146,18 +163,12 @@ export const EditAddDeviceDialogStory: Story = () => {
         }}>
         Edit
       </button>
-      <button
-        onClick={() => {
-          setOpen(true);
-        }}>
-        Add
-      </button>
-      <EditAddDeviceDialog {...editAddDialogProps} />
+      <EditAddDeviceDialog {...editDialogProps} />
     </div>
   );
 };
 
-EditAddDeviceDialogStory.storyName = 'Edit/Add Device Dialog';
+EditDeviceDialogStory.storyName = 'Edit Device Dialog';
 
 export const EditUserDialogStory: Story = () => {
   const [open, setOpen] = useState(false);
@@ -204,7 +215,8 @@ export const NotificationDialogStory: Story = () => {
       title: 'test',
       description: 'This is a test notification, by the way!',
       priority: Priority.LOW,
-      date: new Date(),
+      // I need this date to be in Date format but to be in the past
+      date: new Date(new Date().setDate(new Date().getDate() - 1)),
       read: false,
     },
     {
@@ -212,7 +224,7 @@ export const NotificationDialogStory: Story = () => {
       title: 'test',
       description: 'This is a test notification, by the way!',
       priority: Priority.HIGH,
-      date: new Date(),
+      date: new Date(new Date().setDate(new Date().getDate() - 2)),
       read: false,
     },
     {
@@ -220,7 +232,7 @@ export const NotificationDialogStory: Story = () => {
       title: 'test',
       description: 'This is a test notification, by the way!',
       priority: Priority.LOW,
-      date: new Date(),
+      date: new Date(new Date().setDate(new Date().getDate() - 3)),
       read: false,
     },
     {
@@ -228,7 +240,7 @@ export const NotificationDialogStory: Story = () => {
       title: 'test',
       description: 'This is a test notification, by the way!',
       priority: Priority.HIGH,
-      date: new Date(),
+      date: new Date(new Date().setDate(new Date().getDate() - 4)),
       read: false,
     },
     {
@@ -237,7 +249,7 @@ export const NotificationDialogStory: Story = () => {
       description:
         'This is a test notifThis is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!ication, by the way!',
       priority: Priority.LOW,
-      date: new Date(),
+      date: new Date(new Date().setDate(new Date().getDate() - 5)),
       read: false,
     },
     {
@@ -254,7 +266,7 @@ export const NotificationDialogStory: Story = () => {
       description:
         'This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!This is a test notification, by the way!',
       priority: Priority.HIGH,
-      date: new Date(),
+      date: new Date(new Date().setDate(new Date().getDate() - 10)),
       read: false,
     },
     {

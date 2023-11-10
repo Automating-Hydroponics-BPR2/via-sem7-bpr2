@@ -1,5 +1,7 @@
+import React, { useState } from 'react';
 import { ISectionHeaderProps } from './sectionHeader.props';
 import { SelectChangeEvent } from '@mui/material';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import {
   StyledHeaderWrapper,
   StyledTitle,
@@ -8,9 +10,13 @@ import {
   StyledHeaderLabel,
   StyledHeaderSelect,
   StyledMenuItem,
+  StyledIcon,
 } from './sectionHeader.styles';
+import { DateFilter } from '../../models';
 
 export const SectionHeader = (props: ISectionHeaderProps) => {
+  const [localDateFilter, setLocalDateFilter] = useState<DateFilter>();
+  const [localType, setLocalType] = useState<string>();
   const {
     threshold,
     setSelectedDeviceId,
@@ -37,7 +43,7 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
 
   const handleTypeChange = (e: SelectChangeEvent<unknown>) => {
     const newType = e.target.value as string;
-    setType?.(newType);
+    setLocalType?.(newType);
   };
 
   const handleDateFilterChange = (e: SelectChangeEvent<unknown>) => {
@@ -59,7 +65,14 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
         break;
     }
     setDateFilterLabel?.(newDateFilter);
-    setDateFilter?.({ start, end });
+    setLocalDateFilter?.({ start, end });
+  };
+
+  const handleFilterClick = () => {
+    if (localDateFilter && localType) {
+      setDateFilter?.(localDateFilter);
+      setType?.(localType);
+    }
   };
 
   // this cannot go more than 80 and less than 10 and each option is 10 apart
@@ -90,6 +103,26 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
           </StyledHeaderCategory>
         )}
 
+        {dateFilterLabel && (
+          <StyledHeaderCategory>
+            <StyledHeaderLabel>Date:</StyledHeaderLabel>
+            <StyledHeaderSelect width="8rem" value={dateFilterLabel} onChange={handleDateFilterChange}>
+              <StyledMenuItem key={'Choose a date'} value={dateFilterLabel} disabled>
+                Choose a date
+              </StyledMenuItem>
+              <StyledMenuItem key={'Today'} value={'Today'}>
+                Today
+              </StyledMenuItem>
+              <StyledMenuItem key={'Last 3 days'} value={'Last 3 days'}>
+                Last 3 days
+              </StyledMenuItem>
+              <StyledMenuItem key={'Last 7 days'} value={'Last 7 days'}>
+                Last 7 days
+              </StyledMenuItem>
+            </StyledHeaderSelect>
+          </StyledHeaderCategory>
+        )}
+
         {!(!type && !threshold) ? (
           <StyledHeaderCategory>
             <StyledHeaderLabel>{threshold ? 'Threshold:' : 'Type:'}</StyledHeaderLabel>
@@ -116,24 +149,17 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
             </StyledHeaderSelect>
           </StyledHeaderCategory>
         ) : null}
-        {dateFilterLabel && (
-          <StyledHeaderCategory>
-            <StyledHeaderLabel>Date:</StyledHeaderLabel>
-            <StyledHeaderSelect width="8rem" value={dateFilterLabel} onChange={handleDateFilterChange}>
-              <StyledMenuItem key={'Choose a date'} value={dateFilterLabel} disabled>
-                Choose a date
-              </StyledMenuItem>
-              <StyledMenuItem key={'Today'} value={'Today'}>
-                Today
-              </StyledMenuItem>
-              <StyledMenuItem key={'Last 3 days'} value={'Last 3 days'}>
-                Last 3 days
-              </StyledMenuItem>
-              <StyledMenuItem key={'Last 7 days'} value={'Last 7 days'}>
-                Last 7 days
-              </StyledMenuItem>
-            </StyledHeaderSelect>
-          </StyledHeaderCategory>
+
+        {dateFilterLabel && type && (
+          <StyledIcon
+            size="large"
+            aria-label="theming button"
+            edge="end"
+            onClick={handleFilterClick}
+            color={'inherit'}
+            sx={{ display: { xs: 'none', lg: 'block' } }}>
+            <FilterAltIcon />
+          </StyledIcon>
         )}
       </StyledHeaderCategoryWrapper>
     </StyledHeaderWrapper>

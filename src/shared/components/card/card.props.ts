@@ -1,4 +1,4 @@
-import { DeviceModel, AuthenticatedUser, User } from '../../models';
+import { DeviceModel, AuthenticatedUser, User, CreatedDeviceModel } from '../../models';
 
 export interface CardProps {
   id: string;
@@ -6,7 +6,7 @@ export interface CardProps {
   width: string;
   height: string;
 
-  device?: DeviceModel;
+  device?: CreatedDeviceModel;
   user?: AuthenticatedUser;
   imgSource?: string;
   description: string;

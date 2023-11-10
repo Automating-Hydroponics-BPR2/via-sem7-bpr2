@@ -1,12 +1,12 @@
 import { AuthenticatedUser, DeviceModel, User } from '../../shared';
-import { DateFilter, DeviceReading } from '../../shared/models/device';
+import { CreatedDeviceModel, DateFilter, DeviceReading } from '../../shared/models/device';
 
 export interface DashboardProps {
   threshold: number;
   isLoading: boolean;
 
   type?: string;
-  device?: DeviceModel;
+  device?: CreatedDeviceModel;
   deviceIds?: string[];
   dateFilter: DateFilter;
   dateFilterLabel: string;
@@ -34,7 +34,7 @@ export interface DashboardProps {
   deleteDeviceWithId: (id: string) => void;
   createDevice: (deviceData: DeviceModel) => void;
   updateDeviceWithId: (id: string, deviceData: DeviceModel) => void;
-  getHistoricalReadings: (id: string, start: string, end: string, type?: string) => void;
+  getHistoricalReadings: (id: string, start: number, end: number) => void;
 
   // User
   deleteUserWithId: () => void;
