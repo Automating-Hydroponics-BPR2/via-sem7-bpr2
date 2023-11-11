@@ -19,11 +19,13 @@ const deviceSlice = createSlice({
   name: 'device',
   initialState,
   reducers: {
-    setDevice(state, action: PayloadAction<CreatedDeviceModel>) {
-      state.device = action.payload;
-    },
-    resetDevice(state) {
-      state.device = undefined;
+    setDevice(state, action: PayloadAction<CreatedDeviceModel | undefined>) {
+      if (action.payload) {
+        state.device = action.payload;
+      } else {
+        state.deviceIds?.filter((id) => id !== state.device?.id);
+        state.device = undefined;
+      }
     },
     setHistoricalReadings(state, action: PayloadAction<DeviceReading[]>) {
       state.historicalReadings = action.payload;
@@ -55,7 +57,6 @@ const deviceSlice = createSlice({
 export default deviceSlice.reducer;
 export const {
   setDevice,
-  resetDevice,
   resetDeviceStore,
   setCurrentReading,
   setDeviceIds,

@@ -186,7 +186,7 @@ const updateDeviceById = async (id, userId, device) => {
 
 const getHistoricalReadingsForDeviceId = async (deviceId, userId, start, end) => {
   try {
-    // TODO still cannot get historical readings
+    // TODO still cannot get historical readings 11/11/2023 14:52
     console.log('point of debug 1 historical readings', deviceId);
     if (await checkIfDeviceWithDeviceIdBelongsToUserWithId(deviceId, userId)) {
       console.log('point of debug 2 historical readings', deviceId, start, end);

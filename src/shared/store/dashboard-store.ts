@@ -42,7 +42,7 @@ const dashboardSlice = createSlice({
     setDashboardSelectedDeviceIdDataTable(state, action: PayloadAction<string>) {
       state.selectedDeviceIdDataTable = action.payload;
     },
-    setDashboardSelectedDeviceIdInformaton(state, action: PayloadAction<string>) {
+    setDashboardSelectedDeviceIdInformaton(state, action: PayloadAction<string | undefined>) {
       state.selectedDeviceIdInformaton = action.payload;
     },
     setDashboardType(state, action: PayloadAction<string>) {

@@ -15,8 +15,6 @@ import {
   Priority,
   CreatedDeviceModel,
   setDashboardSelectedDeviceIdInformaton,
-  resetDevice,
-  removeADeviceId,
   addADeviceId,
 } from '../shared';
 
@@ -207,8 +205,8 @@ export const deleteDeviceWithId = (id: string) => (dispatch: any) => {
       },
     })
     .then((res: any) => {
-      dispatch(resetDevice());
-      dispatch(removeADeviceId(id));
+      dispatch(setDevice(undefined));
+      dispatch(setDashboardSelectedDeviceIdInformaton(undefined));
       dispatch(
         addANotification({
           id: uuidv4(),
