@@ -94,7 +94,7 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
     <StyledHeaderWrapper>
       <StyledTitle>{title}</StyledTitle>
       <StyledHeaderCategoryWrapper>
-        {deviceIds && deviceIds.length > 1 && (
+        {deviceIds && deviceIds.length > 0 && (
           <StyledHeaderCategory>
             <StyledHeaderLabel>Device:</StyledHeaderLabel>
             <StyledHeaderSelect

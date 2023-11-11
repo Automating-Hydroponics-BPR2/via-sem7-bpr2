@@ -189,7 +189,7 @@ const getHistoricalReadingsForDeviceId = async (deviceId, userId, start, end) =>
     // TODO still cannot get historical readings 11/11/2023 14:52
     console.log('point of debug 1 historical readings', deviceId);
     if (await checkIfDeviceWithDeviceIdBelongsToUserWithId(deviceId, userId)) {
-      console.log('point of debug 2 historical readings', deviceId, start, end);
+      console.log('point of debug 2 historical readings', deviceId, end, start);
 
       const data = await dynamoDb.send(
         new QueryCommand({
@@ -199,6 +199,8 @@ const getHistoricalReadingsForDeviceId = async (deviceId, userId, start, end) =>
           ExpressionAttributeNames: {
             '#deviceId': 'deviceId',
             '#t': 'timestamp',
+            '#e': 'end',
+            '#s': 'start',
           },
           ExpressionAttributeValues: marshall(
             {
