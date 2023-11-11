@@ -195,7 +195,7 @@ const getHistoricalReadingsForDeviceId = async (deviceId, userId, start, end) =>
         new QueryCommand({
           TableName: process.env.DYNAMODB_TABLE_NAME_READINGS,
           IndexName: 'deviceId-timestamp-index', // Use the name of your Global Secondary Index
-          KeyConditionExpression: '#deviceId = :deviceId AND #t BETWEEN :e AND :s',
+          KeyConditionExpression: '#deviceId = :deviceId AND #t BETWEEN #e AND #s',
           ExpressionAttributeNames: {
             '#deviceId': 'deviceId',
             '#t': 'timestamp',
