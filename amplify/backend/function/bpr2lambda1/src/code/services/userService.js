@@ -208,8 +208,7 @@ const updateUserById = async (userId, user) => {
       const { password, ...userToReturn } = { ...unmarshall(updatedUser), ...user };
       console.log(userToReturn);
       return userToReturn;
-    }
-    else {
+    } else {
       throw new NotFoundError(
         `Could not update user with id ${userId}, user does not exist or username already taken. Please try again`,
         'src/services/userService.js - updateUserById',
@@ -224,7 +223,7 @@ const updateUserById = async (userId, user) => {
 };
 
 export const userServices = {
-  checkIfUsernameExists: checkIfUserWithUsernameExists,
+  queryForUserWithUsername,
   registerUser,
   loginUser,
   deleteUserById,

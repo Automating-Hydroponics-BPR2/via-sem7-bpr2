@@ -10,8 +10,12 @@ export const jwtStrategy = new JwtStrategy(
   },
   async (payload, done) => {
     try {
-      const user = await userServices.checkIfUsernameExists(payload.username, true, true);
-      done(null, user);
+      const user = await userServices.queryForUserWithUsername(payload.username);
+      if (user) {
+        done(null, user);
+      } else {
+        done(new UnauthorizedError('User not found', 'src/config/passport.js - jwtStrategy'), false);
+      }
     } catch (error) {
       if (error instanceof ApiError) done(error, false);
       else {
