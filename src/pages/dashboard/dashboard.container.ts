@@ -97,17 +97,12 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     },
     createDevice: (deviceData: DeviceModel) => {
       dispatch(deviceService.createDevice(deviceData));
-      // TODO: This is not setting the current selected device in the dashboard
-      dispatch(deviceService.getDeviceIds());
     },
     updateDeviceWithId: (id: string, deviceData: DeviceModel) => {
       dispatch(deviceService.updateDeviceWithId(id, deviceData));
-      // TODO: This is not updating the current selected device in the dashboard
-      dispatch(deviceService.getDeviceIds());
     },
     deleteDeviceWithId: (id: string) => {
       dispatch(deviceService.deleteDeviceWithId(id));
-      dispatch(deviceService.getDeviceIds());
     },
 
     // User

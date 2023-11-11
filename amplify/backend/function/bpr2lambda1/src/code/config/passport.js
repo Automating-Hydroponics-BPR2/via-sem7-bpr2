@@ -10,7 +10,7 @@ export const jwtStrategy = new JwtStrategy(
   },
   async (payload, done) => {
     try {
-      const user = await userServices.queryForUserWithUsername(payload.username);
+      const user = await userServices.checkIfUserWithIdExists(payload.id, true);
       if (user) {
         done(null, user);
       } else {
@@ -26,7 +26,7 @@ export const jwtStrategy = new JwtStrategy(
 );
 
 /*
-! Add this 2 lines because who know why env variables are not loaded
+! Added this 2 lines because who know why env variables are not loaded
 ! even though I am calling exactly the same 2 lines in app.js
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env' });

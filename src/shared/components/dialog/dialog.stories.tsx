@@ -4,11 +4,13 @@ import { DialogProps } from './dialog.props';
 import { StoryObj } from '@storybook/react';
 import {
   EditUserDialog,
-  IEditAddDialogDeviceProps,
+  IEditDeviceDialogProps,
   NotificationDialog,
   IEditUserDialogProps,
   INotificationsDialogProps,
-  EditAddDeviceDialog,
+  EditDeviceDialog,
+  AddDeviceDialog,
+  IAddDeviceDialogProps,
 } from '../../../components';
 import { Priority } from '../../models/notification';
 
@@ -102,14 +104,9 @@ ConfirmationDialogStory.storyName = 'Confirmation Dialog';
 
 export const AddDeviceDialogStory: Story = () => {
   const [open, setOpen] = useState(false);
-  const addDialogProps: IEditAddDialogDeviceProps = {
-    device: undefined,
+  const addDialogProps: IAddDeviceDialogProps = {
     open,
     onClose: () => {
-      setOpen(false);
-    },
-    onDeviceEdit: (device) => {
-      alert(JSON.stringify(device));
       setOpen(false);
     },
     onDeviceAdd: (device) => {
@@ -126,7 +123,7 @@ export const AddDeviceDialogStory: Story = () => {
         }}>
         Add
       </button>
-      <EditAddDeviceDialog {...addDialogProps} />
+      <AddDeviceDialog {...addDialogProps} />
     </div>
   );
 };
@@ -135,7 +132,7 @@ AddDeviceDialogStory.storyName = 'Add Device Dialog';
 
 export const EditDeviceDialogStory: Story = () => {
   const [open, setOpen] = useState(false);
-  const editDialogProps: IEditAddDialogDeviceProps = {
+  const editDialogProps: IEditDeviceDialogProps = {
     device: {
       id: '16ff7a57-2ff3-4dd5-9214-f9826473dd05',
       deviceId: '1',
@@ -149,10 +146,6 @@ export const EditDeviceDialogStory: Story = () => {
       alert(JSON.stringify(device));
       setOpen(false);
     },
-    onDeviceAdd: (device) => {
-      alert(JSON.stringify(device));
-      setOpen(false);
-    },
   };
 
   return (
@@ -163,7 +156,7 @@ export const EditDeviceDialogStory: Story = () => {
         }}>
         Edit
       </button>
-      <EditAddDeviceDialog {...editDialogProps} />
+      <EditDeviceDialog {...editDialogProps} />
     </div>
   );
 };

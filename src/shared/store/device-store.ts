@@ -22,11 +22,26 @@ const deviceSlice = createSlice({
     setDevice(state, action: PayloadAction<CreatedDeviceModel>) {
       state.device = action.payload;
     },
+    resetDevice(state) {
+      state.device = undefined;
+    },
     setHistoricalReadings(state, action: PayloadAction<DeviceReading[]>) {
       state.historicalReadings = action.payload;
     },
     setDeviceIds(state, action: PayloadAction<string[]>) {
       state.deviceIds = action.payload;
+    },
+    addADeviceId(state, action: PayloadAction<string>) {
+      if (state.deviceIds) {
+        state.deviceIds.push(action.payload);
+      } else {
+        state.deviceIds = [action.payload];
+      }
+    },
+    removeADeviceId(state, action: PayloadAction<string>) {
+      if (state.deviceIds) {
+        state.deviceIds = state.deviceIds.filter((id) => id !== action.payload);
+      }
     },
     setCurrentReading(state, action: PayloadAction<DeviceReading>) {
       state.currentReading = action.payload;
@@ -38,5 +53,13 @@ const deviceSlice = createSlice({
 });
 
 export default deviceSlice.reducer;
-export const { setDevice, resetDeviceStore, setCurrentReading, setDeviceIds, setHistoricalReadings } =
-  deviceSlice.actions;
+export const {
+  setDevice,
+  resetDevice,
+  resetDeviceStore,
+  setCurrentReading,
+  setDeviceIds,
+  setHistoricalReadings,
+  addADeviceId,
+  removeADeviceId,
+} = deviceSlice.actions;

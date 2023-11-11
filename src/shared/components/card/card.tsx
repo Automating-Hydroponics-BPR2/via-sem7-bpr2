@@ -16,15 +16,15 @@ import {
   ItemDate,
 } from './card.styles';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
-import { EditUserDialog, EditAddDeviceDialog } from '../../../components';
+import { EditUserDialog, EditDeviceDialog, AddDeviceDialog } from '../../../components';
 import { Typography } from '@mui/material';
 
 export const Card = React.memo((props: CardProps) => {
   const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
   const [openEditUserDialog, setOpenEditUserDialog] = useState(false);
-  const [openEditAddDeviceDialog, setOpenEditAddDeviceDialog] = useState(false);
+  const [openEditDeviceDialog, setOpenEditDeviceDialog] = useState(false);
+  const [openAddDeviceDialog, setOpenAddDeviceDialog] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
-  const [isAddDeviceClicked, setIsAddDeviceClicked] = useState(false);
   const { width, height, padding } = props;
   return (
     <>
@@ -51,8 +51,7 @@ export const Card = React.memo((props: CardProps) => {
                   right="-6px"
                   type="button"
                   onClick={(e: React.MouseEvent) => {
-                    setIsAddDeviceClicked(false);
-                    props.user ? setOpenEditUserDialog(true) : setOpenEditAddDeviceDialog(true);
+                    props.user ? setOpenEditUserDialog(true) : setOpenEditDeviceDialog(true);
                     e.stopPropagation();
                   }}>
                   <FontAwesomeIcon icon={faPenToSquare} />
@@ -76,8 +75,7 @@ export const Card = React.memo((props: CardProps) => {
                   right="-6px"
                   type="button"
                   onClick={(e: React.MouseEvent) => {
-                    setIsAddDeviceClicked(true);
-                    setOpenEditAddDeviceDialog(true);
+                    setOpenAddDeviceDialog(true);
                     e.stopPropagation();
                   }}>
                   <FontAwesomeIcon icon={faCirclePlus} />
@@ -135,14 +133,19 @@ export const Card = React.memo((props: CardProps) => {
         user={props.user}
         onUserEdit={props.onUserEditClick}
       />
-      <EditAddDeviceDialog
-        open={openEditAddDeviceDialog}
+      <EditDeviceDialog
+        open={openEditDeviceDialog}
         onClose={() => {
-          setOpenEditAddDeviceDialog(false);
+          setOpenEditDeviceDialog(false);
         }}
-        device={props.device ? props.device : undefined}
-        isAddDevice={isAddDeviceClicked}
+        device={props.device}
         onDeviceEdit={props.onDeviceEditClick}
+      />
+      <AddDeviceDialog
+        open={openAddDeviceDialog}
+        onClose={() => {
+          setOpenAddDeviceDialog(false);
+        }}
         onDeviceAdd={props.onDeviceAddClick}
       />
     </>

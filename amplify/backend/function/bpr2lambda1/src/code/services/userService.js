@@ -42,7 +42,7 @@ const queryForUserWithUsername = async (username) => {
   }
 };
 
-const checkIfUserWithIdExists = async (userId) => {
+const checkIfUserWithIdExists = async (userId, isReturnSpecified) => {
   try {
     const { Item: user } = await dynamoDb.send(
       new GetItemCommand({
@@ -52,7 +52,11 @@ const checkIfUserWithIdExists = async (userId) => {
     );
 
     if (user) {
-      return true;
+      if (isReturnSpecified) {
+        return unmarshall(user);
+      } else {
+        return true;
+      }
     }
 
     return false;
@@ -223,7 +227,7 @@ const updateUserById = async (userId, user) => {
 };
 
 export const userServices = {
-  queryForUserWithUsername,
+  checkIfUserWithIdExists,
   registerUser,
   loginUser,
   deleteUserById,

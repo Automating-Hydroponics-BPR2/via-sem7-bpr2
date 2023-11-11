@@ -1,18 +1,27 @@
 import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Dialog, DialogProps } from '../../../shared';
-import { IEditAddDialogDeviceProps } from './edit-add-device-dialog.props';
-import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import { Dialog, DialogProps, Snackbar } from '../../../shared';
+import { IAddDeviceDialogProps } from './add-device-dialog.props';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { Container, CssBaseline, Avatar, Box, Typography, TextField } from '@mui/material';
 
-export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
+export const AddDeviceDialog = (props: IAddDeviceDialogProps) => {
   const theme = useTheme();
-  const { open, onClose, device, isAddDevice, onDeviceEdit, onDeviceAdd } = props;
+  const { open, onClose, onDeviceAdd } = props;
+  const [alertOpen, setAlertOpen] = useState(false);
   const [formState, setFormState] = useState({
-    deviceId: isAddDevice ? '' : device?.deviceId ?? '',
-    name: isAddDevice ? '' : device?.name ?? '',
+    deviceId: '',
+    name: '',
   });
+
+  const handleCloseAlert = (event?: Event | React.SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setAlertOpen(false);
+  };
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormState({
       ...formState,
@@ -20,29 +29,22 @@ export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
     });
   };
 
-  const checkIfFormChanged = () => {
-    return formState.deviceId !== device?.deviceId || formState.name !== device?.name;
-  };
-
   const handleSave = () => {
-    if (validateForm() && checkIfFormChanged()) {
-      if (!isAddDevice && onDeviceEdit && device) {
-        onDeviceEdit(device?.id, {
-          deviceId: formState.deviceId,
-          name: formState.name,
-        });
-      } else if (isAddDevice && onDeviceAdd) {
+    if (validateForm()) {
+      if (onDeviceAdd) {
         onDeviceAdd({
           deviceId: formState.deviceId,
           name: formState.name,
         });
       }
-      // TODO else add a snack saying that there was no change
       onClose();
+    } else {
+      setAlertOpen(true); // Display Snackbar if validation fails
     }
   };
   const validateForm = () => {
     return (
+      formState.deviceId !== '' &&
       formState.deviceId.match(/^[a-zA-Z0-9-]+$/) &&
       formState.deviceId.length >= 10 &&
       formState.deviceId.length <= 20 &&
@@ -50,10 +52,11 @@ export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
         (formState.name.match(/^[a-zA-Z0-9 ]+$/) && formState.name.length >= 10 && formState.name.length <= 20))
     );
   };
+
   const dialogProps: DialogProps = {
     open,
     onClose,
-    title: isAddDevice ? 'Add a new device' : 'Edit device',
+    title: 'Add a new device',
     children: (
       <Container
         component="main"
@@ -71,10 +74,10 @@ export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
             alignItems: 'center',
           }}>
           <Avatar sx={{ m: 1, bgcolor: theme.palette.text.primary }}>
-            {!isAddDevice ? <ModeEditOutlineOutlinedIcon /> : <AddCircleOutlineOutlinedIcon />}
+            <AddCircleOutlineOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            {!isAddDevice ? (device ? `${device.deviceId}` : '') : 'Add a new device'}
+            'Add a new device'
           </Typography>
           <Box component="form" sx={{ mt: 1 }}>
             <TextField
@@ -85,7 +88,7 @@ export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
               id="deviceId"
               label="Device id"
               name="deviceId"
-              defaultValue={!isAddDevice ? device?.deviceId ?? '' : ''}
+              defaultValue={''}
               autoFocus
               error={
                 formState.deviceId !== '' &&
@@ -110,7 +113,7 @@ export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
               id="name"
               label="Name"
               name="name"
-              defaultValue={!isAddDevice ? device?.name ?? '' : ''}
+              defaultValue={''}
               autoFocus
               error={
                 formState.name !== '' &&
@@ -130,10 +133,9 @@ export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
         </Box>
       </Container>
     ),
-    options: [!isAddDevice ? 'Save' : 'Add', 'Cancel'],
+    options: ['Add', 'Cancel'],
     onOptionClick: (option: string) => {
       switch (option) {
-        case 'Save':
         case 'Add':
           handleSave();
           break;
@@ -149,6 +151,13 @@ export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
   return (
     <div>
       <Dialog {...dialogProps} />
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseAlert}
+        type="info"
+        message="Form is empty or invalid"
+      />
     </div>
   );
 };

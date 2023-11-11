@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Dialog, DialogProps, User } from '../../../shared';
+import { Dialog, DialogProps, Snackbar, User } from '../../../shared';
 import { IEditUserDialogProps } from './edit-user-dialog.props';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import { Container, CssBaseline, Avatar, Box, Typography, TextField } from '@mui/material';
@@ -9,12 +9,22 @@ import { isEmailValid } from '../../../pages/authentication/register/register.ut
 export const EditUserDialog = (props: IEditUserDialogProps) => {
   const theme = useTheme();
   const { open, onClose, user, onUserEdit } = props;
+  const [alertOpen, setAlertOpen] = useState(false);
   const [formState, setFormState] = useState<User>({
     username: user?.username ?? '',
     firstName: user?.firstName ?? '',
     lastName: user?.lastName ?? '',
     email: user?.email ?? '',
   });
+
+  const handleCloseAlert = (event?: Event | React.SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setAlertOpen(false);
+  };
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormState({
       ...formState,
@@ -41,8 +51,9 @@ export const EditUserDialog = (props: IEditUserDialogProps) => {
           email: formState.email,
         });
       }
-      // TODO else add a snack saying that there was no change
       onClose();
+    } else {
+      setAlertOpen(true); // Display Snackbar if validation fails
     }
   };
   const validateForm = () => {
@@ -197,6 +208,13 @@ export const EditUserDialog = (props: IEditUserDialogProps) => {
   return (
     <div>
       <Dialog {...dialogProps} />
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseAlert}
+        type="info"
+        message="Form is empty or invalid"
+      />
     </div>
   );
 };
