@@ -14,6 +14,7 @@ import {
   addANotification,
   Priority,
   CreatedDeviceModel,
+  setDashboardSelectedDeviceIdInformaton,
 } from '../shared';
 
 const getToken = () => {
@@ -35,6 +36,8 @@ export const createDevice = (deviceData: DeviceModel) => (dispatch: any) => {
       },
     })
     .then((res: any) => {
+      dispatch(setDevice(res.data as CreatedDeviceModel));
+      dispatch(setDashboardSelectedDeviceIdInformaton(deviceData.deviceId));
       dispatch(
         addANotification({
           id: uuidv4(),
@@ -144,6 +147,8 @@ export const updateDeviceWithId = (id: string, deviceData: DeviceModel) => (disp
     })
     .then((res: any) => {
       console.log(res.data);
+      dispatch(setDevice(res.data as CreatedDeviceModel));
+      dispatch(setDashboardSelectedDeviceIdInformaton(res.data.deviceId as string));
       dispatch(
         addANotification({
           id: uuidv4(),
@@ -161,7 +166,6 @@ export const updateDeviceWithId = (id: string, deviceData: DeviceModel) => (disp
           message: `Device was updated successfully!`,
         }),
       );
-      dispatch(setDevice(res.data as CreatedDeviceModel));
     })
     .catch((err: any) => {
       dispatch(

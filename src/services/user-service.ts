@@ -245,7 +245,7 @@ export const updateUserWithId = (userData: User) => (dispatch: any) => {
         addANotification({
           id: uuidv4(),
           title: 'User update failed',
-          description: `You have failed to update a user with username ${getToken().username}!`,
+          description: `You have failed to update a user with username ${getToken().username}! Reasons can be: invalid data or username is already taken.`,
           read: false,
           priority: Priority.HIGH,
           date: new Date(),

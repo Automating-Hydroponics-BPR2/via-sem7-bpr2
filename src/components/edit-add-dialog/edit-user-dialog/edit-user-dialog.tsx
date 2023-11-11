@@ -21,8 +21,18 @@ export const EditUserDialog = (props: IEditUserDialogProps) => {
       [event.target.name]: event.target.value,
     });
   };
+
+  const checkIfFormChanged = () => {
+    return (
+      formState.username !== user?.username ||
+      formState.firstName !== user?.firstName ||
+      formState.lastName !== user?.lastName ||
+      formState.email !== user?.email
+    );
+  };
+
   const handleSave = () => {
-    if (validateForm()) {
+    if (validateForm() && checkIfFormChanged()) {
       if (onUserEdit) {
         onUserEdit({
           username: formState.username,
@@ -31,6 +41,7 @@ export const EditUserDialog = (props: IEditUserDialogProps) => {
           email: formState.email,
         });
       }
+      // TODO else add a snack saying that there was no change
       onClose();
     }
   };

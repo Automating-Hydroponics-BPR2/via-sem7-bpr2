@@ -3,6 +3,10 @@ import ThemeIcon from '@mui/icons-material/Brightness6';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
+import HomeIcon from '@mui/icons-material/Home';
+import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import {
   AppBar,
   Divider,
@@ -24,7 +28,15 @@ import { useNavigate } from 'react-router-dom';
 import { type NavItem } from '../../shared';
 import { ThemeDialogContainer } from '../theme-dialog/theme-dialog.container';
 import { HeaderProps } from './header.props';
-import { Logo, StyledLinkText, StyledIcon, StyledNumberOfNotifications, StyledLinkButtonIcon, StyledLinkButton } from './header.styles';
+import {
+  Logo,
+  StyledLinkText,
+  StyledIcon,
+  StyledNumberOfNotifications,
+  StyledLinkButtonIcon,
+  StyledLinkButton,
+  StyledLinkButtonWrapper,
+} from './header.styles';
 import { NotificationDialog } from '../notifications-dialog';
 
 const Search = styled('div')(({ theme }) => ({
@@ -143,27 +155,35 @@ export const Header = (props: HeaderProps) => {
             color: theme.palette.text.primary,
           }}>
           <Toolbar>
-            <Box
-              sx={{ flexGrow: 1, cursor: 'pointer' }}
-              onClick={() => {
-                navigate('/');
-              }}>
-              <Logo src="/images/stgdev__logo__dark.png" />
+            <Box sx={{ flexGrow: 1 }}>
+              <Logo
+                src="/images/stgdev__logo__dark.png"
+                onClick={() => {
+                  navigate('/');
+                }}
+              />
             </Box>
-            <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
+            <StyledLinkButtonWrapper sx={{ display: { xs: 'none', lg: 'block' } }}>
               {navItems.map((item) => (
-                <StyledLinkButton
-                  key={item.name}
-                  onClick={() => {
-                    handleLinkButtonClick(item.path);
-                  }}>
+                <StyledLinkButton key={item.name}>
                   <StyledLinkText>{item.name}</StyledLinkText>
-                  <StyledLinkButtonIcon>
-                    <CircleNotificationsIcon />
+                  <StyledLinkButtonIcon
+                    onClick={() => {
+                      handleLinkButtonClick(item.path);
+                    }}>
+                    {item.name === 'Home' ? (
+                      <HomeIcon />
+                    ) : item.name === 'Dashboard' ? (
+                      <DashboardIcon />
+                    ) : item.name === 'Logout' ? (
+                      <LogoutIcon />
+                    ) : (
+                      <LoginIcon />
+                    )}
                   </StyledLinkButtonIcon>
                 </StyledLinkButton>
               ))}
-            </Box>
+            </StyledLinkButtonWrapper>
             <Search sx={{ width: 250 }}>
               <SearchIconWrapper>
                 <SearchIcon />

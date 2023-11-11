@@ -1,10 +1,11 @@
-import { IconButton, Typography, Button } from '@mui/material';
+import { IconButton, Typography, Button, Box } from '@mui/material';
 import styled from 'styled-components';
 
 export const Logo = styled.img`
   display: block;
   width: 9rem;
   height: 2rem;
+  cursor: pointer;
   margin-right: 1rem;
 `;
 
@@ -15,9 +16,17 @@ export const StyledLinkText = styled(Typography)<{ isInverted?: boolean }>`
     isInverted ? theme.palette.primary.contrastText : theme.palette.text.primary}; };
 `;
 
+export const StyledLinkButtonWrapper = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+`;
+
 export const StyledLinkButton = styled(Button)`
   text-transform: uppercase;
   transition: opacity 0.3s;
+  cursor: default;
 
   &:hover {
     ${StyledLinkText} {
@@ -28,14 +37,18 @@ export const StyledLinkButton = styled(Button)`
 
 export const StyledLinkButtonIcon = styled(IconButton)`
   position: absolute;
-  top: 50%;
-  right: 50%;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
   color: ${({ theme }) => theme.palette.text.primary};
   opacity: 0;
   transition: opacity 0.2s;
   cursor: pointer;
 
   ${StyledLinkButton}:hover & {
+    margin: 0 auto;
+    max-width: 3rem;
     opacity: 1;
   }
 `;

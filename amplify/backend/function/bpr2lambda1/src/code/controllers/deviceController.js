@@ -56,7 +56,7 @@ export const getCurrentReadings = async (req, res, next) => {
       query: { id: deviceId },
       user: { id: userId },
     } = req;
-    const currentReadings = await deviceServices.getCurrentReadings(deviceId, userId);
+    const currentReadings = await deviceServices.getCurrentReadingForDeviceId(deviceId, userId);
     res.status(200).json(currentReadings);
   } catch (error) {
     if (error instanceof ApiError) next(error);
@@ -72,7 +72,7 @@ export const getHistoricalReadings = async (req, res, next) => {
       query: { id, start, end },
       user: { id: userId },
     } = req;
-    const historicalReadings = await deviceServices.getHistoricalReadings(id, userId, start, end);
+    const historicalReadings = await deviceServices.getHistoricalReadingsForDeviceId(id, userId, start, end);
     res.status(200).json(historicalReadings);
   } catch (error) {
     if (error instanceof ApiError) next(error);
@@ -103,7 +103,7 @@ export const getDeviceInformationForId = async (req, res, next) => {
       query: { id: deviceId },
       user: { id: userId },
     } = req;
-    const deviceInformation = await deviceServices.getDeviceInformationForId(deviceId, userId);
+    const deviceInformation = await deviceServices.getDeviceInformationForDeviceId(deviceId, userId);
     res.status(200).json(deviceInformation);
   } catch (error) {
     if (error instanceof ApiError) next(error);

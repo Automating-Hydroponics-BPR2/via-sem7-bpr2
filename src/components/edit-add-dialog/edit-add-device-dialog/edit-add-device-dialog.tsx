@@ -19,8 +19,13 @@ export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
       [event.target.name]: event.target.value,
     });
   };
+
+  const checkIfFormChanged = () => {
+    return formState.deviceId !== device?.deviceId || formState.name !== device?.name;
+  };
+
   const handleSave = () => {
-    if (validateForm()) {
+    if (validateForm() && checkIfFormChanged()) {
       if (!isAddDevice && onDeviceEdit && device) {
         onDeviceEdit(device?.id, {
           deviceId: formState.deviceId,
@@ -32,6 +37,7 @@ export const EditAddDeviceDialog = (props: IEditAddDialogDeviceProps) => {
           name: formState.name,
         });
       }
+      // TODO else add a snack saying that there was no change
       onClose();
     }
   };

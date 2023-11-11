@@ -33,7 +33,7 @@ export const updateUserById = async (req, res, next) => {
       body: user,
       user: { id },
     } = req;
-    const updatedUser = await userServices.updateUserById(user, id);
+    const updatedUser = await userServices.updateUserById(id, user);
     res.status(200).json(updatedUser);
   } catch (error) {
     if (error instanceof ApiError) next(error);
