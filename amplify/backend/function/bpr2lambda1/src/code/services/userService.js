@@ -33,9 +33,9 @@ const queryForUserWithUsername = async (username) => {
       if (Items.length === 1) {
         return unmarshall(Items[0]);
       }
-
-      return null;
     }
+
+    return null;
   } catch (error) {
     if (error instanceof ApiError) throw error;
     else throw new DynamoDBError(error, `src/services/userService.js - ${username} - queryForUserWithUsername`);
@@ -44,16 +44,16 @@ const queryForUserWithUsername = async (username) => {
 
 const checkIfUserWithIdExists = async (userId, isReturnSpecified) => {
   try {
-    const { Item: user } = await dynamoDb.send(
+    const { Item } = await dynamoDb.send(
       new GetItemCommand({
         TableName: process.env.DYNAMODB_TABLE_NAME_USERS,
         Key: marshall({ id: userId }),
       }),
     );
 
-    if (user) {
+    if (Item) {
       if (isReturnSpecified) {
-        return unmarshall(user);
+        return unmarshall(Item);
       } else {
         return true;
       }
@@ -67,16 +67,11 @@ const checkIfUserWithIdExists = async (userId, isReturnSpecified) => {
 };
 
 const checkIfUserWithUsernameExists = async (username) => {
-  try {
-    const user = await queryForUserWithUsername(username);
-    if (user) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (error) {
-    if (error instanceof ApiError) throw error;
-    else throw new DynamoDBError(error, `src/services/userService.js - ${username} - checkIfUsernameExists`);
+  const user = await queryForUserWithUsername(username);
+  if (user) {
+    return true;
+  } else {
+    return false;
   }
 };
 
@@ -153,7 +148,7 @@ const loginUser = async (user) => {
         );
       }
     } else {
-      throw new NotFoundError(
+      throw new BadRequestError(
         `Could not login user with username ${user.username}, user does not exist. Please try again`,
         'src/services/userService.js - loginUser',
       );
@@ -213,7 +208,7 @@ const updateUserById = async (userId, user) => {
       console.log(userToReturn);
       return userToReturn;
     } else {
-      throw new NotFoundError(
+      throw new BadRequestError(
         `Could not update user with id ${userId}, user does not exist or username already taken. Please try again`,
         'src/services/userService.js - updateUserById',
       );
@@ -228,6 +223,7 @@ const updateUserById = async (userId, user) => {
 
 export const userServices = {
   checkIfUserWithIdExists,
+  queryForUserWithUsername,
   registerUser,
   loginUser,
   deleteUserById,

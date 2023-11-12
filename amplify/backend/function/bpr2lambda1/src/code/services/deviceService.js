@@ -173,7 +173,7 @@ const updateDeviceById = async (id, userId, device) => {
 
       return deviceToReturn;
     } else {
-      throw new NotFoundError(
+      throw new BadRequestError(
         `Device doest not belong to user or deviceId {${device.deviceId}} already exists.`,
         'src/services/deviceService.js - updateDeviceById',
       );
@@ -195,12 +195,10 @@ const getHistoricalReadingsForDeviceId = async (deviceId, userId, start, end) =>
         new QueryCommand({
           TableName: process.env.DYNAMODB_TABLE_NAME_READINGS,
           IndexName: 'deviceId-timestamp-index', // Use the name of your Global Secondary Index
-          KeyConditionExpression: '#deviceId = :deviceId AND #t BETWEEN #e = :e AND #s = :s',
+          KeyConditionExpression: '#deviceId = :deviceId AND #t BETWEEN :s AND :e',
           ExpressionAttributeNames: {
             '#deviceId': 'deviceId',
             '#t': 'timestamp',
-            '#e': 'end',
-            '#s': 'start',
           },
           ExpressionAttributeValues: marshall(
             {

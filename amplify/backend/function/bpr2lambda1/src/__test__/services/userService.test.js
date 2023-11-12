@@ -4,6 +4,7 @@ import {
   QueryCommand,
   DeleteItemCommand,
   UpdateItemCommand,
+  GetItemCommand,
 } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
 import bcrypt from 'bcrypt';
@@ -51,40 +52,121 @@ describe('userServices', () => {
   });
 
   describe('should check if a user exists', () => {
-    it('should return a user if the user exists', async () => {
-      // Mock the DynamoDB send method for QueryCommand to simulate an existing user
+    it('should return true if a user with id exists', async () => {
+      // Mock the DynamoDB send method for GetItemCommand to simulate an existing user
       mockSend.mockResolvedValueOnce({
-        Items: [marshall(sampleUser)],
+        Item: marshall(sampleUser),
       });
 
-      // Call the checkIfUsernameExists function
-      const user = await userServices.checkIfUsernameExists(sampleUser.username, true, true);
+      const result = await userServices.checkIfUserWithIdExists(sampleUser.id);
 
       // Expect the DynamoDB client to have been called and QueryCommand to have been called with any arguments
-      expect(mockSend).toHaveBeenCalledWith(expect.any(QueryCommand));
+      expect(mockSend).toHaveBeenCalledWith(expect.any(GetItemCommand));
 
-      // Ensure that the user object is returned correctly
-      expect(user).toEqual(sampleUser);
+      // Ensure that the DynamoDB client has been called only once
+      expect(mockSend).toHaveBeenCalledTimes(1);
+      // Ensure that the checkIfUserWithIdExists function returns true
+      expect(result).toBe(true);
     });
 
-    it('should throw a NotFoundError if the user does not exist', async () => {
-      // Mock the DynamoDB send method for QueryCommand to simulate a nonexistent user
-      mockSend.mockResolvedValueOnce({ Items: [] });
+    it('should return false if a user with id does not exist', async () => {
+      // Mock the DynamoDB send method for GetItemCommand to simulate a nonexistent user
+      mockSend.mockResolvedValueOnce({});
+      const result = await userServices.checkIfUserWithIdExists(sampleUser.id);
 
-      // Call the checkIfUsernameExists function and expect it to throw a NotFoundError
-      await expect(userServices.checkIfUsernameExists(sampleUser.username, true, true)).rejects.toThrowError(
-        NotFoundError,
-      );
+      // Expect the DynamoDB client to have been called and QueryCommand to have been called with any arguments
+      expect(mockSend).toHaveBeenCalledWith(expect.any(GetItemCommand));
+
+      // Ensure that the DynamoDB client has been called only once
+      expect(mockSend).toHaveBeenCalledTimes(1);
+      // Ensure that the checkIfUserWithIdExists function returns false
+      expect(result).toBe(false);
+    });
+
+    it('should return user if a user with id exists and isReturnSpecified is true', async () => {
+      // Mock the DynamoDB send method for GetItemCommand to simulate an existing user
+      mockSend.mockResolvedValueOnce({
+        Item: marshall(sampleUser),
+      });
+
+      const result = await userServices.checkIfUserWithIdExists(sampleUser.id, true);
+
+      // Expect the DynamoDB client to have been called and QueryCommand to have been called with any arguments
+      expect(mockSend).toHaveBeenCalledWith(expect.any(GetItemCommand));
+
+      // Ensure that the DynamoDB client has been called only once
+      expect(mockSend).toHaveBeenCalledTimes(1);
+      // Ensure that the checkIfUserWithIdExists function returns the user
+      expect(result).toEqual(sampleUser);
     });
 
     it('should throw a DynamoDBError if the DynamoDB client throws an error', async () => {
       // Mock the DynamoDB send method for QueryCommand to simulate a DynamoDB error
       mockSend.mockRejectedValueOnce(new Error('DynamoDB error'));
 
-      // Call the checkIfUsernameExists function and expect it to throw a DynamoDBError
-      await expect(userServices.checkIfUsernameExists(sampleUser.username, true, true)).rejects.toThrowError(
-        DynamoDBError,
-      );
+      // Call the checkIfUserWithIdExists function and expect it to throw a DynamoDBError
+      await expect(userServices.checkIfUserWithIdExists(sampleUser.id, false)).rejects.toThrowError(DynamoDBError);
+    });
+
+    it('should rethrow a thrown exception if it is an instance of ApiError', async () => {
+      // Mock the DynamoDB send method for QueryCommand to simulate a BadRequestError
+      mockSend.mockRejectedValueOnce(new BadRequestError('Bad request'));
+
+      // Call the checkIfUserWithIdExists function and expect it to throw a BadRequestError
+      await expect(userServices.checkIfUserWithIdExists(sampleUser.id, false)).rejects.toThrowError(BadRequestError);
+    });
+  });
+
+  describe('should query for a user with username', () => {
+    it('should return a user if a user with username exists', async () => {
+      // Mock the DynamoDB send method for QueryCommand to simulate an existing user
+      mockSend.mockResolvedValueOnce({
+        Items: [marshall(sampleUser)],
+      });
+
+      const result = await userServices.queryForUserWithUsername(sampleUser.username);
+
+      // Expect the DynamoDB client to have been called and QueryCommand to have been called with any arguments
+      expect(mockSend).toHaveBeenCalledWith(expect.any(QueryCommand));
+
+      // Ensure that the DynamoDB client has been called only once
+      expect(mockSend).toHaveBeenCalledTimes(1);
+      // Ensure that the queryForUserWithUsername function returns the user
+      expect(result).toEqual(sampleUser);
+    });
+
+    it('should return null if a user with username does not exist', async () => {
+      // Mock the DynamoDB send method for QueryCommand to simulate a nonexistent user
+      mockSend.mockResolvedValueOnce({
+        Items: [],
+      });
+
+      const result = await userServices.queryForUserWithUsername(sampleUser.username);
+
+      // Expect the DynamoDB client to have been called and QueryCommand to have been called with any arguments
+      expect(mockSend).toHaveBeenCalledWith(expect.any(QueryCommand));
+
+      // Ensure that the DynamoDB client has been called only once
+      expect(mockSend).toHaveBeenCalledTimes(1);
+      // Ensure that the queryForUserWithUsername function returns null
+      expect(result).toBeNull();
+    });
+
+    it('should return null if no username is provided', async () => {
+      const result = await userServices.queryForUserWithUsername(null);
+
+      // Ensure that the DynamoDB client has not been called
+      expect(mockSend).not.toHaveBeenCalled();
+      // Ensure that the queryForUserWithUsername function returns null
+      expect(result).toBeNull();
+    });
+
+    it('should rethrow a thrown exception if it is an instance of ApiError', async () => {
+      // Mock the DynamoDB send method for QueryCommand to simulate a BadRequestError
+      mockSend.mockRejectedValueOnce(new BadRequestError('Bad request'));
+
+      // Call the queryForUserWithUsername function and expect it to throw a BadRequestError
+      await expect(userServices.queryForUserWithUsername(sampleUser.username)).rejects.toThrowError(BadRequestError);
     });
   });
 
@@ -194,10 +276,10 @@ describe('userServices', () => {
       };
 
       // Call the loginUser function and expect it to throw a NotFoundError
-      await expect(userServices.loginUser(loginCredentials)).rejects.toThrowError(NotFoundError);
+      await expect(userServices.loginUser(loginCredentials)).rejects.toThrowError(BadRequestError);
     });
 
-    it('should throw a new DynamoDBError if the caught exception is not instance of ApiError', async () => {
+    it('should throw a new UnauthorizedError if the caught exception is not instance of ApiError', async () => {
       // Mock they DynamoDB send method for QueryCommand to simulate an existing user
       mockSend.mockResolvedValueOnce({
         Items: [marshall(sampleUser)],
@@ -216,16 +298,11 @@ describe('userServices', () => {
 
       // Call the loginUser function and expect it to throw a DynamoDBError
       await expect(userServices.loginUser(loginCredentials)).rejects.toThrowError(DynamoDBError);
-    })
+    });
   });
 
   describe('should delete a user', () => {
     it('should delete a user', async () => {
-      // Mock the DynamoDB send method for QueryCommand to simulate an existing user
-      mockSend.mockResolvedValueOnce({
-        Items: [marshall(sampleUser)],
-      });
-
       // Mock the DynamoDB send method for DeleteItemCommand
       mockSend.mockResolvedValueOnce({});
 
@@ -233,24 +310,17 @@ describe('userServices', () => {
       await userServices.deleteUserById(sampleUser.id);
 
       // Expect the DynamoDB client to have been called and DeleteItemCommand to have been called with any arguments
-      expect(mockSend).toHaveBeenCalledWith(expect.any(QueryCommand));
       expect(mockSend).toHaveBeenCalledWith(expect.any(DeleteItemCommand));
     });
 
     it('should not delete a user if the user does not exist', async () => {
       // Mock the DynamoDB send method for QueryCommand to simulate a nonexistent user
-      mockSend.mockResolvedValueOnce({ Items: [] });
-
+      mockSend.mockRejectedValueOnce(new Error('User does not exist'));
       // Call the deleteUserById function and expect it to throw a NotFoundError
-      await expect(userServices.deleteUserById(sampleUser.id)).rejects.toThrowError(NotFoundError);
+      await expect(userServices.deleteUserById('1234234233')).rejects.toThrowError(DynamoDBError);
     });
 
     it('should not delete a user if the DynamoDB client throws an error', async () => {
-      // Mock the DynamoDB send method for QueryCommand to simulate an existing user
-      mockSend.mockResolvedValueOnce({
-        Items: [marshall(sampleUser)],
-      });
-
       // Mock the DynamoDB send method for DeleteItemCommand to simulate a DynamoDB error
       mockSend.mockRejectedValueOnce(new Error('DynamoDB error'));
 
@@ -259,11 +329,6 @@ describe('userServices', () => {
     });
 
     it('should not delete a user and should forward a thrown exception if it is an instance of ApiError', async () => {
-      // Mock the DynamoDB send method for QueryCommand to simulate an existing user
-      mockSend.mockResolvedValueOnce({
-        Items: [marshall(sampleUser)],
-      });
-
       // Mock the DynamoDB send method for DeleteItemCommand to simulate a BadRequestError
       mockSend.mockRejectedValueOnce(new BadRequestError('Bad request'));
 
@@ -272,11 +337,6 @@ describe('userServices', () => {
     });
 
     it('should not delete a user and should throw a DynamoDBError if the thrown exception is not an instance of ApiError', async () => {
-      // Mock the DynamoDB send method for QueryCommand to simulate an existing user
-      mockSend.mockResolvedValueOnce({
-        Items: [marshall(sampleUser)],
-      });
-
       // Mock the DynamoDB send method for DeleteItemCommand to simulate a DynamoDB error
       mockSend.mockRejectedValueOnce(new Error('DynamoDB error'));
 
@@ -284,27 +344,25 @@ describe('userServices', () => {
       await expect(userServices.deleteUserById(sampleUser.id)).rejects.toThrowError(DynamoDBError);
     });
 
-   it('should not delete a user if the delete command conditional check fails', async () => {
-     // Mock the DynamoDB send method for QueryCommand to simulate an existing user
-     mockSend.mockResolvedValueOnce({
-       Items: [marshall(sampleUser)],
-     });
+    it('should not delete a user if the delete command conditional check fails', async () => {
+      // Mock the DynamoDB send method to throw an exception with name equal to ConditionalCheckFailedException
+      mockSend.mockRejectedValueOnce({
+        name: 'ConditionalCheckFailedException',
+      });
 
-     // Mock the DynamoDB send method to throw an exception with name equal to ConditionalCheckFailedException
-     mockSend.mockRejectedValueOnce({
-       name: 'ConditionalCheckFailedException',
-     });
-
-     // Call the deleteUserById function and expect it to throw a NotFoundError
-     await expect(userServices.deleteUserById(sampleUser.id)).rejects.toThrowError(NotFoundError);
-   });
+      // Call the deleteUserById function and expect it to throw a NotFoundError
+      await expect(userServices.deleteUserById(sampleUser.id)).rejects.toThrowError(NotFoundError);
+    });
   });
 
   describe('should update a user', () => {
     it('should update a user', async () => {
       // Mock the DynamoDB send method for QueryCommand to simulate an existing user
       mockSend.mockResolvedValueOnce({
-        Items: [marshall(sampleUser)],
+        Item: marshall(sampleUser),
+      });
+      mockSend.mockResolvedValueOnce({
+        Items: [],
       });
 
       // Define the updated user object
@@ -322,16 +380,17 @@ describe('userServices', () => {
       });
 
       // Call the updateUserById function
-      await userServices.updateUserById(updatedUser, sampleUser.id);
+      await userServices.updateUserById(sampleUser.id, updatedUser);
 
       // Expect the DynamoDB client to have been called and UpdateItemCommand to have been called with any arguments
+      expect(mockSend).toHaveBeenCalledWith(expect.any(GetItemCommand));
       expect(mockSend).toHaveBeenCalledWith(expect.any(QueryCommand));
       expect(mockSend).toHaveBeenCalledWith(expect.any(UpdateItemCommand));
     });
 
     it('should not update a user if the user does not exist', async () => {
       // Mock the DynamoDB send method for QueryCommand to simulate a nonexistent user
-      mockSend.mockResolvedValueOnce({ Items: [] });
+      mockSend.mockResolvedValueOnce({});
 
       // Define the updated user object
       const updatedUser = {
@@ -342,14 +401,17 @@ describe('userServices', () => {
         lastName: 'updatedLastName',
       };
 
-      // Call the updateUserById function and expect it to throw a NotFoundError
-      await expect(userServices.updateUserById(updatedUser, sampleUser.id)).rejects.toThrowError(NotFoundError);
+      // Call the updateUserById function and expect it to throw a BadRequestError
+      await expect(userServices.updateUserById(sampleUser.id, updatedUser)).rejects.toThrowError(BadRequestError);
     });
 
     it('should not update a user if the DynamoDB client throws an error', async () => {
       // Mock the DynamoDB send method for QueryCommand to simulate an existing user
       mockSend.mockResolvedValueOnce({
-        Items: [marshall(sampleUser)],
+        Item: marshall(sampleUser),
+      });
+      mockSend.mockResolvedValueOnce({
+        Items: [],
       });
 
       // Mock the DynamoDB send method for UpdateItemCommand to simulate a DynamoDB error
@@ -365,13 +427,16 @@ describe('userServices', () => {
       };
 
       // Call the updateUserById function and expect it to throw a DynamoDBError
-      await expect(userServices.updateUserById(updatedUser, sampleUser.id)).rejects.toThrowError(DynamoDBError);
+      await expect(userServices.updateUserById(sampleUser.id, updatedUser)).rejects.toThrowError(DynamoDBError);
     });
 
     it('should not update a user and should forward a thrown exception if it is an instance of ApiError', async () => {
       // Mock the DynamoDB send method for QueryCommand to simulate an existing user
       mockSend.mockResolvedValueOnce({
-        Items: [marshall(sampleUser)],
+        Item: marshall(sampleUser),
+      });
+      mockSend.mockResolvedValueOnce({
+        Items: [],
       });
 
       // Mock the DynamoDB send method for UpdateItemCommand to simulate a BadRequestError
@@ -387,13 +452,16 @@ describe('userServices', () => {
       };
 
       // Call the updateUserById function and expect it to throw a BadRequestError
-      await expect(userServices.updateUserById(updatedUser, sampleUser.id)).rejects.toThrowError(BadRequestError);
+      await expect(userServices.updateUserById(sampleUser.id, updatedUser)).rejects.toThrowError(BadRequestError);
     });
 
     it('should not update a user and should throw a DynamoDBError if the thrown exception is not an instance of ApiError', async () => {
       // Mock the DynamoDB send method for QueryCommand to simulate an existing user
       mockSend.mockResolvedValueOnce({
-        Items: [marshall(sampleUser)],
+        Item: marshall(sampleUser),
+      });
+      mockSend.mockResolvedValueOnce({
+        Items: [],
       });
 
       // Mock the DynamoDB send method for UpdateItemCommand to simulate a DynamoDB error
@@ -409,13 +477,16 @@ describe('userServices', () => {
       };
 
       // Call the updateUserById function and expect it to throw a DynamoDBError
-      await expect(userServices.updateUserById(updatedUser, sampleUser.id)).rejects.toThrowError(DynamoDBError);
+      await expect(userServices.updateUserById(sampleUser.id, updatedUser)).rejects.toThrowError(DynamoDBError);
     });
 
     it('should not update a user if the update command conditional check fails', async () => {
       // Mock the DynamoDB send method for QueryCommand to simulate an existing user
       mockSend.mockResolvedValueOnce({
-        Items: [marshall(sampleUser)],
+        Item: marshall(sampleUser),
+      });
+      mockSend.mockResolvedValueOnce({
+        Items: [],
       });
 
       // Mock the DynamoDB send method to throw an exception with name equal to ConditionalCheckFailedException
@@ -432,7 +503,7 @@ describe('userServices', () => {
       };
 
       // Call the updateUserById function and expect it to throw a NotFoundError
-      await expect(userServices.updateUserById(updatedUser, sampleUser.id)).rejects.toThrowError(NotFoundError);
+      await expect(userServices.updateUserById(sampleUser.id, updatedUser)).rejects.toThrowError(NotFoundError);
     });
   });
 });
