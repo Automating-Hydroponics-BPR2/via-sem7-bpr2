@@ -54,20 +54,20 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
 
   const handleDateFilterChange = (e: SelectChangeEvent<unknown>) => {
     const newDateFilter = e.target.value as string;
-    const start = new Date().getTime();
-    let end = 0;
+    const end = new Date().getTime();
+    let start = 0;
     switch (newDateFilter) {
       case 'Today':
-        end = new Date().setHours(0, 0, 0, 0);
+        start = new Date().setHours(0, 0, 0, 0);
         break;
       case 'Last 3 days':
-        end = new Date().setHours(0, 0, 0, 0) - 259200000;
+        start = new Date().setHours(0, 0, 0, 0) - 259200000;
         break;
       case 'Last 7 days':
-        end = new Date().setHours(0, 0, 0, 0) - 604800000;
+        start = new Date().setHours(0, 0, 0, 0) - 604800000;
         break;
       default:
-        end = new Date().setHours(0, 0, 0, 0) - 604800000;
+        start = new Date().setHours(0, 0, 0, 0) - 604800000;
         break;
     }
     setDateFilterLabel?.(newDateFilter);

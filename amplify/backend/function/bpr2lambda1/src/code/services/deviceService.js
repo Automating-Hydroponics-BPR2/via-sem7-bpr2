@@ -190,6 +190,7 @@ const getHistoricalReadingsForDeviceId = async (deviceId, userId, start, end) =>
     console.log('point of debug 1 historical readings', deviceId);
     if (await checkIfDeviceWithDeviceIdBelongsToUserWithId(deviceId, userId)) {
       console.log('point of debug 2 historical readings', deviceId, end, start);
+      console.log('point of debug 3 historical readings', typeof end === 'number', typeof start === 'number');
 
       const data = await dynamoDb.send(
         new QueryCommand({
@@ -203,8 +204,8 @@ const getHistoricalReadingsForDeviceId = async (deviceId, userId, start, end) =>
           ExpressionAttributeValues: marshall(
             {
               ':deviceId': deviceId,
-              ':s': start,
-              ':e': end,
+              ':s': parseInt(start),
+              ':e': parseInt(end),
             },
             {
               removeUndefinedValues: true,
