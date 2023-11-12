@@ -113,6 +113,9 @@ export const AddDeviceDialogStory: Story = () => {
       alert(JSON.stringify(device));
       setOpen(false);
     },
+    navigate: () => {
+      console.log('navigate');
+    },
   };
 
   return (
@@ -145,6 +148,9 @@ export const EditDeviceDialogStory: Story = () => {
     onDeviceEdit: (device) => {
       alert(JSON.stringify(device));
       setOpen(false);
+    },
+    navigate: () => {
+      console.log('navigate');
     },
   };
 
@@ -182,6 +188,9 @@ export const EditUserDialogStory: Story = () => {
     onUserEdit: (user) => {
       alert(JSON.stringify(user));
       setOpen(false);
+    },
+    navigate: () => {
+      console.log('navigate');
     },
   };
 

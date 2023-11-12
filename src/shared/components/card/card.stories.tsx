@@ -23,6 +23,9 @@ export const CardStory: Story = () => {
         showEdit={true}
         showAdd={true}
         showDelete={true}
+        navigate={() => {
+          console.log('navigate');
+        }}
       />
       <Card
         key={2}
@@ -33,6 +36,9 @@ export const CardStory: Story = () => {
         imgSource="https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg"
         title="The title of the activity"
         showEdit={true}
+        navigate={() => {
+          console.log('navigate');
+        }}
       />
       <Card
         key={3}
@@ -49,6 +55,9 @@ export const CardStory: Story = () => {
           deviceId: 'uuid',
           name: 'Device name',
           id: 'uuid123',
+        }}
+        navigate={() => {
+          console.log('navigate');
         }}
       />
     </div>

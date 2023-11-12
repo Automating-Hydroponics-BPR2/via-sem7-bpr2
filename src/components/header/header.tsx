@@ -31,7 +31,7 @@ import { HeaderProps } from './header.props';
 import {
   Logo,
   StyledLinkText,
-  StyledIcon,
+  StyledIconButton,
   StyledNumberOfNotifications,
   StyledLinkButtonIcon,
   StyledLinkButton,
@@ -172,13 +172,13 @@ export const Header = (props: HeaderProps) => {
                       handleLinkButtonClick(item.path);
                     }}>
                     {item.name === 'Home' ? (
-                      <HomeIcon />
+                      <HomeIcon sx={{ paddingY: theme.spacing(0.5) }} />
                     ) : item.name === 'Dashboard' ? (
-                      <DashboardIcon />
+                      <DashboardIcon sx={{ paddingY: theme.spacing(0.5) }} />
                     ) : item.name === 'Logout' ? (
-                      <LogoutIcon />
+                      <LogoutIcon sx={{ paddingY: theme.spacing(0.5) }} />
                     ) : (
-                      <LoginIcon />
+                      <LoginIcon sx={{ paddingY: theme.spacing(0.5) }} />
                     )}
                   </StyledLinkButtonIcon>
                 </StyledLinkButton>
@@ -191,7 +191,7 @@ export const Header = (props: HeaderProps) => {
               <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
             </Search>
             <Divider />
-            <StyledIcon
+            <StyledIconButton
               size="large"
               aria-label="notification button"
               edge="end"
@@ -204,8 +204,8 @@ export const Header = (props: HeaderProps) => {
               <StyledNumberOfNotifications>
                 {props.notifications.filter((n) => !n.read).length}
               </StyledNumberOfNotifications>
-            </StyledIcon>
-            <StyledIcon
+            </StyledIconButton>
+            <StyledIconButton
               size="large"
               aria-label="theming button"
               edge="end"
@@ -215,15 +215,15 @@ export const Header = (props: HeaderProps) => {
               color={'inherit'}
               sx={{ display: { xs: 'none', lg: 'block' } }}>
               <ThemeIcon />
-            </StyledIcon>
-            <StyledIcon
+            </StyledIconButton>
+            <StyledIconButton
               color="inherit"
               aria-label="open drawer"
               edge="end"
               onClick={handleDrawerToggle}
               sx={{ display: { lg: 'none' } }}>
               <MenuIcon />
-            </StyledIcon>
+            </StyledIconButton>
           </Toolbar>
         </AppBar>
       </HideOnScroll>

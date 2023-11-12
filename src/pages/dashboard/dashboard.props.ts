@@ -1,3 +1,4 @@
+import { NavigateFunction } from 'react-router-dom';
 import { AuthenticatedUser, DeviceModel, User } from '../../shared';
 import { CreatedDeviceModel, DateFilter, DeviceReading } from '../../shared/models/device';
 
@@ -8,7 +9,6 @@ export interface DashboardProps {
   type?: string;
   device?: CreatedDeviceModel;
   deviceIds?: string[];
-  dateFilter: DateFilter;
   dateFilterLabel: string;
   user?: AuthenticatedUser;
   currentReading?: DeviceReading;
@@ -22,21 +22,18 @@ export interface DashboardProps {
   setThreshold: (treshold: number) => void;
   setDateFilter: (dateFilter: DateFilter) => void;
   setDateFilterLabel: (dateFilter: string) => void;
-  setSelectedDeviceIdChart: (deviceId: string) => void;
-  setSelectedDeviceIdDataTable: (deviceId: string) => void;
-  setSelectedDeviceIdInformaton: (deviceId: string) => void;
+  setSelectedDeviceIdChart: (navigate: NavigateFunction, deviceId: string) => void;
+  setSelectedDeviceIdDataTable: (navigate: NavigateFunction, deviceId: string, dateFilter?: DateFilter) => void;
+  setSelectedDeviceIdInformaton: (navigate: NavigateFunction, deviceId: string) => void;
 
   // Services
   // Device
-  getDeviceIds: () => void;
-  getDeviceWithId: (id: string) => void;
-  getCurrentReading: (id: string) => void;
-  deleteDeviceWithId: (id: string) => void;
-  createDevice: (deviceData: DeviceModel) => void;
-  updateDeviceWithId: (id: string, deviceData: DeviceModel) => void;
-  getHistoricalReadings: (id: string, start: number, end: number) => void;
+  getDeviceIds: (navigate: NavigateFunction) => void;
+  deleteDeviceWithId: (navigate: NavigateFunction, id: string) => void;
+  createDevice: (navigate: NavigateFunction, deviceData: DeviceModel) => void;
+  updateDeviceWithId: (navigate: NavigateFunction, id: string, deviceData: DeviceModel) => void;
 
   // User
-  deleteUserWithId: () => void;
-  updateUserWithId: (userData: User) => void;
+  deleteUserWithId: (navigate: NavigateFunction) => void;
+  updateUserWithId: (navigate: NavigateFunction, userData: Partial<User>) => void;
 }

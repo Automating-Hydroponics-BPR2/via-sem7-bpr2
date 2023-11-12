@@ -7,7 +7,7 @@ import { Container, CssBaseline, Avatar, Box, Typography, TextField } from '@mui
 
 export const AddDeviceDialog = (props: IAddDeviceDialogProps) => {
   const theme = useTheme();
-  const { open, onClose, onDeviceAdd } = props;
+  const { open, onClose, onDeviceAdd, navigate } = props;
   const [alertOpen, setAlertOpen] = useState(false);
   const [formState, setFormState] = useState({
     deviceId: '',
@@ -32,7 +32,7 @@ export const AddDeviceDialog = (props: IAddDeviceDialogProps) => {
   const handleSave = () => {
     if (validateForm()) {
       if (onDeviceAdd) {
-        onDeviceAdd({
+        onDeviceAdd(navigate, {
           deviceId: formState.deviceId,
           name: formState.name,
         });
@@ -77,7 +77,7 @@ export const AddDeviceDialog = (props: IAddDeviceDialogProps) => {
             <AddCircleOutlineOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            'Add a new device'
+            Add a new device
           </Typography>
           <Box component="form" sx={{ mt: 1 }}>
             <TextField

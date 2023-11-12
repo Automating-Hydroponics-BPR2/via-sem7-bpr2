@@ -19,6 +19,7 @@ import {
 } from '../../shared';
 import { Dashboard } from './dashboard';
 import { deviceService, userService } from '../../services';
+import { NavigateFunction } from 'react-router-dom';
 
 const mapStateToProps = (state: ApplicationState) => ({
   type: state.dashboard.type,
@@ -51,16 +52,21 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
         }),
       );
     },
-    setSelectedDeviceIdChart: (deviceId: string) => {
-      dispatch(deviceService.getCurrentReading(deviceId));
+    setSelectedDeviceIdChart: (navigate: NavigateFunction, deviceId: string) => {
       dispatch(setDashboardSelectedDeviceIdChart(deviceId));
+      dispatch(deviceService.getCurrentReading(navigate, deviceId));
     },
-    setSelectedDeviceIdDataTable: (deviceId: string) => {
-      dispatch(setDashboardSelectedDeviceIdDataTable(deviceId));
+    setSelectedDeviceIdDataTable: (navigate: NavigateFunction, deviceId: string, dateFilter?: DateFilter) => {
+      if (dateFilter) {
+        const start = dateFilter.start;
+        const end = dateFilter.end;
+        dispatch(setDashboardSelectedDeviceIdDataTable(deviceId));
+        dispatch(deviceService.getHistoricalReadings(navigate, deviceId, start, end));
+      }
     },
-    setSelectedDeviceIdInformaton: (deviceId: string) => {
-      dispatch(deviceService.getDeviceWithId(deviceId));
+    setSelectedDeviceIdInformaton: (navigate: NavigateFunction, deviceId: string) => {
       dispatch(setDashboardSelectedDeviceIdInformaton(deviceId));
+      dispatch(deviceService.getDeviceWithId(navigate, deviceId));
     },
     setType: (type: string) => {
       dispatch(setDashboardType(type));
@@ -83,34 +89,27 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     },
 
     // Device
-    getDeviceIds: () => {
-      dispatch(deviceService.getDeviceIds());
+    getDeviceIds: (navigate: NavigateFunction) => {
+      dispatch(deviceService.getDeviceIds(navigate));
     },
-    getDeviceWithId: (id: string) => {
-      dispatch(deviceService.getDeviceWithId(id));
+    createDevice: (navigate: NavigateFunction, deviceData: DeviceModel) => {
+      dispatch(deviceService.createDevice(navigate, deviceData));
     },
-    getCurrentReading: (id: string) => {
-      dispatch(deviceService.getCurrentReading(id));
+    updateDeviceWithId: (navigate: NavigateFunction, id: string, deviceData: DeviceModel) => {
+      dispatch(deviceService.updateDeviceWithId(navigate, id, deviceData));
+      dispatch(deviceService.getDeviceIds(navigate));
     },
-    getHistoricalReadings: (id: string, start: number, end: number) => {
-      dispatch(deviceService.getHistoricalReadings(id, start, end));
-    },
-    createDevice: (deviceData: DeviceModel) => {
-      dispatch(deviceService.createDevice(deviceData));
-    },
-    updateDeviceWithId: (id: string, deviceData: DeviceModel) => {
-      dispatch(deviceService.updateDeviceWithId(id, deviceData));
-    },
-    deleteDeviceWithId: (id: string) => {
-      dispatch(deviceService.deleteDeviceWithId(id));
+    deleteDeviceWithId: (navigate: NavigateFunction, id: string) => {
+      dispatch(deviceService.deleteDeviceWithId(navigate, id));
+      dispatch(deviceService.getDeviceIds(navigate));
     },
 
     // User
-    deleteUserWithId: () => {
-      dispatch(userService.deleteUserWithId());
+    deleteUserWithId: (navigate: NavigateFunction) => {
+      dispatch(userService.deleteUserWithId(navigate));
     },
-    updateUserWithId: (userData: User) => {
-      dispatch(userService.updateUserWithId(userData));
+    updateUserWithId: (navigate: NavigateFunction, userData: Partial<User>) => {
+      dispatch(userService.updateUserWithId(navigate, userData));
     },
   };
 };

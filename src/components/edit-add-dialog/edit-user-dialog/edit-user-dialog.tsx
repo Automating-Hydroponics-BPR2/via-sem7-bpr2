@@ -8,9 +8,9 @@ import { isEmailValid } from '../../../pages/authentication/register/register.ut
 
 export const EditUserDialog = (props: IEditUserDialogProps) => {
   const theme = useTheme();
-  const { open, onClose, user, onUserEdit } = props;
+  const { open, onClose, user, onUserEdit, navigate } = props;
   const [alertOpen, setAlertOpen] = useState(false);
-  const [formState, setFormState] = useState<User>({
+  const [formState, setFormState] = useState<Partial<User>>({
     username: user?.username ?? '',
     firstName: user?.firstName ?? '',
     lastName: user?.lastName ?? '',
@@ -44,11 +44,11 @@ export const EditUserDialog = (props: IEditUserDialogProps) => {
   const handleSave = () => {
     if (validateForm() && checkIfFormChanged()) {
       if (onUserEdit) {
-        onUserEdit({
-          username: formState.username,
-          firstName: formState.firstName,
-          lastName: formState.lastName,
-          email: formState.email,
+        onUserEdit(navigate, {
+          username: formState.username === user?.username ? undefined : formState.username,
+          firstName: formState.firstName === user?.firstName ? undefined : formState.firstName,
+          lastName: formState.lastName === user?.lastName ? undefined : formState.lastName,
+          email: formState.email === user?.email ? undefined : formState.email,
         });
       }
       onClose();
@@ -58,6 +58,10 @@ export const EditUserDialog = (props: IEditUserDialogProps) => {
   };
   const validateForm = () => {
     return (
+      formState.username &&
+      formState.firstName &&
+      formState.lastName &&
+      formState.email &&
       formState.username.match(/^[a-zA-Z0-9- ]+$/) &&
       formState.username.length >= 3 &&
       formState.username.length <= 21 &&
@@ -109,13 +113,14 @@ export const EditUserDialog = (props: IEditUserDialogProps) => {
               defaultValue={user?.username ?? ''}
               autoFocus
               error={
+                formState.username !== undefined &&
                 formState.username !== '' &&
                 (!formState.username.match(/^[a-zA-Z0-9- ]+$/) ||
                   formState.username.length < 3 ||
                   formState.username.length > 21)
               }
               helperText={
-                formState.username !== ''
+                formState.username && formState.username !== ''
                   ? formState.username.match(/^[a-zA-Z0-9- ]+$/) &&
                     formState.username.length >= 3 &&
                     formState.username.length <= 21
@@ -133,8 +138,12 @@ export const EditUserDialog = (props: IEditUserDialogProps) => {
               name="email"
               defaultValue={user?.email ?? ''}
               autoFocus
-              error={formState.email !== '' && isEmailValid(formState.email) !== 'Email can be inserted'}
-              helperText={isEmailValid(formState.email)}
+              error={
+                formState.email !== undefined &&
+                formState.email !== '' &&
+                isEmailValid(formState.email) !== 'Email can be inserted'
+              }
+              helperText={formState.email && isEmailValid(formState.email)}
             />
             <TextField
               onChange={handleChange}
@@ -147,12 +156,13 @@ export const EditUserDialog = (props: IEditUserDialogProps) => {
               autoFocus
               error={
                 formState.firstName !== '' &&
+                formState.firstName !== undefined &&
                 (!formState.firstName.match(/^[a-zA-Z0-9 ]+$/) ||
                   formState.firstName.length < 3 ||
                   formState.firstName.length > 21)
               }
               helperText={
-                formState.firstName !== ''
+                formState.firstName && formState.firstName !== ''
                   ? formState.firstName.match(/^[a-zA-Z0-9 ]+$/) &&
                     formState.firstName.length >= 3 &&
                     formState.firstName.length <= 21
@@ -172,12 +182,13 @@ export const EditUserDialog = (props: IEditUserDialogProps) => {
               autoFocus
               error={
                 formState.lastName !== '' &&
+                formState.lastName !== undefined &&
                 (!formState.lastName.match(/^[a-zA-Z0-9 ]+$/) ||
                   formState.lastName.length < 3 ||
                   formState.lastName.length > 21)
               }
               helperText={
-                formState.lastName !== ''
+                formState.lastName && formState.lastName !== ''
                   ? formState.lastName.match(/^[a-zA-Z0-9 ]+$/) &&
                     formState.lastName.length >= 3 &&
                     formState.lastName.length <= 21

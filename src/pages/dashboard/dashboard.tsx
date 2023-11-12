@@ -4,8 +4,10 @@ import { Backdrop, Card, Chart, DataTable, FilterType, SectionHeader, Snackbar }
 import { Grid, Skeleton } from '@mui/material';
 import { StyledDashboardGridWrapper } from './dashboard.styles';
 import { convertToChartData, convertTimestampToDate, filterDataTableDataForType } from './dashboard.utils';
+import { useNavigate } from 'react-router-dom';
 
 export const Dashboard = (props: DashboardProps) => {
+  const navigate = useNavigate();
   const [alertOpen, setAlertOpen] = useState(false);
   const [hasAlertAlreadyBeenShown, setHasAlertAlreadyBeenShown] = useState(false);
 
@@ -86,7 +88,6 @@ export const Dashboard = (props: DashboardProps) => {
     deviceIds,
     threshold,
     isLoading,
-    dateFilter,
     dateFilterLabel,
     selectedDeviceIdChart,
     selectedDeviceIdDataTable,
@@ -108,7 +109,6 @@ export const Dashboard = (props: DashboardProps) => {
     deleteUserWithId,
     deleteDeviceWithId,
     updateDeviceWithId,
-    getHistoricalReadings,
   } = props;
 
   const handleChartData = convertToChartData(
@@ -153,14 +153,10 @@ export const Dashboard = (props: DashboardProps) => {
 
   useEffect(() => {
     if (!initialized) {
-      getDeviceIds();
+      getDeviceIds(navigate);
       setInitialized(true);
     }
-
-    if (selectedDeviceIdDataTable && dateFilter) {
-      getHistoricalReadings(selectedDeviceIdDataTable, dateFilter.start, dateFilter.end);
-    }
-  }, [initialized, selectedDeviceIdDataTable, dateFilter]);
+  }, [initialized]);
 
   useEffect(() => {
     isThresholdExceeded();
@@ -189,6 +185,7 @@ export const Dashboard = (props: DashboardProps) => {
         <>
           <Grid item xs={12} md={6} lg={4}>
             <SectionHeader
+              navigate={navigate}
               selectedDeviceId={selectedDeviceIdInformaton}
               deviceIds={deviceIds}
               title="Device information"
@@ -199,6 +196,7 @@ export const Dashboard = (props: DashboardProps) => {
               showAdd
               showEdit={!!device}
               showDelete={!!device}
+              navigate={navigate}
               onDeviceAddClick={createDevice}
               onDeviceEditClick={updateDeviceWithId}
               onDeviceDeleteClick={deleteDeviceWithId}
@@ -213,6 +211,7 @@ export const Dashboard = (props: DashboardProps) => {
           </Grid>
           <Grid item xs={12} md={6} lg={8}>
             <SectionHeader
+              navigate={navigate}
               threshold={threshold}
               setSelectedDeviceId={setSelectedDeviceIdChart}
               selectedDeviceId={selectedDeviceIdChart}
@@ -226,6 +225,7 @@ export const Dashboard = (props: DashboardProps) => {
             <SectionHeader
               type={type}
               setType={setType}
+              navigate={navigate}
               deviceIds={deviceIds}
               setDateFilter={setDateFilter}
               dateFilterLabel={dateFilterLabel}
@@ -244,12 +244,7 @@ export const Dashboard = (props: DashboardProps) => {
                           timestamp: convertTimestampToDate(reading.timestamp as number),
                         };
                       })
-                    : filterDataTableDataForType(type as FilterType, historicalReadings).map((reading) => {
-                        return {
-                          ...reading,
-                          timestamp: convertTimestampToDate(reading.timestamp as number),
-                        };
-                      })
+                    : filterDataTableDataForType(type as FilterType, historicalReadings)
                   : type === 'Choose a type'
                   ? hardCodedDataTableData.map((reading) => {
                       return {
@@ -269,6 +264,7 @@ export const Dashboard = (props: DashboardProps) => {
             <Card
               user={user}
               showEdit={!!user}
+              navigate={navigate}
               showDelete={!!user}
               onUserEditClick={updateUserWithId}
               onUserDeleteClick={deleteUserWithId}

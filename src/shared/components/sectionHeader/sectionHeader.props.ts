@@ -1,15 +1,17 @@
+import { NavigateFunction } from 'react-router-dom';
 import { DateFilter } from '../../models';
 
 export interface ISectionHeaderProps {
   title: string;
-  threshold?: number;
-  dateFilterLabel?: string;
+  
   type?: string;
-
+  threshold?: number;
   deviceIds?: string[];
+  dateFilterLabel?: string;
   selectedDeviceId?: string;
+  navigate?: NavigateFunction;
 
-  setSelectedDeviceId?: (deviceId: string) => void;
+  setSelectedDeviceId?: (navigate: NavigateFunction, deviceId: string, dateFilter?: DateFilter) => void;
   setDateFilterLabel?: (dateFilter: string) => void;
   setDateFilter?: (dateFilter: DateFilter) => void;
   setThreshold?: (threshold: number) => void;

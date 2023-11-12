@@ -99,7 +99,7 @@ export const Card = React.memo((props: CardProps) => {
         }}
         title={'Confirm deletion?'}
         children={[
-          <Typography variant="body1" mt={2}>{`${
+          <Typography key={'confirmBody'} variant="body1" mt={2}>{`${
             props.device
               ? 'Are you sure you want to delete this device'
               : props.user
@@ -112,8 +112,8 @@ export const Card = React.memo((props: CardProps) => {
           switch (option) {
             case 'Confirm':
               if (props.device?.id) {
-                props.onDeviceDeleteClick?.(props.device.id);
-              } else props.onUserDeleteClick?.();
+                props.onDeviceDeleteClick?.(props.navigate, props.device.id);
+              } else props.onUserDeleteClick?.(props.navigate);
               break;
             case 'Cancel':
               break;
@@ -126,6 +126,7 @@ export const Card = React.memo((props: CardProps) => {
         height="200px"
       />
       <EditUserDialog
+        navigate={props.navigate}
         open={openEditUserDialog}
         onClose={() => {
           setOpenEditUserDialog(false);
@@ -134,6 +135,7 @@ export const Card = React.memo((props: CardProps) => {
         onUserEdit={props.onUserEditClick}
       />
       <EditDeviceDialog
+        navigate={props.navigate}
         open={openEditDeviceDialog}
         onClose={() => {
           setOpenEditDeviceDialog(false);
@@ -142,6 +144,7 @@ export const Card = React.memo((props: CardProps) => {
         onDeviceEdit={props.onDeviceEditClick}
       />
       <AddDeviceDialog
+        navigate={props.navigate}
         open={openAddDeviceDialog}
         onClose={() => {
           setOpenAddDeviceDialog(false);

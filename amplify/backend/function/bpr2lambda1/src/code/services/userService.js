@@ -197,7 +197,7 @@ const updateUserById = async (userId, user) => {
           UpdateExpression: updateExpression,
           ExpressionAttributeNames: expressionAttributeNames,
           ExpressionAttributeValues: expressionAttributeValues,
-          ReturnValues: 'UPDATED_NEW',
+          ReturnValues: 'ALL_NEW',
           ConditionExpression: 'attribute_exists(id)',
         }),
       );

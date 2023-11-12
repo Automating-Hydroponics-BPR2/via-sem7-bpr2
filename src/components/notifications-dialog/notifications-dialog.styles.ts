@@ -8,7 +8,7 @@ export const NotificationsList = styled(Box)`
   border-radius: 8px;
 `;
 
-export const NotificationItem = styled(Paper)<{ read: boolean }>`
+export const NotificationItem = styled(Paper)<{ read?: boolean }>`
   margin-bottom: ${({ theme }) => theme.spacing(1)};
   padding: 12px;
   border: 2px solid transparent;
@@ -65,7 +65,7 @@ export const StyledNotificationDate = styled(Typography)`
   color: grey;
 `;
 
-export const StyledNotificationPriority = styled(Typography)<{ prioritized: boolean }>`
+export const StyledNotificationPriority = styled(Typography)<{ prioritized?: boolean }>`
   margin-top: ${({ theme }) => theme.spacing(1)};
   font-size: 12px;
   color: ${({ prioritized }) => (prioritized ? '#ef5350' : '#000')};

@@ -58,7 +58,7 @@ export const NotificationDialog = (props: INotificationsDialogProps) => {
               .map((notification: TNotification) => (
                 <NotificationItem
                   key={notification.id}
-                  read={notification.read}
+                  {...(notification.read ? { read: true } : null)} // Conditionally add the read prop
                   onMouseEnter={() => {
                     if (!notification.read) {
                       onMarkAsRead(notification.id);
@@ -82,7 +82,8 @@ export const NotificationDialog = (props: INotificationsDialogProps) => {
                         minute: 'numeric',
                       })}
                     </StyledNotificationDate>
-                    <StyledNotificationPriority prioritized={notification.priority === Priority.HIGH}>
+                    <StyledNotificationPriority
+                      {...(notification.priority === Priority.HIGH ? { priority: 'high' } : null)}>
                       {notification.priority === Priority.HIGH ? 'High' : 'Low'}
                     </StyledNotificationPriority>
                     <TrashcanIcon

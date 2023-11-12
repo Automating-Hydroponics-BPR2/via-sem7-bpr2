@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 import React, { useState } from 'react';
 import { ISectionHeaderProps } from './sectionHeader.props';
 import { SelectChangeEvent, Tooltip } from '@mui/material';
@@ -16,6 +17,7 @@ import { DateFilter } from '../../models';
 
 export const SectionHeader = (props: ISectionHeaderProps) => {
   const {
+    navigate,
     threshold,
     setSelectedDeviceId,
     selectedDeviceId,
@@ -35,8 +37,10 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
   const handleDeviceChange = (e: SelectChangeEvent<unknown>) => {
     const newDeviceId = e.target.value as string;
     setLocalSelectedDeviceId?.(newDeviceId);
-    if (threshold ?? !type) {
-      setSelectedDeviceId?.(newDeviceId);
+    if (!threshold && !type) {
+      if (navigate) {
+        setSelectedDeviceId?.(navigate, newDeviceId);
+      }
     }
   };
 
@@ -76,12 +80,12 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
 
   const handleFilterClick = () => {
     if (localSelectedDeviceId) {
-      setSelectedDeviceId?.(localSelectedDeviceId);
-      if (localDateFilter) {
-        setDateFilter?.(localDateFilter);
-      }
-      if (localType !== 'Choose a type') {
-        setType?.(localType);
+      if (navigate) {
+        if (localDateFilter) {
+          setDateFilter?.(localDateFilter);
+          setSelectedDeviceId?.(navigate, localSelectedDeviceId, localDateFilter);
+        }
+        setSelectedDeviceId?.(navigate, localSelectedDeviceId);
       }
     }
   };
@@ -169,9 +173,9 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
           </StyledHeaderCategory>
         ) : null}
 
-        {dateFilterLabel && type && (
+        {((dateFilterLabel && type) || threshold) && (
           <Tooltip
-            title="The type can always be applied even without clicking the filter button as it is only affecting current data. However, in order for changed selected device id or date filter to take effect, you must click the filter button."
+            title="Type and threshold can always be applied even without clicking the filter button as it is only affecting current data. However, in order for changed device id or date filter to take effect, you must click the filter button."
             placement="top"
             arrow>
             <StyledIcon

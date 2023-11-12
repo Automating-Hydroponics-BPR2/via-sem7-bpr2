@@ -7,7 +7,7 @@ import { Container, CssBaseline, Avatar, Box, Typography, TextField } from '@mui
 
 export const EditDeviceDialog = (props: IEditDeviceDialogProps) => {
   const theme = useTheme();
-  const { open, onClose, device, onDeviceEdit } = props;
+  const { open, onClose, device, onDeviceEdit, navigate } = props;
   const [alertOpen, setAlertOpen] = useState(false);
   const [formState, setFormState] = useState({
     deviceId: device?.deviceId ?? '',
@@ -36,7 +36,7 @@ export const EditDeviceDialog = (props: IEditDeviceDialogProps) => {
   const handleSave = () => {
     if (validateForm() && checkIfFormChanged()) {
       if (onDeviceEdit && device) {
-        onDeviceEdit(device?.id, {
+        onDeviceEdit(navigate, device?.id, {
           deviceId: formState.deviceId,
           name: formState.name,
         });

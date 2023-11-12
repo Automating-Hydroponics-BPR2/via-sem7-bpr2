@@ -1,6 +1,7 @@
 import { StoryObj } from '@storybook/react';
 import { SectionHeader } from './sectionHeader';
 import { ISectionHeaderProps } from './sectionHeader.props';
+import { NavigateFunction } from 'react-router-dom';
 
 export default {
   title: 'SectionHeader',
@@ -14,7 +15,7 @@ export const SectionHeaderWithThresholdStory: Story = () => {
     title: 'Section Header',
     deviceIds: ['device1', 'device2', 'device3'],
     selectedDeviceId: 'device1',
-    setSelectedDeviceId: (deviceId: string) => {
+    setSelectedDeviceId: (navigate: NavigateFunction, deviceId: string) => {
       alert(deviceId);
     },
     threshold: 10,
@@ -41,7 +42,7 @@ export const SectionHeaderWithTypeStory: Story = () => {
     title: 'Section Header',
     deviceIds: ['device1', 'device2', 'device3'],
     selectedDeviceId: 'device1',
-    setSelectedDeviceId: (deviceId: string) => {
+    setSelectedDeviceId: (navigate: NavigateFunction, deviceId: string) => {
       alert(deviceId);
     },
     type: 'Choose a type',
@@ -64,7 +65,7 @@ export const SectionHeaderWithDateFilterStory: Story = () => {
     title: 'Section Header',
     deviceIds: ['device1', 'device2', 'device3'],
     selectedDeviceId: 'device1',
-    setSelectedDeviceId: (deviceId: string) => {
+    setSelectedDeviceId: (navigate: NavigateFunction, deviceId: string) => {
       alert(deviceId);
     },
     type: 'Choose a type',

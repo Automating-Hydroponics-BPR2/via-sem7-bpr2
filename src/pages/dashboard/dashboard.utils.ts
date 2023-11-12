@@ -41,7 +41,7 @@ export const convertTimestampToDate = (timestamp: number) => {
 export const filterDataTableDataForType = (type: FilterType, data: DeviceReading[]) => {
   return data.map((item: DeviceReading) => {
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const filteredItem = {
+    const filteredItem: FilteredDeviceReading = {
       timestamp: convertTimestampToDate(item.timestamp as number),
       [type]: item[type],
     } as FilteredDeviceReading;

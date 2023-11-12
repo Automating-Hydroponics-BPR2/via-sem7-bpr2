@@ -1,7 +1,9 @@
-import { CreatedDeviceModel, DeviceModel, DialogProps } from '../../../shared';
+import { NavigateFunction } from 'react-router-dom';
+import { CreatedDeviceModel, DeviceModel } from '../../../shared';
+import { IEditAddDialogProps } from '../edit-add-dialog.props';
 
-export interface IEditDeviceDialogProps extends DialogProps {
+export interface IEditDeviceDialogProps extends IEditAddDialogProps {
   device?: CreatedDeviceModel;
 
-  onDeviceEdit?: (id: string, device: DeviceModel) => void;
+  onDeviceEdit?: (navigate: NavigateFunction, id: string, device: DeviceModel) => void;
 }

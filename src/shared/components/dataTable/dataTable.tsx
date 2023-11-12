@@ -17,9 +17,9 @@ export const DataTable = (props: IDataTableProps) => {
       <StyledTableContainer as={Paper} height={height} width={width}>
         <Table sx={{ width, height }}>
           <TableHead>
-            <StyledTableRow sx={{textAlign: 'center', pointerEvents: 'none' }}>
+            <StyledTableRow sx={{ textAlign: 'center', pointerEvents: 'none' }}>
               {filterType ? (
-                <StyledTableHeaderCell>
+                <StyledTableHeaderCell colSpan={6} style={{ width: '75%' }}>
                   {filterType === 'light'
                     ? 'Light'
                     : filterType === 'ph'
@@ -41,7 +41,9 @@ export const DataTable = (props: IDataTableProps) => {
                   <StyledTableHeaderCell>Humidity</StyledTableHeaderCell>
                 </>
               )}
-              <StyledTableHeaderCell>Date</StyledTableHeaderCell>
+              <StyledTableHeaderCell colSpan={1} style={{ width: '25%' }}>
+                Date
+              </StyledTableHeaderCell>
             </StyledTableRow>
           </TableHead>
           <TableBody>
@@ -49,7 +51,7 @@ export const DataTable = (props: IDataTableProps) => {
               data.map((reading, index) => (
                 <StyledTableRow key={index}>
                   {filterType ? (
-                    <StyledTableCell>
+                    <StyledTableCell colSpan={6} style={{ width: '75%' }}>
                       {filterType === 'light'
                         ? reading.light
                         : filterType === 'ph'
@@ -69,7 +71,9 @@ export const DataTable = (props: IDataTableProps) => {
                       <StyledTableCell>{reading.humidity}</StyledTableCell>
                     </>
                   )}
-                  <StyledTableCell>{reading.timestamp}</StyledTableCell>
+                  <StyledTableCell colSpan={1} style={{ width: '25%' }}>
+                    {reading.timestamp}
+                  </StyledTableCell>
                 </StyledTableRow>
               ))
             ) : (

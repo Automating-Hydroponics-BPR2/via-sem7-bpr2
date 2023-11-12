@@ -1,5 +1,6 @@
 import { IconButton, Typography, Button, Box } from '@mui/material';
 import styled from 'styled-components';
+import { hexWithAlpha } from '../../shared';
 
 export const Logo = styled.img`
   display: block;
@@ -35,25 +36,27 @@ export const StyledLinkButton = styled(Button)`
   }
 `;
 
-export const StyledLinkButtonIcon = styled(IconButton)`
+export const StyledLinkButtonIcon = styled(Box)`
+  margin: ${({ theme }) => theme.spacing(0.5)} auto;
   position: absolute;
   top: 0;
   right: 0;
   left: 0;
   bottom: 0;
+  border-radius: 50%;
   color: ${({ theme }) => theme.palette.text.primary};
   opacity: 0;
   transition: opacity 0.2s;
-  cursor: pointer;
-
+  
   ${StyledLinkButton}:hover & {
-    margin: 0 auto;
+    background-color: ${({ theme }) => hexWithAlpha(theme.palette.text.primary as string, 10)};
+    cursor: pointer;
     max-width: 3rem;
     opacity: 1;
   }
 `;
 
-export const StyledIcon = styled(IconButton)`
+export const StyledIconButton = styled(IconButton)`
   margin-left: ${({ theme }) => theme.spacing(2)};
   padding-bottom: ${({ theme }) => theme.spacing(0.5)};
 `;

@@ -1,6 +1,8 @@
-import { AuthenticatedUser, DialogProps, User } from '../../../shared';
+import { NavigateFunction } from 'react-router-dom';
+import { AuthenticatedUser, User } from '../../../shared';
+import { IEditAddDialogProps } from '../edit-add-dialog.props';
 
-export interface IEditUserDialogProps extends DialogProps {
+export interface IEditUserDialogProps extends IEditAddDialogProps {
   user?: AuthenticatedUser;
-  onUserEdit?: (user: User) => void;
+  onUserEdit?: (navigate: NavigateFunction, user: Partial<User>) => void;
 }

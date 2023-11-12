@@ -13,14 +13,13 @@ import {
 } from '../shared';
 import { Priority } from '../shared/models/notification';
 import { v4 as uuidv4 } from 'uuid';
+import { NavigateFunction } from 'react-router-dom';
 
 const getToken = () => {
   const token = localStorage.getItem('token');
-  if (!token) {
-    throw new Error('No token found');
+  if (token) {
+    return token;
   }
-  const username = (jwtDecode(token) as AuthenticatedUser).username;
-  return { token, username };
 };
 
 // #region login
@@ -146,117 +145,140 @@ export const register = (user: User) => (dispatch: any) => {
 // #endregion
 
 // #region deleteUserWithId
-export const deleteUserWithId = () => (dispatch: any) => {
-  dispatch(setDashboardIsLoading(true));
-  axios
-    .delete(userEndpoints.delete(), {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${getToken().token}`,
-      },
-    })
-    .then((res: any) => {
-      dispatch(
-        addANotification({
-          id: uuidv4(),
-          title: 'User deleted',
-          description: `You have successfully deleted a user with username ${getToken().username}!`,
-          read: false,
-          priority: Priority.LOW,
-          date: new Date(),
-        }),
-      );
-      dispatch(
-        setSnackbar({
-          open: true,
-          type: 'success',
-          message: `User was deleted successfully!`,
-        }),
-      );
-      dispatch(reset());
-    })
-    .catch((err: any) => {
-      dispatch(
-        setSnackbar({
-          open: true,
-          type: 'error',
-          message: `User was not deleted!`,
-        }),
-      );
-      dispatch(
-        addANotification({
-          id: uuidv4(),
-          title: 'User deletion failed',
-          description: `You have failed to delete a user with username ${getToken().username}!`,
-          read: false,
-          priority: Priority.HIGH,
-          date: new Date(),
-        }),
-      );
-      console.error(err);
-    })
-    .finally(() => {
-      dispatch(setDashboardIsLoading(false));
-    });
+export const deleteUserWithId = (navigate: NavigateFunction) => (dispatch: any) => {
+  const token = getToken();
+  if (token) {
+    dispatch(setDashboardIsLoading(true));
+    axios
+      .delete(userEndpoints.delete(), {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res: any) => {
+        dispatch(
+          addANotification({
+            id: uuidv4(),
+            title: 'User deleted',
+            description: `You have successfully deleted your user!`,
+            read: false,
+            priority: Priority.LOW,
+            date: new Date(),
+          }),
+        );
+        dispatch(
+          setSnackbar({
+            open: true,
+            type: 'success',
+            message: `User was deleted successfully!`,
+          }),
+        );
+        dispatch(reset());
+      })
+      .catch((err: any) => {
+        dispatch(
+          setSnackbar({
+            open: true,
+            type: 'error',
+            message: `User was not deleted!`,
+          }),
+        );
+        dispatch(
+          addANotification({
+            id: uuidv4(),
+            title: 'User deletion failed',
+            description: `You have failed to delete your user!`,
+            read: false,
+            priority: Priority.HIGH,
+            date: new Date(),
+          }),
+        );
+        console.error(err);
+      })
+      .finally(() => {
+        dispatch(setDashboardIsLoading(false));
+      });
+  } else {
+    navigate('/login');
+    dispatch(
+      setSnackbar({
+        open: true,
+        type: 'warning',
+        message: `Your session has expired! You need to login again!`,
+      }),
+    );
+  }
 };
 
 // #endregion
 
 // #region updateUserWithId
-export const updateUserWithId = (userData: User) => (dispatch: any) => {
-  dispatch(setDashboardIsLoading(true));
-  axios
-    .patch(userEndpoints.update(), JSON.stringify(userData), {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${getToken().token}`,
-      },
-    })
-    .then((res: any) => {
-      dispatch(
-        addANotification({
-          id: uuidv4(),
-          title: 'User updated',
-          description: `You have successfully updated a user with username ${getToken().username}!`,
-          read: false,
-          priority: Priority.LOW,
-          date: new Date(),
-        }),
-      );
-      dispatch(
-        setSnackbar({
-          open: true,
-          type: 'success',
-          message: `User was updated successfully!`,
-        }),
-      );
-      dispatch(setUser(res.data as AuthenticatedUser));
-    })
-    .catch((err: any) => {
-      dispatch(
-        setSnackbar({
-          open: true,
-          type: 'error',
-          message: `User was not updated!`,
-        }),
-      );
-      dispatch(
-        addANotification({
-          id: uuidv4(),
-          title: 'User update failed',
-          description: `You have failed to update a user with username ${
-            getToken().username
-          }! Reasons can be: invalid data or username is already taken.`,
-          read: false,
-          priority: Priority.HIGH,
-          date: new Date(),
-        }),
-      );
-      console.error(err);
-    })
-    .finally(() => {
-      dispatch(setDashboardIsLoading(false));
-    });
+export const updateUserWithId = (navigate: NavigateFunction, userData: Partial<User>) => (dispatch: any) => {
+  const token = getToken();
+  if (token) {
+    console.log(userData);
+    dispatch(setDashboardIsLoading(true));
+    axios
+      .patch(userEndpoints.update(), JSON.stringify(userData), {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res: any) => {
+        dispatch(
+          addANotification({
+            id: uuidv4(),
+            title: 'User updated',
+            description: `You have successfully updated your user!`,
+            read: false,
+            priority: Priority.LOW,
+            date: new Date(),
+          }),
+        );
+        dispatch(
+          setSnackbar({
+            open: true,
+            type: 'success',
+            message: `User was updated successfully!`,
+          }),
+        );
+        dispatch(setUser(res.data as AuthenticatedUser));
+      })
+      .catch((err: any) => {
+        dispatch(
+          setSnackbar({
+            open: true,
+            type: 'error',
+            message: `User was not updated!`,
+          }),
+        );
+        dispatch(
+          addANotification({
+            id: uuidv4(),
+            title: 'User update failed',
+            description: `You have failed to update your user! Reasons can be: invalid data or username is already taken.`,
+            read: false,
+            priority: Priority.HIGH,
+            date: new Date(),
+          }),
+        );
+        console.error(err);
+      })
+      .finally(() => {
+        dispatch(setDashboardIsLoading(false));
+      });
+  } else {
+    navigate('/login');
+    dispatch(
+      setSnackbar({
+        open: true,
+        type: 'warning',
+        message: `Your session has expired! You need to login again!`,
+      }),
+    );
+  }
 };
 
 // #endregion

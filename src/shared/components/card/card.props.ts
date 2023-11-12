@@ -1,3 +1,4 @@
+import { NavigateFunction } from 'react-router-dom';
 import { DeviceModel, AuthenticatedUser, User, CreatedDeviceModel } from '../../models';
 
 export interface CardProps {
@@ -5,6 +6,7 @@ export interface CardProps {
   title: string;
   width: string;
   height: string;
+  navigate: NavigateFunction;
 
   device?: CreatedDeviceModel;
   user?: AuthenticatedUser;
@@ -16,9 +18,9 @@ export interface CardProps {
   showEdit?: boolean;
   showDelete?: boolean;
 
-  onDeviceAddClick?: (device: DeviceModel) => void;
-  onDeviceEditClick?: (id: string, device: DeviceModel) => void;
-  onDeviceDeleteClick?: (id: string) => void;
-  onUserEditClick?: (user: User) => void;
-  onUserDeleteClick?: () => void;
+  onDeviceAddClick?: (navigate: NavigateFunction, device: DeviceModel) => void;
+  onDeviceEditClick?: (navigate: NavigateFunction, id: string, device: DeviceModel) => void;
+  onDeviceDeleteClick?: (navigate: NavigateFunction, id: string) => void;
+  onUserEditClick?: (navigate: NavigateFunction, user: Partial<User>) => void;
+  onUserDeleteClick?: (navigate: NavigateFunction) => void;
 }

@@ -30,17 +30,16 @@ interface IAppProps {
 
 const App = (props: IAppProps) => {
   // Set background color for the root element
+  const token = localStorage.getItem('token');
   const root = document.getElementById('root') as HTMLElement;
   const theme = useCustomTheme();
   root.style.backgroundColor = theme.palette.background.default;
 
-  const { snackbar, setSnackbarVisibility } = props;
+  const { user, snackbar, setSnackbarVisibility, onInit } = props;
 
   useEffect(() => {
-    if (!props.user) {
-      props.onInit();
-    }
-  }, []);
+    onInit();
+  }, [token]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -56,7 +55,7 @@ const App = (props: IAppProps) => {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              {props.user ? (
+              {user ? (
                 <Route path="/dashboard" element={<Dashboard />} />
               ) : (
                 <Route path="/dashboard" element={<Login />} />
@@ -83,6 +82,7 @@ const App = (props: IAppProps) => {
 const mapStateToProps = (state: ApplicationState) => ({
   snackbar: state.notifications.snackbar,
   user: state.user.user,
+  token: state.user.token,
 });
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
@@ -97,11 +97,31 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
           dispatch(
             setSnackbar({
               open: true,
-              message: `Welcome back! ${decoded.username}`,
+              message: `Welcome back! ${decoded.username} 👋`,
               type: 'success',
             }),
           );
+        } else {
+          // Remove invalid token
+          localStorage.removeItem('token');
+          dispatch(setUser(undefined));
+          dispatch(
+            setSnackbar({
+              open: true,
+              message: 'Your session has expired. Please login again. 😅',
+              type: 'error',
+            }),
+          );
         }
+      } else {
+        dispatch(setUser(undefined));
+        dispatch(
+          setSnackbar({
+            open: true,
+            message: 'Welcome! Please login or register to continue 😎',
+            type: 'info',
+          }),
+        );
       }
     },
     setSnackbarVisibility: (visibility: boolean) => dispatch(setSnackbarVisibility(visibility)),
