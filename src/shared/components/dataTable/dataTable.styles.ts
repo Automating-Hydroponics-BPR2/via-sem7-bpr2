@@ -7,7 +7,6 @@ export const StyledTableWrapper = styled('div')<{ height: string; width: string 
   width: ${({ width }) => width};
   background-color: ${({ theme }) => theme.palette.background.default};
   margin-bottom: 1rem;
-  cursor: pointer;
 `;
 
 export const StyledTableContainer = styled(TableContainer)<{ height: string; width: string }>`

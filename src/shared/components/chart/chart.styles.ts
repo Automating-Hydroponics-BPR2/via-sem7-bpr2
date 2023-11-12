@@ -5,5 +5,4 @@ export const StyledChartWrapper = styled('div')<{ height: number; width: number 
   max-height: ${({ height }) => height}px;
   background-color: ${({ theme }) => theme.palette.background.default};
   margin-bottom: 1rem;
-  cursor: pointer;
 `;

@@ -124,7 +124,6 @@ const loginUser = async (user) => {
   try {
     const userToReturn = await queryForUserWithUsername(user.username);
     if (userToReturn) {
-      console.log('loginUser, userToReturn, point of debug', userToReturn);
       const isPasswordCorrect = bcrypt.compareSync(user.password, userToReturn.password);
 
       if (isPasswordCorrect) {
@@ -205,7 +204,6 @@ const updateUserById = async (userId, user) => {
 
       // include the attributes that were not updated except the password if it existed in the request body
       const { password, ...userToReturn } = { ...unmarshall(updatedUser), ...user };
-      console.log(userToReturn);
       return userToReturn;
     } else {
       throw new BadRequestError(

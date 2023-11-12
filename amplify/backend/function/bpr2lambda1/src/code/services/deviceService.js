@@ -223,10 +223,8 @@ const getHistoricalReadingsForDeviceId = async (deviceId, userId, start, end) =>
 };
 
 const getCurrentReadingForDeviceId = async (deviceId, userId) => {
-  console.log('point of debug 1 current readings', deviceId);
   try {
     if (await checkIfDeviceWithDeviceIdBelongsToUserWithId(deviceId, userId)) {
-      console.log('point of debug 2 current readings', deviceId);
       // Retrieve all items for the specified deviceId
       const data = await dynamoDb.send(
         new QueryCommand({
@@ -249,7 +247,7 @@ const getCurrentReadingForDeviceId = async (deviceId, userId) => {
         }),
       );
 
-      return data.Items.length > 0 ? unmarshall(data.Items[0]) : []; // Return the item with the latest timestamp or empty array
+      return data.Items.length > 0 ? unmarshall(data.Items[0]) : {}; // Return the item with the latest timestamp or empty object
     } else {
       throw new NotFoundError(
         `Could not get current readings for device with id ${deviceId}, device does not exist or does not belong to user.`,
@@ -294,7 +292,6 @@ const getDeviceIdsForUser = async (userId) => {
 
 const getDeviceInformationForDeviceId = async (deviceId, userId) => {
   const device = await checkIfDeviceWithDeviceIdBelongsToUserWithId(deviceId, userId, true);
-  console.log('point of debug 2', device);
   if (!device)
     throw new NotFoundError(
       `Could not get deivce. Device with id ${deviceId} does not exist or does not belong to user.`,

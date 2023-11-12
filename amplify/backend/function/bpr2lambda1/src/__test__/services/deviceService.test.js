@@ -597,7 +597,7 @@ describe('deviceServices', () => {
       );
     });
 
-    it('should return an empty array if the Items array is empty', async () => {
+    it('should return an empty object if the Items array is empty', async () => {
       // Mock the DynamoDB send method for QueryCommand to simulate a successful query
       mockSend.mockResolvedValueOnce({
         Items: [
@@ -623,8 +623,8 @@ describe('deviceServices', () => {
       // Expect the DynamoDB client to have been called with QueryCommand
       expect(mockSend).toHaveBeenCalledWith(expect.any(QueryCommand));
 
-      // Expect the result to be empty array
-      expect(result).toEqual([]);
+      // Expect the result to be empty object
+      expect(result).toEqual({});
     });
 
     it('should throw a DynamoDBError if the DynamoDB client throws an error', async () => {

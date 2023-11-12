@@ -94,7 +94,6 @@ export const getDeviceWithId = (deviceId: string) => (dispatch: any) => {
       },
     })
     .then((res: any) => {
-      console.log(res.data);
       dispatch(setDevice(res.data as CreatedDeviceModel));
       dispatch(
         setSnackbar({
@@ -149,7 +148,6 @@ export const updateDeviceWithId = (id: string, deviceData: DeviceModel) => (disp
       },
     })
     .then((res: any) => {
-      console.log(res.data);
       dispatch(setDevice(res.data as CreatedDeviceModel));
       dispatch(setDashboardSelectedDeviceIdInformaton(res.data.deviceId as string));
       dispatch(addADeviceId(res.data.deviceId as string));
@@ -265,31 +263,38 @@ export const getCurrentReading = (id: string) => (dispatch: any) => {
       dispatch(setCurrentReading(res.data as DeviceReading));
       // I want here to check what is the highest value out of the current reading and set the threshold to that value + 10. Keep in mind that values are in string format and also I only need to check ph, light, temp, waterTemp and humidity values.
       const currentReading = res.data as DeviceReading;
-      const currentReadingValues = [
-        currentReading.ph,
-        currentReading.light,
-        currentReading.temp,
-        currentReading.waterTemp,
-        currentReading.humidity,
-      ];
-      const currentReadingValuesAsNumbers = currentReadingValues.map((value) => parseInt(value));
-      const highestValue = Math.max(...currentReadingValuesAsNumbers);
-      dispatch(setDashboardThreshold(highestValue + 10));
+      const isCurrentReadingEmpty = Object.keys(currentReading).length === 0 && currentReading.constructor === Object;
+      if (currentReading && !isCurrentReadingEmpty) {
+        const currentReadingValues = [
+          currentReading.ph,
+          currentReading.light,
+          currentReading.temp,
+          currentReading.waterTemp,
+          currentReading.humidity,
+        ];
+        const currentReadingValuesAsNumbers = currentReadingValues.map((value) => parseInt(value));
+        const highestValue = Math.max(...currentReadingValuesAsNumbers);
+        dispatch(setDashboardThreshold(highestValue + 10));
+      }
 
       dispatch(
         setSnackbar({
           open: true,
-          type: 'success',
-          message: `Successfully retrieved current device data!`,
+          type: !isCurrentReadingEmpty ? 'success' : 'warning',
+          message: !isCurrentReadingEmpty
+            ? `Successfully retrieved current device data!`
+            : `No current readings found!`,
         }),
       );
       dispatch(
         addANotification({
           id: uuidv4(),
-          title: 'Current device data retrieved',
-          description: `You have successfully retrieved current device data for device with deviceId ${id}!`,
+          title: !isCurrentReadingEmpty ? 'Current device data retrieved' : 'No current readings found',
+          description: !isCurrentReadingEmpty
+            ? `You have successfully retrieved current device data for device with id ${id}!`
+            : `You have no current readings for device with id ${id}!`,
           read: false,
-          priority: Priority.LOW,
+          priority: !isCurrentReadingEmpty ? Priority.LOW : Priority.HIGH,
           date: new Date(),
         }),
       );
@@ -329,23 +334,27 @@ export const getHistoricalReadings = (id: string, start: number, end: number) =>
       },
     })
     .then((res: any) => {
-      console.log(res.data.devices);
       dispatch(setHistoricalReadings(res.data.devices as DeviceReading[]));
-      // TODO Future improvement can be to check if res.data.lastEvaluatedKey exists and if it does, then we can make another call to get the next set of data and etc.
       dispatch(
         setSnackbar({
           open: true,
-          type: 'success',
-          message: `Successfully retrieved historical device data!`,
+          type: res.data.devices.length === 0 ? 'warning' : 'success',
+          message:
+            res.data.devices.length === 0
+              ? `No historical readings found for selected device!`
+              : `Successfully retrieved historical device data!`,
         }),
       );
       dispatch(
         addANotification({
           id: uuidv4(),
-          title: 'Historical device data retrieved',
-          description: `You have successfully retrieved historical device data for device with id ${id}!`,
+          title: res.data.devices.length === 0 ? 'No historical readings found' : 'Historical device data retrieved',
+          description:
+            res.data.devices.length === 0
+              ? `You have no historical readings for device with id ${id}!`
+              : `You have successfully retrieved historical device data for device with id ${id}!`,
           read: false,
-          priority: Priority.LOW,
+          priority: res.data.devices.length === 0 ? Priority.HIGH : Priority.LOW,
           date: new Date(),
         }),
       );

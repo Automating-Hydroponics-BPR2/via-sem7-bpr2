@@ -213,7 +213,6 @@ export const updateUserWithId = (userData: User) => (dispatch: any) => {
       },
     })
     .then((res: any) => {
-      console.log(res.data);
       dispatch(
         addANotification({
           id: uuidv4(),

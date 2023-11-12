@@ -15,9 +15,9 @@ export const DataTable = (props: IDataTableProps) => {
   return (
     <StyledTableWrapper height={height} width={width}>
       <StyledTableContainer as={Paper} height={height} width={width}>
-        <Table>
+        <Table sx={{ width, height }}>
           <TableHead>
-            <StyledTableRow>
+            <StyledTableRow sx={{textAlign: 'center', pointerEvents: 'none' }}>
               {filterType ? (
                 <StyledTableHeaderCell>
                   {filterType === 'light'
@@ -73,8 +73,10 @@ export const DataTable = (props: IDataTableProps) => {
                 </StyledTableRow>
               ))
             ) : (
-              <StyledTableRow sx={{width:'100%'}}>
-                <StyledTableCell>No data available</StyledTableCell>
+              <StyledTableRow>
+                <StyledTableCell colSpan={filterType ? 6 : 7} style={{ textAlign: 'center', pointerEvents: 'none' }}>
+                  No data available
+                </StyledTableCell>
               </StyledTableRow>
             )}
           </TableBody>
