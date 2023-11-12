@@ -16,6 +16,7 @@ import {
   CreatedDeviceModel,
   setDashboardSelectedDeviceIdInformaton,
   addADeviceId,
+  setDashboardThreshold,
 } from '../shared';
 
 const getToken = () => {
@@ -262,6 +263,19 @@ export const getCurrentReading = (id: string) => (dispatch: any) => {
     .then((res: any) => {
       console.log(res.data);
       dispatch(setCurrentReading(res.data as DeviceReading));
+      // I want here to check what is the highest value out of the current reading and set the threshold to that value + 10. Keep in mind that values are in string format and also I only need to check ph, light, temp, waterTemp and humidity values.
+      const currentReading = res.data as DeviceReading;
+      const currentReadingValues = [
+        currentReading.ph,
+        currentReading.light,
+        currentReading.temp,
+        currentReading.waterTemp,
+        currentReading.humidity,
+      ];
+      const currentReadingValuesAsNumbers = currentReadingValues.map((value) => parseInt(value));
+      const highestValue = Math.max(...currentReadingValuesAsNumbers);
+      dispatch(setDashboardThreshold(highestValue + 10));
+
       dispatch(
         setSnackbar({
           open: true,
@@ -315,8 +329,9 @@ export const getHistoricalReadings = (id: string, start: number, end: number) =>
       },
     })
     .then((res: any) => {
-      console.log(res.data);
-      dispatch(setHistoricalReadings(res.data as DeviceReading[]));
+      console.log(res.data.devices);
+      dispatch(setHistoricalReadings(res.data.devices as DeviceReading[]));
+      // TODO Future improvement can be to check if res.data.lastEvaluatedKey exists and if it does, then we can make another call to get the next set of data and etc.
       dispatch(
         setSnackbar({
           open: true,

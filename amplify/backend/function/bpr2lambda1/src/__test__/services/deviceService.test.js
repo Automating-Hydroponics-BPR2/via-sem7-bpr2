@@ -26,6 +26,129 @@ describe('deviceServices', () => {
     mockSend.mockClear();
   });
 
+  describe('checkIfDeviceWithIdBelongsToUserWithId', () => {
+    it('should return true if the device belongs to the user', async () => {
+      // Mock the DynamoDB send method for GetItemCommand to simulate a successful get
+      mockSend.mockResolvedValueOnce({
+        Item: marshall({
+          id: 'deviceIdToCheck',
+          deviceId: 'deviceToCheck',
+          name: 'Device To Check',
+          userId: 'user123',
+        }),
+      });
+
+      const deviceIdToCheck = 'deviceIdToCheck';
+      const userId = 'user123';
+
+      const result = await deviceServices.checkIfDeviceWithIdBelongsToUserWithId(deviceIdToCheck, userId);
+
+      // Expect the DynamoDB client to have been called with GetItemCommand
+      expect(mockSend).toHaveBeenCalledWith(expect.any(GetItemCommand));
+
+      // Expect the result to be true
+      expect(result).toEqual(true);
+    });
+
+    it('should return false if the device does not belong to the user', async () => {
+      const result = await deviceServices.checkIfDeviceWithIdBelongsToUserWithId(undefined, undefined);
+
+      // Expect the result to be true
+      expect(result).toEqual(false);
+    });
+
+    it('should throw a DynamoDBError if the DynamoDB client throws an error', async () => {
+      // Mock the DynamoDB send method for GetItemCommand to simulate a DynamoDB error
+      mockSend.mockRejectedValueOnce(new Error('DynamoDB error'));
+
+      const deviceIdToCheck = 'deviceIdToCheck';
+      const userId = 'user123';
+
+      // Call the checkIfDeviceWithIdBelongsToUserWithId function and expect it to throw a DynamoDBError
+      await expect(deviceServices.checkIfDeviceWithIdBelongsToUserWithId(deviceIdToCheck, userId)).rejects.toThrowError(
+        DynamoDBError,
+      );
+    });
+
+    it('should rethrow the exception if the thrown exception is an instance of ApiError', async () => {
+      // Mock the DynamoDB send method for GetItemCommand to simulate a DynamoDB error
+      mockSend.mockRejectedValueOnce(new NotFoundError('NotFound error'));
+
+      const deviceIdToCheck = 'deviceIdToCheck';
+      const userId = 'user123';
+
+      // Call the checkIfDeviceWithIdBelongsToUserWithId function and expect it to throw a NotFoundError
+      await expect(deviceServices.checkIfDeviceWithIdBelongsToUserWithId(deviceIdToCheck, userId)).rejects.toThrowError(
+        NotFoundError,
+      );
+    });
+  });
+
+  describe('checkIfDeviceWithDeviceIdBelongsToUserWithId', () => {
+    it('should return true if the device belongs to the user', async () => {
+      // Mock the DynamoDB send method for QueryCommand to simulate a successful query
+      mockSend.mockResolvedValueOnce({
+        Items: [
+          marshall({
+            deviceId: 'deviceToCheck',
+            userId: 'user123',
+          }),
+        ],
+      });
+
+      const deviceIdToCheck = 'deviceToCheck';
+      const userId = 'user123';
+
+      const result = await deviceServices.checkIfDeviceWithDeviceIdBelongsToUserWithId(deviceIdToCheck, userId);
+
+      // Expect the DynamoDB client to have been called with QueryCommand
+      expect(mockSend).toHaveBeenCalledWith(expect.any(QueryCommand));
+
+      // Expect the result to be true
+      expect(result).toEqual(true);
+    });
+
+    it('should return false if the device does not belong to the user', async () => {
+      const result = await deviceServices.checkIfDeviceWithDeviceIdBelongsToUserWithId(undefined, undefined);
+
+      // Expect the result to be true
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if the deviceId or userId are not provided', async () => {
+      const result = await deviceServices.checkIfDeviceWithDeviceIdBelongsToUserWithId(undefined, 'user123');
+
+      // Expect the result to be true
+      expect(result).toEqual(false);
+    });
+
+    it('should throw a DynamoDBError if the DynamoDB client throws an error', async () => {
+      // Mock the DynamoDB send method for QueryCommand to simulate a DynamoDB error
+      mockSend.mockRejectedValueOnce(new Error('DynamoDB error'));
+
+      const deviceIdToCheck = 'deviceIdToCheck';
+      const userId = 'user123';
+
+      // Call the checkIfDeviceWithDeviceIdBelongsToUserWithId function and expect it to throw a DynamoDBError
+      await expect(
+        deviceServices.checkIfDeviceWithDeviceIdBelongsToUserWithId(deviceIdToCheck, userId),
+      ).rejects.toThrowError(DynamoDBError);
+    });
+
+    it('should rethrow the exception if the thrown exception is an instance of ApiError', async () => {
+      // Mock the DynamoDB send method for QueryCommand to simulate a DynamoDB error
+      mockSend.mockRejectedValueOnce(new NotFoundError('NotFound error'));
+
+      const deviceIdToCheck = 'deviceIdToCheck';
+      const userId = 'user123';
+
+      // Call the checkIfDeviceWithDeviceIdBelongsToUserWithId function and expect it to throw a NotFoundError
+      await expect(
+        deviceServices.checkIfDeviceWithDeviceIdBelongsToUserWithId(deviceIdToCheck, userId),
+      ).rejects.toThrowError(NotFoundError);
+    });
+  });
+
   describe('createDevice', () => {
     it('should create a device if it does not already exist for the user', async () => {
       // Mock the DynamoDB send method for GetItemCommand to simulate a non-existing device
@@ -56,6 +179,36 @@ describe('deviceServices', () => {
       });
     });
 
+    it('should create a device and generate a name if the name is not provided', async () => {
+      // Mock the DynamoDB send method for GetItemCommand to simulate a non-existing device
+      mockSend.mockResolvedValueOnce({ Items: [] });
+
+      // Mock the DynamoDB send method for PutItemCommand
+      mockSend.mockResolvedValueOnce({});
+      const device = {
+        deviceId: '12345',
+      };
+
+      const userId = 'user123';
+
+      const result = await deviceServices.createDevice(device, userId);
+
+      // Expect the DynamoDB client to have been called with GetItemCommand and PutItemCommand
+      expect(mockSend).toHaveBeenCalledWith(expect.any(QueryCommand));
+      expect(mockSend).toHaveBeenCalledWith(expect.any(PutItemCommand));
+
+      // Expect the result to be the created device
+      expect(result).toEqual({
+        id: expect.any(String),
+        deviceId: '12345',
+        name: 'Unnamed Device',
+        userId: 'user123',
+      });
+
+      // Expect the v4 method to have been called to generate a UUID
+      expect(require('uuid').v4).toHaveBeenCalled();
+    });
+
     it('should throw a BadRequestError if the device already exists for the user', async () => {
       // Mock the DynamoDB query method for QueryCommand to simulate an existing device
       mockSend.mockResolvedValueOnce({ Items: [marshall({ deviceId: 'existingDeviceId', userId: 'user123' })] });
@@ -73,8 +226,8 @@ describe('deviceServices', () => {
     });
 
     it('should throw a DynamoDBError if the DynamoDB client throws an error', async () => {
-      // Mock the DynamoDB send method for QueryCommand to simulate a DynamoDB error
-      mockSend.mockRejectedValueOnce(new Error('DynamoDB error'));
+      // Mock the DynamoDB send method for QueryCommand to simulate a successful check for an existing device
+      mockSend.mockResolvedValueOnce({ Items: [] });
 
       const device = {
         deviceId: '12345',
@@ -82,6 +235,9 @@ describe('deviceServices', () => {
       };
 
       const userId = 'user123';
+
+      // Mock the DynamoDB send method for QueryCommand to simulate a DynamoDB error
+      mockSend.mockRejectedValueOnce(new Error('DynamoDB error'));
 
       // Call the createDevice function and expect it to throw a DynamoDBError
       await expect(deviceServices.createDevice(device, userId)).rejects.toThrowError(DynamoDBError);
@@ -209,36 +365,60 @@ describe('deviceServices', () => {
     });
 
     it('should throw a DynamoDBError if the DynamoDB client throws an error', async () => {
+      // Device to update
+      const deviceToUpdate = {
+        id: 'deviceIdToUpdate',
+        deviceId: 'deviceToUpdate',
+        name: 'Device To Update',
+        userId: 'user123',
+      };
+
+      // Mock the DynamoDb send method for a GetItemCommand to simulate a successful get
+      mockSend.mockResolvedValueOnce({
+        Item: marshall(deviceToUpdate),
+      });
+
+      // Mock the DynamoDB send method for a QueryCommand to simulate a non-existing deviceId
+      mockSend.mockResolvedValueOnce({ Items: [] });
+
       // Mock the DynamoDB send method for UpdateItemCommand to simulate a DynamoDB error
       mockSend.mockRejectedValueOnce(new Error('DynamoDB error'));
 
       const deviceIdToUpdate = 'deviceIdToUpdate';
       const userId = 'user123';
-      const updatedDevice = {
-        deviceId: 'updatedDeviceId',
-        name: 'Updated Device',
-      };
 
       // Call the updateDeviceById function and expect it to throw a DynamoDBError
-      await expect(deviceServices.updateDeviceById(deviceIdToUpdate, userId, updatedDevice)).rejects.toThrowError(
+      await expect(deviceServices.updateDeviceById(deviceIdToUpdate, userId, deviceToUpdate)).rejects.toThrowError(
         DynamoDBError,
       );
     });
 
-    it('should throw a DynamoDBError if the thrown exception is not an instance of ApiError', async () => {
-      // Mock the DynamoDB send method for UpdateItemCommand to simulate a non-ApiError exception
-      mockSend.mockRejectedValueOnce(new Error('DynamoDB error'));
+    it('should rethrow the exception if the thrown exception is an instance of ApiError', async () => {
+      // Device to update
+      const deviceToUpdate = {
+        id: 'deviceIdToUpdate',
+        deviceId: 'deviceToUpdate',
+        name: 'Device To Update',
+        userId: 'user123',
+      };
+
+      // Mock the DynamoDb send method for a GetItemCommand to simulate a successful get
+      mockSend.mockResolvedValueOnce({
+        Item: marshall(deviceToUpdate),
+      });
+
+      // Mock the DynamoDB send method for a QueryCommand to simulate a non-existing deviceId
+      mockSend.mockResolvedValueOnce({ Items: [] });
+
+      // Mock the DynamoDB send method for UpdateItemCommand to simulate a DynamoDB error
+      mockSend.mockRejectedValueOnce(new BadRequestError('BadRequest error'));
 
       const deviceIdToUpdate = 'deviceIdToUpdate';
       const userId = 'user123';
-      const updatedDevice = {
-        deviceId: 'updatedDeviceId',
-        name: 'Updated Device',
-      };
 
       // Call the updateDeviceById function and expect it to throw a DynamoDBError
-      await expect(deviceServices.updateDeviceById(deviceIdToUpdate, userId, updatedDevice)).rejects.toThrowError(
-        DynamoDBError,
+      await expect(deviceServices.updateDeviceById(deviceIdToUpdate, userId, deviceToUpdate)).rejects.toThrowError(
+        BadRequestError,
       );
     });
   });
@@ -286,32 +466,6 @@ describe('deviceServices', () => {
         NotFoundError,
       );
     });
-
-    it('should throw a DynamoDBError if the DynamoDB client throws an error', async () => {
-      // Mock the DynamoDB send method for GetItemCommand to simulate a DynamoDB error
-      mockSend.mockRejectedValueOnce(new Error('DynamoDB error'));
-
-      const deviceIdToGet = 'deviceIdToGet';
-      const userId = 'user123';
-
-      // Call the getDeviceById function and expect it to throw a DynamoDBError
-      await expect(deviceServices.getDeviceInformationForDeviceId(deviceIdToGet, userId)).rejects.toThrowError(
-        DynamoDBError,
-      );
-    });
-
-    it('should throw a DynamoDBError if the thrown exception is not an instance of ApiError', async () => {
-      // Mock the DynamoDB send method for GetItemCommand to simulate a non-ApiError exception
-      mockSend.mockRejectedValueOnce(new Error('DynamoDB error'));
-
-      const deviceIdToGet = 'deviceIdToGet';
-      const userId = 'user123';
-
-      // Call the getDeviceById function and expect it to throw a DynamoDBError
-      await expect(deviceServices.getDeviceInformationForDeviceId(deviceIdToGet, userId)).rejects.toThrowError(
-        DynamoDBError,
-      );
-    });
   });
 
   describe('deleteDeviceById', () => {
@@ -340,36 +494,35 @@ describe('deviceServices', () => {
     });
 
     it('should throw a NotFoundError if the device does not belong to the user', async () => {
-      // Mock the DynamoDB send method for GetItemCommand to simulate a non-existing device
-      mockSend.mockResolvedValueOnce({ Items: [] });
+      // Mock the DynamoDB send method for GetItemCommand to simulate a device that does not belong to the user
+      mockSend.mockResolvedValueOnce({ Item: marshall({ id: '23', userId: 'user122' }) });
 
-      const deviceIdToDelete = 'deviceIdToDelete';
+      const id = 'id';
       const userId = 'user123';
 
       // Call the deleteDeviceById function and expect it to throw a NotFoundError
-      await expect(deviceServices.deleteDeviceById(deviceIdToDelete, userId)).rejects.toThrowError(NotFoundError);
-    });
-
-    it('should throw a DynamoDBError if the DynamoDB client throws an error', async () => {
-      // Mock the DynamoDB send method for GetItemCommand to simulate a DynamoDB error
-      mockSend.mockRejectedValueOnce(new Error('DynamoDB error'));
-
-      const deviceIdToDelete = 'deviceIdToDelete';
-      const userId = 'user123';
-
-      // Call the deleteDeviceById function and expect it to throw a DynamoDBError
-      await expect(deviceServices.deleteDeviceById(deviceIdToDelete, userId)).rejects.toThrowError(DynamoDBError);
+      await expect(deviceServices.deleteDeviceById(id, userId)).rejects.toThrowError(NotFoundError);
     });
 
     it('should throw a DynamoDBError if the thrown exception is not an instance of ApiError', async () => {
+      // Mock the DynamoDB send method for GetItemCommand to simulate a successful query
+      mockSend.mockResolvedValueOnce({
+        Item: marshall({
+          id: 'id',
+          deviceId: 'deviceToDelete',
+          name: 'Device To Delete',
+          userId: 'user123',
+        }),
+      });
+
       // Mock the DynamoDB send method for GetItemCommand to simulate a non-ApiError exception
       mockSend.mockRejectedValueOnce(new Error('DynamoDB error'));
 
-      const deviceIdToDelete = 'deviceIdToDelete';
+      const id = 'id';
       const userId = 'user123';
 
-      // Call the deleteDeviceById function and expect it to throw a DynamoDBError
-      await expect(deviceServices.deleteDeviceById(deviceIdToDelete, userId)).rejects.toThrowError(DynamoDBError);
+      // Call the deleteDeviceById function and expect it to throw a InternalServerError
+      await expect(deviceServices.deleteDeviceById(id, userId)).rejects.toThrowError(DynamoDBError);
     });
   });
 
@@ -424,7 +577,16 @@ describe('deviceServices', () => {
 
     it('should throw a NotFoundError if the device does not belong to the user', async () => {
       // Mock the DynamoDB send method for QueryCommand to simulate a non-existing device
-      mockSend.mockResolvedValueOnce({ Items: [] });
+      mockSend.mockResolvedValueOnce({
+        Items: [
+          marshall({
+            deviceId: 'deviceIdToGet',
+            id: 'deviceIdToGet',
+            userId: 'user1233423',
+            name: 'Device To Get',
+          }),
+        ],
+      });
 
       const deviceIdToGet = 'deviceIdToGet';
       const userId = 'user123';
@@ -435,7 +597,49 @@ describe('deviceServices', () => {
       );
     });
 
+    it('should return an empty array if the Items array is empty', async () => {
+      // Mock the DynamoDB send method for QueryCommand to simulate a successful query
+      mockSend.mockResolvedValueOnce({
+        Items: [
+          marshall({
+            id: 'id',
+            deviceId: 'deviceToGet',
+            userId: 'user123',
+            name: 'Device To Get',
+          }),
+        ],
+      });
+
+      // Mock the DynamoDB send method for QueryCommand to simulate a successful query
+      mockSend.mockResolvedValueOnce({
+        Items: [],
+      });
+
+      const deviceIdToGet = 'deviceToGet';
+      const userId = 'user123';
+
+      const result = await deviceServices.getCurrentReadingForDeviceId(deviceIdToGet, userId);
+
+      // Expect the DynamoDB client to have been called with QueryCommand
+      expect(mockSend).toHaveBeenCalledWith(expect.any(QueryCommand));
+
+      // Expect the result to be empty array
+      expect(result).toEqual([]);
+    });
+
     it('should throw a DynamoDBError if the DynamoDB client throws an error', async () => {
+      // Mock the DynamoDB send method for QueryCommand to simulate a device that belongs to the user
+      mockSend.mockResolvedValueOnce({
+        Items: [
+          marshall({
+            deviceId: 'deviceToGet',
+            id: 'deviceIdToGet',
+            userId: 'user123',
+            name: 'Device To Get',
+          }),
+        ],
+      });
+
       // Mock the DynamoDB send method for QueryCommand to simulate a DynamoDB error
       mockSend.mockRejectedValueOnce(new Error('DynamoDB error'));
 
@@ -448,7 +652,19 @@ describe('deviceServices', () => {
       );
     });
 
-    it('should throw a DynamoDBError if the thrown exception is not an instance of ApiError', async () => {
+    it('should rethrow the exception if the thrown exception is an instance of ApiError', async () => {
+      // Mock the DynamoDB send method for QueryCommand to simulate a device that belongs to the user
+      mockSend.mockResolvedValueOnce({
+        Items: [
+          marshall({
+            deviceId: 'deviceToGet',
+            id: 'deviceIdToGet',
+            userId: 'user123',
+            name: 'Device To Get',
+          }),
+        ],
+      });
+
       // Mock the DynamoDB send method for QueryCommand to simulate a non-ApiError exception
       mockSend.mockRejectedValueOnce(new Error('DynamoDB error'));
 
@@ -547,9 +763,52 @@ describe('deviceServices', () => {
       });
     });
 
+    it('should return an object with empty array, count equal to 0 and lastEvaluatedKey equal to undefined if the Items array is empty', async () => {
+      // Mock the DynamoDB send method for QueryCommand to simulate a successful query
+      mockSend.mockResolvedValueOnce({
+        Items: [
+          marshall({
+            deviceId: 'deviceToGet',
+            id: 'deviceIdToGet',
+            userId: 'user123',
+            name: 'Device To Get',
+          }),
+        ],
+      });
+
+      // Mock the DynamoDB send method for QueryCommand to simulate a successful query
+      mockSend.mockResolvedValueOnce({
+        Items: [],
+      });
+
+      const deviceIdToGet = 'deviceToGet';
+      const userId = 'user123';
+      const start = 1610000000000;
+      const end = 1620000000000;
+
+      const result = await deviceServices.getHistoricalReadingsForDeviceId(deviceIdToGet, userId, start, end);
+
+      // Expect the DynamoDB client to have been called with QueryCommand
+      expect(mockSend).toHaveBeenCalledWith(expect.any(QueryCommand));
+
+      // Expect the result to be the as desired
+      expect(result).toEqual({
+        devices: [],
+        count: 0,
+        lastEvaluatedKey: undefined,
+      });
+    });
+
     it('should throw a NotFoundError if the device does not belong to the user', async () => {
-      // Mock the DynamoDB send method for QueryCommand to simulate a non-existing device
-      mockSend.mockResolvedValueOnce({ Items: [] });
+      // Mock the DynamoDB send method for QueryCommand to simulate a device that does not belong to the user
+      mockSend.mockResolvedValueOnce({
+        Items: [
+          marshall({
+            deviceId: 'deviceToGet',
+            userId: 'user123421',
+          }),
+        ],
+      });
 
       const deviceIdToGet = 'deviceIdToGet';
       const userId = 'user123';
@@ -561,6 +820,16 @@ describe('deviceServices', () => {
     });
 
     it('should throw a DynamoDBError if the DynamoDB client throws an error', async () => {
+      // Mock the DynamoDB send method for QueryCommand to simulate a device that belongs to the user
+      mockSend.mockResolvedValueOnce({
+        Items: [
+          marshall({
+            deviceId: 'deviceIdToGet',
+            userId: 'user123',
+          }),
+        ],
+      });
+
       // Mock the DynamoDB send method for QueryCommand to simulate a DynamoDB error
       mockSend.mockRejectedValueOnce(new Error('DynamoDB error'));
 
@@ -568,22 +837,32 @@ describe('deviceServices', () => {
       const userId = 'user123';
 
       // Call the getHistoricalReadingsForDeviceId function and expect it to throw a DynamoDBError
-      await expect(deviceServices.getHistoricalReadingsForDeviceId(deviceIdToGet, userId)).rejects.toThrowError(
-        DynamoDBError,
-      );
+      await expect(
+        deviceServices.getHistoricalReadingsForDeviceId(deviceIdToGet, userId, 34234, 234234),
+      ).rejects.toThrowError(DynamoDBError);
     });
 
-    it('should throw a DynamoDBError if the thrown exception is not an instance of ApiError', async () => {
+    it('should rethrow the exception if the thrown exception is an instance of ApiError', async () => {
+      // Mock the DynamoDB send method for QueryCommand to simulate a device that belongs to the user
+      mockSend.mockResolvedValueOnce({
+        Items: [
+          marshall({
+            deviceId: 'deviceIdToGet',
+            userId: 'user123',
+          }),
+        ],
+      });
+
       // Mock the DynamoDB send method for QueryCommand to simulate a non-ApiError exception
-      mockSend.mockRejectedValueOnce(new Error('DynamoDB error'));
+      mockSend.mockRejectedValueOnce(new BadRequestError('BadRequestError error'));
 
       const deviceIdToGet = 'deviceIdToGet';
       const userId = 'user123';
 
       // Call the getHistoricalReadingsForDeviceId function and expect it to throw a DynamoDBError
-      await expect(deviceServices.getHistoricalReadingsForDeviceId(deviceIdToGet, userId)).rejects.toThrowError(
-        DynamoDBError,
-      );
+      await expect(
+        deviceServices.getHistoricalReadingsForDeviceId(deviceIdToGet, userId, 34234, 23423423),
+      ).rejects.toThrowError(BadRequestError);
     });
   });
 

@@ -9,7 +9,7 @@ import {
   ScanCommand,
 } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { NotFoundError, DynamoDBError, BadRequestError, InternalServerError, ApiError } from '../helpers/apiError.js';
+import { NotFoundError, DynamoDBError, BadRequestError, ApiError } from '../helpers/apiError.js';
 const dynamoDb = new DynamoDBClient({ region: 'eu-central-1' });
 
 // Important for updating a device and deleting a device when the device id might be changed/undefined
@@ -85,8 +85,6 @@ const checkIfDeviceWithDeviceIdBelongsToUserWithId = async (deviceId, userId, sh
 const createDevice = async (device, userId) => {
   try {
     if (!(await checkIfDeviceWithDeviceIdBelongsToUserWithId(device.deviceId, userId))) {
-      console.log('point of debug 1', device);
-
       const deviceToCreate = {
         id: uuidv4(),
         deviceId: device.deviceId,
@@ -132,19 +130,17 @@ const deleteDeviceById = async (id, userId) => {
     }
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    else throw new InternalServerError(error, 'src/services/deviceService.js - deleteDeviceById');
+    else throw new DynamoDBError(error, 'src/services/deviceService.js - deleteDeviceById');
   }
 };
 
 const updateDeviceById = async (id, userId, device) => {
   try {
-    console.log('point of debug 1', device);
     if (
       (await checkIfDeviceWithIdBelongsToUserWithId(id, userId)) &&
       //! This check is needed because the user might change the deviceId to an existing one
       !(await checkIfDeviceWithDeviceIdBelongsToUserWithId(device.deviceId, userId))
     ) {
-      console.log('point of debug 2', device);
       const deviceToUpdateKeys = Object.keys(device);
 
       const updateExpression = `SET ${deviceToUpdateKeys.map((key) => `#${key} = :${key}`).join(', ')}`;
@@ -152,8 +148,6 @@ const updateDeviceById = async (id, userId, device) => {
       const expressionAttributeValues = marshall(
         deviceToUpdateKeys.reduce((acc, key) => ({ ...acc, [`:${key}`]: device[key] }), {}),
       );
-
-      console.log('point of debug 3', updateExpression, expressionAttributeNames, expressionAttributeValues);
 
       const { Attributes: updatedDevice } = await dynamoDb.send(
         new UpdateItemCommand({
@@ -169,7 +163,6 @@ const updateDeviceById = async (id, userId, device) => {
 
       // include the attributes that were not updated
       const deviceToReturn = unmarshall(updatedDevice);
-      console.log('point of debug 4', deviceToReturn);
 
       return deviceToReturn;
     } else {
@@ -186,12 +179,7 @@ const updateDeviceById = async (id, userId, device) => {
 
 const getHistoricalReadingsForDeviceId = async (deviceId, userId, start, end) => {
   try {
-    // TODO still cannot get historical readings 11/11/2023 14:52
-    console.log('point of debug 1 historical readings', deviceId);
     if (await checkIfDeviceWithDeviceIdBelongsToUserWithId(deviceId, userId)) {
-      console.log('point of debug 2 historical readings', deviceId, end, start);
-      console.log('point of debug 3 historical readings', typeof end === 'number', typeof start === 'number');
-
       const data = await dynamoDb.send(
         new QueryCommand({
           TableName: process.env.DYNAMODB_TABLE_NAME_READINGS,
@@ -215,17 +203,9 @@ const getHistoricalReadingsForDeviceId = async (deviceId, userId, start, end) =>
         }),
       );
 
-      console.log(data);
-
-      if (!data)
-        throw new NotFoundError(
-          `Could not get data. No readings found for device with id ${deviceId} between ${start} and ${end}`,
-          'src/services/deviceService.js - getHistoricalReadings',
-        );
-
       const devicesToReturn = {
-        devices: data.Items.map((item) => unmarshall(item)),
-        count: data.Count,
+        count: data.Count ?? 0,
+        devices: data.Items.length > 0 ? data.Items.map((item) => unmarshall(item)) : [],
         lastEvaluatedKey: data.LastEvaluatedKey && unmarshall(data.LastEvaluatedKey),
       };
 
@@ -269,16 +249,7 @@ const getCurrentReadingForDeviceId = async (deviceId, userId) => {
         }),
       );
 
-      console.log('point of debug 3 current readings', data);
-
-      if (!data || !data.Items || data.Items.length === 0) {
-        throw new NotFoundError(
-          `Could not get current readings for device with id ${deviceId}, no readings found`,
-          'src/services/deviceService.js - getCurrentReadingForDeviceId',
-        );
-      }
-
-      return unmarshall(data.Items[0]); // Return the item with the latest timestamp
+      return data.Items.length > 0 ? unmarshall(data.Items[0]) : []; // Return the item with the latest timestamp or empty array
     } else {
       throw new NotFoundError(
         `Could not get current readings for device with id ${deviceId}, device does not exist or does not belong to user.`,
@@ -322,29 +293,25 @@ const getDeviceIdsForUser = async (userId) => {
 };
 
 const getDeviceInformationForDeviceId = async (deviceId, userId) => {
-  try {
-    console.log('point of debug 1', deviceId, userId);
-    const device = await checkIfDeviceWithDeviceIdBelongsToUserWithId(deviceId, userId, true);
-    console.log('point of debug 2', device);
-    if (!device)
-      throw new NotFoundError(
-        `Could not get deivce. Device with id ${deviceId} does not exist or does not belong to user.`,
-        'src/services/deviceService.js - getDeviceInformationForDeviceId',
-      );
+  const device = await checkIfDeviceWithDeviceIdBelongsToUserWithId(deviceId, userId, true);
+  console.log('point of debug 2', device);
+  if (!device)
+    throw new NotFoundError(
+      `Could not get deivce. Device with id ${deviceId} does not exist or does not belong to user.`,
+      'src/services/deviceService.js - getDeviceInformationForDeviceId',
+    );
 
-    return device;
-  } catch (error) {
-    if (error instanceof ApiError) throw error;
-    throw new DynamoDBError(error, 'src/services/deviceService.js - getDeviceInformationForDeviceId');
-  }
+  return device;
 };
 
 export const deviceServices = {
   createDevice,
   updateDeviceById,
   deleteDeviceById,
-  getHistoricalReadingsForDeviceId,
-  getCurrentReadingForDeviceId,
   getDeviceIdsForUser,
+  getCurrentReadingForDeviceId,
   getDeviceInformationForDeviceId,
+  getHistoricalReadingsForDeviceId,
+  checkIfDeviceWithIdBelongsToUserWithId,
+  checkIfDeviceWithDeviceIdBelongsToUserWithId,
 };

@@ -1,7 +1,7 @@
 import { DeviceReading, FilterType, FilteredDeviceReading } from '../../shared';
 
 export const convertToChartData = (data: DeviceReading) => {
-  return [
+  const chartData = [
     {
       name: 'ph',
       value: data.ph,
@@ -23,6 +23,8 @@ export const convertToChartData = (data: DeviceReading) => {
       value: data.humidity,
     },
   ];
+
+  return chartData;
 };
 
 export const convertTimestampToDate = (timestamp: number) => {

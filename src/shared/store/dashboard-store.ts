@@ -17,8 +17,8 @@ const initialState: DashboardStore = {
   isLoading: false,
   type: 'Choose a type',
   dateFilter: {
-    start: new Date().getTime(),
-    end: new Date().setHours(0, 0, 0, 0) - 604800000,
+    start: Math.floor(new Date().setHours(0, 0, 0, 0) / 1000) - 604800,
+    end: Math.floor(Date.now() / 1000),
   },
   dateFilterLabel: 'Choose a date',
   selectedDeviceIdChart: undefined,

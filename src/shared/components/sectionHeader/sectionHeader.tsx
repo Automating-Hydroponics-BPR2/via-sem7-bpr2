@@ -54,20 +54,20 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
 
   const handleDateFilterChange = (e: SelectChangeEvent<unknown>) => {
     const newDateFilter = e.target.value as string;
-    const end = new Date().getTime();
+    const end = Math.floor(Date.now() / 1000);
     let start = 0;
     switch (newDateFilter) {
       case 'Today':
-        start = new Date().setHours(0, 0, 0, 0);
+        start = Math.floor(new Date().setHours(0, 0, 0, 0) / 1000);
         break;
       case 'Last 3 days':
-        start = new Date().setHours(0, 0, 0, 0) - 259200000;
+        start = Math.floor(new Date().setHours(0, 0, 0, 0) / 1000) - 259200;
         break;
       case 'Last 7 days':
-        start = new Date().setHours(0, 0, 0, 0) - 604800000;
+        start = Math.floor(new Date().setHours(0, 0, 0, 0) / 1000) - 604800;
         break;
       default:
-        start = new Date().setHours(0, 0, 0, 0) - 604800000;
+        start = Math.floor(new Date().setHours(0, 0, 0, 0) / 1000) - 604800;
         break;
     }
     setDateFilterLabel?.(newDateFilter);
@@ -86,8 +86,16 @@ export const SectionHeader = (props: ISectionHeaderProps) => {
     }
   };
 
-  // this cannot go more than 80 and less than 10 and each option is 10 apart
-  const thresholdOptions = Array.from(Array(8).keys()).map((i) => i * 10 + 10);
+  // I want this to be dynamic, - 50 of threshold and + 50 of threshold, 10 increments
+  const thresholdOptions = [
+    threshold ? threshold - 30 : 0,
+    threshold ? threshold - 20 : 0,
+    threshold ? threshold - 10 : 0,
+    threshold ?? 0,
+    threshold ? threshold + 10 : 0,
+    threshold ? threshold + 20 : 0,
+    threshold ? threshold + 30 : 0,
+  ];
   const typeOptions = ['light', 'ph', 'temp', 'waterTemp', 'humidity'];
 
   return (

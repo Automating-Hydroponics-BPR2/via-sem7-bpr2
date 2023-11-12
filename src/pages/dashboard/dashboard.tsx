@@ -1,16 +1,26 @@
 import { useEffect, useState } from 'react';
 import { DashboardProps } from './dashboard.props';
-import { Backdrop, Card, Chart, DataTable, FilterType, SectionHeader } from '../../shared';
+import { Backdrop, Card, Chart, DataTable, FilterType, SectionHeader, Snackbar } from '../../shared';
 import { Grid, Skeleton } from '@mui/material';
 import { StyledDashboardGridWrapper } from './dashboard.styles';
 import { convertToChartData, convertTimestampToDate, filterDataTableDataForType } from './dashboard.utils';
 
 export const Dashboard = (props: DashboardProps) => {
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [hasAlertAlreadyBeenShown, setHasAlertAlreadyBeenShown] = useState(false);
+
+  const handleCloseAlert = (event?: Event | React.SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setAlertOpen(false);
+  };
+
   const hardCodedDataTableData = [
     {
       id: '1',
       deviceId: '2',
-      name: 'Device 2',
       light: '1',
       ph: '2',
       temp: '3',
@@ -21,7 +31,6 @@ export const Dashboard = (props: DashboardProps) => {
     {
       id: '2',
       deviceId: '2',
-      name: 'Device 2',
       light: '1',
       ph: '2',
       temp: '3',
@@ -32,7 +41,6 @@ export const Dashboard = (props: DashboardProps) => {
     {
       id: '3',
       deviceId: '2',
-      name: 'Device 2',
       light: '1',
       ph: '2',
       temp: '3',
@@ -43,7 +51,6 @@ export const Dashboard = (props: DashboardProps) => {
     {
       id: '4',
       deviceId: '2',
-      name: 'Device 2',
       light: '1',
       ph: '2',
       temp: '3',
@@ -54,7 +61,6 @@ export const Dashboard = (props: DashboardProps) => {
     {
       id: '5',
       deviceId: '2',
-      name: 'Device 2',
       light: '1',
       ph: '2',
       temp: '3',
@@ -65,7 +71,6 @@ export const Dashboard = (props: DashboardProps) => {
     {
       id: '6',
       deviceId: '2',
-      name: 'Device 2',
       light: '1',
       ph: '2',
       temp: '3',
@@ -106,6 +111,44 @@ export const Dashboard = (props: DashboardProps) => {
     getHistoricalReadings,
   } = props;
 
+  const handleChartData = convertToChartData(
+    currentReading ?? {
+      id: '6',
+      deviceId: '2',
+      light: '15',
+      ph: '25',
+      temp: '33',
+      waterTemp: '24',
+      humidity: '52',
+      timestamp: 1697637285,
+    },
+  );
+
+  const isThresholdExceeded = () => {
+    const { light, ph, temp, waterTemp, humidity } = currentReading ?? {
+      id: '6',
+      deviceId: '2',
+      light: '15',
+      ph: '25',
+      temp: '33',
+      waterTemp: '24',
+      humidity: '52',
+      timestamp: 1697637285,
+    };
+
+    const isThresholdExceeded =
+      parseInt(light) >= threshold ||
+      parseInt(ph) >= threshold ||
+      parseInt(temp) >= threshold ||
+      parseInt(waterTemp) >= threshold ||
+      parseInt(humidity) >= threshold;
+
+    if (isThresholdExceeded && !hasAlertAlreadyBeenShown) {
+      setAlertOpen(true);
+      setHasAlertAlreadyBeenShown(true);
+    }
+  };
+
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
@@ -118,6 +161,11 @@ export const Dashboard = (props: DashboardProps) => {
       getHistoricalReadings(selectedDeviceIdDataTable, dateFilter.start, dateFilter.end);
     }
   }, [initialized, selectedDeviceIdDataTable, dateFilter]);
+
+  useEffect(() => {
+    isThresholdExceeded();
+    setHasAlertAlreadyBeenShown(false);
+  }, [currentReading, threshold]);
 
   return (
     <StyledDashboardGridWrapper container columnSpacing={3}>
@@ -172,23 +220,7 @@ export const Dashboard = (props: DashboardProps) => {
               deviceIds={deviceIds}
               title={'Current Readings'}
             />
-            <Chart
-              data={convertToChartData(
-                currentReading ?? {
-                  id: '1',
-                  deviceId: '2',
-                  light: '15',
-                  ph: '20',
-                  temp: '33',
-                  waterTemp: '40',
-                  humidity: '50',
-                  timestamp: 1697637285,
-                },
-              )}
-              width={100}
-              height={200}
-              threshold={threshold}
-            />
+            <Chart data={handleChartData} width={100} height={200} threshold={threshold} />
           </Grid>
           <Grid item xs={12} md={6} lg={8}>
             <SectionHeader
@@ -248,6 +280,13 @@ export const Dashboard = (props: DashboardProps) => {
               padding={'0'}
             />
           </Grid>
+          <Snackbar
+            open={alertOpen}
+            autoHideDuration={3000}
+            onClose={handleCloseAlert}
+            type="warning"
+            message="Threshold exceeded!"
+          />
         </>
       )}
     </StyledDashboardGridWrapper>

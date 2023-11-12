@@ -45,32 +45,38 @@ export const DataTable = (props: IDataTableProps) => {
             </StyledTableRow>
           </TableHead>
           <TableBody>
-            {data.map((reading, index) => (
-              <StyledTableRow key={index}>
-                {filterType ? (
-                  <StyledTableCell>
-                    {filterType === 'light'
-                      ? reading.light
-                      : filterType === 'ph'
-                      ? reading.ph
-                      : filterType === 'temp'
-                      ? reading.temp
-                      : filterType === 'waterTemp'
-                      ? reading.waterTemp
-                      : reading.humidity}
-                  </StyledTableCell>
-                ) : (
-                  <>
-                    <StyledTableCell>{reading.light}</StyledTableCell>
-                    <StyledTableCell>{reading.ph}</StyledTableCell>
-                    <StyledTableCell>{reading.temp}</StyledTableCell>
-                    <StyledTableCell>{reading.waterTemp}</StyledTableCell>
-                    <StyledTableCell>{reading.humidity}</StyledTableCell>
-                  </>
-                )}
-                <StyledTableCell>{reading.timestamp}</StyledTableCell>
+            {data.length > 0 ? (
+              data.map((reading, index) => (
+                <StyledTableRow key={index}>
+                  {filterType ? (
+                    <StyledTableCell>
+                      {filterType === 'light'
+                        ? reading.light
+                        : filterType === 'ph'
+                        ? reading.ph
+                        : filterType === 'temp'
+                        ? reading.temp
+                        : filterType === 'waterTemp'
+                        ? reading.waterTemp
+                        : reading.humidity}
+                    </StyledTableCell>
+                  ) : (
+                    <>
+                      <StyledTableCell>{reading.light}</StyledTableCell>
+                      <StyledTableCell>{reading.ph}</StyledTableCell>
+                      <StyledTableCell>{reading.temp}</StyledTableCell>
+                      <StyledTableCell>{reading.waterTemp}</StyledTableCell>
+                      <StyledTableCell>{reading.humidity}</StyledTableCell>
+                    </>
+                  )}
+                  <StyledTableCell>{reading.timestamp}</StyledTableCell>
+                </StyledTableRow>
+              ))
+            ) : (
+              <StyledTableRow sx={{width:'100%'}}>
+                <StyledTableCell>No data available</StyledTableCell>
               </StyledTableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </StyledTableContainer>
