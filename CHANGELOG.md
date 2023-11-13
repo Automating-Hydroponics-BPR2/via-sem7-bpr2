@@ -1,3 +1,59 @@
+# [4.1.0](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/compare/v4.0.0...v4.1.0) (2023-11-13)
+
+
+### Bug Fixes
+
+* **amplify:** fixing failed build 🙏 ([511a5fe](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/511a5fe5368bfbf69f18fc8319cf5666ecb0fd62))
+* **api:** fixing api not having the needed resources ([b2d5e17](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/b2d5e17a18a2d4aab2e1b7aa6de6832b985210a0))
+* **app.js:** fixing (or trying to fix 😥 cors error) ([29b6baf](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/29b6baf6b4803839155b607e2de99991792682fc))
+* **app.js:** fixing cors error 😪 ([5e013df](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/5e013df35ad8eaff86f1e5549eacd8b6f4f29fb7))
+* **app.tsx:** fixing App.tsx not being renamed by Github properly so I am reverting the name change ([b0c45c5](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/b0c45c5aded9a6c10a5601630011ca7cf67f33fd))
+* **datatable:** adding a title to the dataTable ([46d6803](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/46d68037bb280f453bda3b4b977dc4afacf3aa33))
+* **devicerouter:** cannot GET /device?id= ([1d9646d](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/1d9646da79d64e160c6be62a01bfea30a31a5bc8))
+* deviceService. Trying to make historicalReadings work. Debugging ([377baed](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/377baed432da65206f25bf82011a2efcd4269e0b))
+* **deviceservice.js:** now correctly returns only the ids istead of all the devices ([af7fe09](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/af7fe09a465ee9ccfc1443c3eaa10b6b406e9922))
+* **deviceservice.js:** trying to fix getHistoricalReadingsForDeviceId 😎 ([cf1d3aa](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/cf1d3aaad145c307b3f8773b353097339115e640))
+* **deviceservice:** fixing getHistoricalReadingsForDeviceId 😎 ([b224a33](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/b224a33841ef8b467eb2c07c93990ec97d78ba84))
+* finalized deviceService.test, some threshold adjustments in frontend ([671c63e](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/671c63e0589279c4b77f7ed56ea91d96468248a0))
+* fixing an bug not showing "Choose a device" if the array has only 1 item ([4f486ce](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/4f486ce7de981c4d80c93a258fd1f268e565d1ee))
+* hitting a different get endpoint is happening. Looking for a solution ([bf3d475](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/bf3d475264ddc4fa8b2800afbbc8f52ac15c655a))
+* overall bug fixes & improvements ([01619ba](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/01619ba1f86e5ab1e7db1faeae1978cf27b4ede3))
+* overall bug fixes, improvements, token handling, tests ([465921a](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/465921aa02e5cf559e8f35ee7ec385f5692daace))
+* overall changes, fixes, improvements, logic modifications ([c8b70f0](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/c8b70f0a32feea6d6c2352462fadc36af77dc0d9))
+* overall fixes around the app & improvements ([04072b2](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/04072b2c5346917bfed05c683b10324290e2b187))
+* overall fixes in the endpoints, services & controllers ([cc90752](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/cc9075238f36e24cf5a963f04c89cc1f984170d4))
+* overall fixes, changes, improvements ([d2ee5f3](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/d2ee5f3f3ddf35db84b3022ae24cca4e6f80f74c))
+* **passport.js:** fixing an error that was using a wrong function from userService ([8ca72fc](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/8ca72fca9bcb01fc5d9dd18c4361a6bf261d42e6))
+* small fix in delete a device with id chain. Get historical readings are still not working ([6474bb5](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/6474bb513399f6826ef2a7cc2d92d6c53b18fbca))
+* some integration testing around the application and fixing issues I found ([bba3ece](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/bba3ece423edf5d9c87ef70567f6266282c33e0d))
+* some more indication for user if no data has been fetched. Fix in getCurrentReading ([a449ecf](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/a449ecfacd01c8cd006993240d56ed4d3d778175))
+
+
+### Features
+
+* adding a chart and dataTable to dashboard ([3e63507](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/3e63507c6a5ab4f3d855c2782a6abe642cebc0cb))
+* adding a number next to the notifications dialog. Adding some notifications around services ([8e66bfd](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/8e66bfdaa2b25fa8f0d6b388d0678a5bc716707b))
+* adding deviceService.test.js and still trying to fix getHistoricalReadings... 😭 ([7441ab7](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/7441ab766ce1911a1f849f97561fa7b8b29ebcc3))
+* adding extra functionality in lambda function. Adding some methods in the device-service ([18b5618](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/18b5618945bdd80f3e7a18ccb93057b3f148663a))
+* adding notifications dialog ([20b100e](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/20b100e44214cfd4760e610e08f5eb637d50cde7))
+* adding notifications dialog to bottom navigation ([f9b66ec](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/f9b66ec84e5bc67fcad1c15da4f56d8708df8808))
+* adding some dialogs for user/device edit device add and delete. Changes to card component ([a769f02](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/a769f025367ee39edbd2272d66968f49231cfa59))
+* adding some services and connecting services to dashboard page ([c286a3e](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/c286a3e1dadafedf666179638cfd7e37dcf718f2))
+* adding some titles to dashboard sections ([ec7347a](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/ec7347a2ee1ec5e2d5d0555aa80519d53faa5c10))
+* **authentication:** successfully added authentication flow ([8537b5d](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/8537b5d32530a6539b9e09cb11e203a5457fc8e7))
+* changes include - renamings. styles changes. props added. changes to stories ([8424a86](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/8424a863324178f9dd07127f5ef9be7de1cb6cf1))
+* changes to card. Adding card buttons. Adding confirmation dialog in dashboard ([4d84046](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/4d8404694084c9dc997c62bbd00573feb9b35a53))
+* connected dashboard to different dialogs (edit, delete, add). Added some loading in services ([d90476d](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/d90476dce1dcbce19336f387c29360015cc23418))
+* **dashboard-chain:** initial commit for the dashboard chain ([99575c7](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/99575c7b0d7882b718fcde9534eb7da6e4dfcafe))
+* **dashboard.tsx:** adding section header to all grid items ([45fb94c](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/45fb94c37257911dcb19235f1267f8a7432d298a))
+* **home.tsx:** adding some intro section to home page ([9c96e54](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/9c96e54842f953d2abf7244ac12fb6419c76eb0f))
+* notifications dialog in bottom navigation ([2f84701](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/2f84701db021d1751de90797bb2070387371ebce))
+
+
+### Performance Improvements
+
+* **jest.config.ts:** now not running tests that are only in the local amplify backend dir ([2b07618](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/2b0761804e414746aeab7515a9f3dc8fd8efdc86))
+
 # [4.0.0](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/compare/v3.0.0...v4.0.0) (2023-10-08)
 
 
