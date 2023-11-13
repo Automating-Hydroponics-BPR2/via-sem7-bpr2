@@ -1,6 +1,27 @@
-import { signUp, signIn } from './user-service';
+import { register, login, updateUserWithId, deleteUserWithId } from './user-service';
+import {
+  createDevice,
+  getDeviceWithId,
+  getDeviceIds,
+  getHistoricalReadings,
+  getCurrentReading,
+  updateDeviceWithId,
+  deleteDeviceWithId,
+} from './device-service';
 
 export const userService = {
-  signIn,
-  signUp,
+  login,
+  register,
+  updateUserWithId,
+  deleteUserWithId,
+};
+
+export const deviceService = {
+  createDevice,
+  getDeviceWithId,
+  getDeviceIds,
+  getHistoricalReadings,
+  getCurrentReading,
+  updateDeviceWithId,
+  deleteDeviceWithId,
 };

@@ -56,7 +56,7 @@ export const getCurrentReadings = async (req, res, next) => {
       query: { id: deviceId },
       user: { id: userId },
     } = req;
-    const currentReadings = await deviceServices.getCurrentReadings(deviceId, userId);
+    const currentReadings = await deviceServices.getCurrentReadingForDeviceId(deviceId, userId);
     res.status(200).json(currentReadings);
   } catch (error) {
     if (error instanceof ApiError) next(error);
@@ -69,15 +69,46 @@ export const getCurrentReadings = async (req, res, next) => {
 export const getHistoricalReadings = async (req, res, next) => {
   try {
     const {
-      query: { id, type, start, end },
+      query: { id, start, end },
       user: { id: userId },
     } = req;
-    const historicalReadings = await deviceServices.getHistoricalReadings(id, userId, start, end, type);
+    const historicalReadings = await deviceServices.getHistoricalReadingsForDeviceId(id, userId, start, end);
     res.status(200).json(historicalReadings);
   } catch (error) {
     if (error instanceof ApiError) next(error);
     else {
       next(new InternalServerError(error, 'src/controllers/deviceController.js - getHistoricalReadings'));
+    }
+  }
+};
+
+export const getDeviceIdsForUser = async (req, res, next) => {
+  try {
+    const {
+      user: { id: userId },
+    } = req;
+    const deviceIds = await deviceServices.getDeviceIdsForUser(userId);
+    res.status(200).json(deviceIds);
+  } catch (error) {
+    if (error instanceof ApiError) next(error);
+    else {
+      next(new InternalServerError(error, 'src/controllers/deviceController.js - getDeviceIdsForUser'));
+    }
+  }
+};
+
+export const getDeviceInformationForId = async (req, res, next) => {
+  try {
+    const {
+      query: { id: deviceId },
+      user: { id: userId },
+    } = req;
+    const deviceInformation = await deviceServices.getDeviceInformationForDeviceId(deviceId, userId);
+    res.status(200).json(deviceInformation);
+  } catch (error) {
+    if (error instanceof ApiError) next(error);
+    else {
+      next(new InternalServerError(error, 'src/controllers/deviceController.js - getDeviceInformationForId'));
     }
   }
 };

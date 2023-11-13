@@ -42,6 +42,10 @@ export const useCustomTheme = () => {
           fontWeightMedium: 500,
           fontWeightBold: 700,
         },
+        zIndex: {
+          appBar: 1200,
+          drawer: 1100,
+        },
       }),
     [theme],
   );

@@ -3,9 +3,9 @@ import { ColorResult } from 'react-color';
 
 import { Divider, StyledCirclePicker, StyledColorPickerWrapper } from './color-picker.styles';
 import { ColorPickerProps } from './color-picker.props';
-import { StyledTypography } from '../../../shared/styles';
+import { StyledTypography } from '../../../shared';
 
-export const _ColorPicker = (props: ColorPickerProps) => {
+export const ColorPicker = (props: ColorPickerProps) => {
   const [color, setColor] = useState(props.color);
 
   const handleColorChange = (color: ColorResult) => {

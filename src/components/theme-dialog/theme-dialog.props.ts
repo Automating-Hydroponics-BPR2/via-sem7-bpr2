@@ -1,5 +1,4 @@
-import { Theme } from '../../shared/models/theme';
-import { DialogProps } from '../shared/dialog/dialog.props';
+import { Theme, DialogProps } from '../../shared';
 
 export interface ThemeDialogProps extends DialogProps {
   theme: Theme;

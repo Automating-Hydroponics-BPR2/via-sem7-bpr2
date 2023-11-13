@@ -1,11 +1,13 @@
-import { Card } from './shared/card/card.container';
-import { _BottomNavigation as BottomNavigation } from './bottom-navigation/bottom-navigation';
-import { Header } from './header/header';
-import { _Snackbar as Snackbar } from './shared/snackbar/snackbar';
-import { _Button as Button } from './shared/button/button';
-import { ThemeDialog } from './theme-dialog/theme-dialog';
-import { _Dialog as Dialog } from './shared/dialog/dialog.container';
-import { _ColorPicker as ColorPicker } from './theme-dialog/color-picker/color-picker';
-import { _Backdrop as Backdrop } from './shared/backdrop/backdrop';
+import { HeaderContainer } from './header/header.container';
+import { ThemeDialogContainer } from './theme-dialog/theme-dialog.container';
+import { ColorPicker } from './theme-dialog/color-picker/color-picker';
+import { BottomNavigationContainer } from './bottom-navigation';
 
-export { Backdrop, BottomNavigation, Header, Snackbar, Button, ColorPicker, ThemeDialog, Card, Dialog };
+export {
+  BottomNavigationContainer as BottomNavigation,
+  ThemeDialogContainer as ThemeDialog,
+  HeaderContainer as Header,
+  ColorPicker,
+};
+export * from './edit-add-dialog';
+export * from './notifications-dialog';
