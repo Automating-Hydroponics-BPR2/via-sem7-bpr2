@@ -47,7 +47,7 @@ export const StyledLinkButtonIcon = styled(Box)`
   color: ${({ theme }) => theme.palette.text.primary};
   opacity: 0;
   transition: opacity 0.2s;
-  
+
   ${StyledLinkButton}:hover & {
     background-color: ${({ theme }) => hexWithAlpha(theme.palette.text.primary as string, 10)};
     cursor: pointer;

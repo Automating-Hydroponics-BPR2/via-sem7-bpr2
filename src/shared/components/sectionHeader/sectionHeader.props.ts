@@ -3,7 +3,7 @@ import { DateFilter } from '../../models';
 
 export interface ISectionHeaderProps {
   title: string;
-  
+
   type?: string;
   threshold?: number;
   deviceIds?: string[];

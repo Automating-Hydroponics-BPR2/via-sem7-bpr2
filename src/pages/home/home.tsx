@@ -63,11 +63,15 @@ export const Home = (props: IHomeProps) => {
               Check out more of our projects on Github!! 🤗 <br />
               <Box>
                 <StyledLink>
-                  <a href="https://github.com/NoHop3">Stefan's GitHub</a>
+                  <a href="https://github.com/NoHop3" target="_blank">
+                    Stefan's GitHub
+                  </a>
                 </StyledLink>
                 {'&'}
                 <StyledLink>
-                  <a href="https://github.com/YoyoMy">Yoana's GitHub</a>
+                  <a href="https://github.com/YoyoMy" target="_blank">
+                    Yoana's GitHub
+                  </a>
                 </StyledLink>
               </Box>
             </StyledCheckpointInfo>
