@@ -23,14 +23,14 @@ export const DataTable = (props: IDataTableProps) => {
                   {filterType === 'light'
                     ? 'Light'
                     : filterType === 'ph'
-                    ? 'pH'
-                    : filterType === 'temp'
-                    ? 'Temperature'
-                    : filterType === 'waterTemp'
-                    ? 'Water Temperature'
-                    : filterType === 'humidity'
-                    ? 'Humidity'
-                    : 'Date'}
+                      ? 'pH'
+                      : filterType === 'temp'
+                        ? 'Temperature'
+                        : filterType === 'waterTemp'
+                          ? 'Water Temperature'
+                          : filterType === 'humidity'
+                            ? 'Humidity'
+                            : 'Date'}
                 </StyledTableHeaderCell>
               ) : (
                 <>
@@ -55,12 +55,12 @@ export const DataTable = (props: IDataTableProps) => {
                       {filterType === 'light'
                         ? reading.light
                         : filterType === 'ph'
-                        ? reading.ph
-                        : filterType === 'temp'
-                        ? reading.temp
-                        : filterType === 'waterTemp'
-                        ? reading.waterTemp
-                        : reading.humidity}
+                          ? reading.ph
+                          : filterType === 'temp'
+                            ? reading.temp
+                            : filterType === 'waterTemp'
+                              ? reading.waterTemp
+                              : reading.humidity}
                     </StyledTableCell>
                   ) : (
                     <>

@@ -246,13 +246,13 @@ export const Dashboard = (props: DashboardProps) => {
                       })
                     : filterDataTableDataForType(type as FilterType, historicalReadings)
                   : type === 'Choose a type'
-                  ? hardCodedDataTableData.map((reading) => {
-                      return {
-                        ...reading,
-                        timestamp: convertTimestampToDate(reading.timestamp as number),
-                      };
-                    })
-                  : filterDataTableDataForType(type as FilterType, hardCodedDataTableData)
+                    ? hardCodedDataTableData.map((reading) => {
+                        return {
+                          ...reading,
+                          timestamp: convertTimestampToDate(reading.timestamp as number),
+                        };
+                      })
+                    : filterDataTableDataForType(type as FilterType, hardCodedDataTableData)
               }
               filterType={type !== 'Choose a type' ? (type as FilterType) : undefined}
               width={'100%'}

@@ -103,8 +103,8 @@ export const Card = React.memo((props: CardProps) => {
             props.device
               ? 'Are you sure you want to delete this device'
               : props.user
-              ? 'Are you sure you want to delete your account'
-              : 'Confirm and proceed with selected action'
+                ? 'Are you sure you want to delete your account'
+                : 'Confirm and proceed with selected action'
           }?`}</Typography>,
         ]}
         options={['Confirm', 'Cancel']}
