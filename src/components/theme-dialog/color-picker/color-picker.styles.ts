@@ -18,8 +18,8 @@ export const StyledColorPickerWrapper = styled.div`
   padding: ${({ theme }) => theme.spacing(3)};
 `;
 
-export const StyledCirclePicker = styled(CirclePicker)<{ isInverted?: boolean }>`
+export const StyledCirclePicker = styled(CirclePicker)`
   > span > div > span > div {
-    box-shadow: ${({ theme, isInverted }) => isInverted && `0 0 0 1px ${theme.palette.secondary.contrastText!} inset`};
+    box-shadow: ${({ theme }) => `0 0 0 1px ${theme.palette.secondary.contrastText!} inset`};
   }
 `;
