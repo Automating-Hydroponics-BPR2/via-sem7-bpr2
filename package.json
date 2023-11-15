@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "via-sem7-bpr2",
   "version": "4.1.1",
   "private": true,
@@ -99,6 +100,9 @@
     "svgo": "3.0.3",
     "ts-jest": "29.1.1",
     "typescript": "5.2.2"
+  },
+  "resolutions": {
+    "strip-ansi": "6.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
