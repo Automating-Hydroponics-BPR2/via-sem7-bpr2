@@ -1,3 +1,10 @@
+## [4.1.2](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/compare/v4.1.1...v4.1.2) (2023-11-15)
+
+
+### Bug Fixes
+
+* **package.json:** fixing failing main build on aws amplify ([1526579](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/commit/15265797eae53395efd5c006acc85b26ea6ee79f))
+
 ## [4.1.1](https://github.com/Automating-Hydroponics-BPR2/via-sem7-bpr2-client/compare/v4.1.0...v4.1.1) (2023-11-15)
 
 
