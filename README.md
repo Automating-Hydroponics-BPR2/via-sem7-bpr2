@@ -56,7 +56,7 @@ $ git push
 
 This bachelor project has been build and hosted on AWS Amplify which is a way to deploy Full-stack applications under one roof. [Learn more](https://docs.amplify.aws/)
 
-The application has been hosted on 👉 [link](https://main.d2w95gfx7rgwd6.amplifyapp.com/)
+The application has been hosted on 👉 [link](https://main.d2w95gfx7rgwd6.amplifyapp.com)
 
 ![Image](https://techblog.nhn-techorus.com/wp-content/uploads/2022/11/AWSAmplify_OGP.png)
 
