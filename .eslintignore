@@ -1,8 +1,9 @@
 node_modules
-babel.config.js
+babel.config.cjs
 reportWebVitals.ts
 react-app-env.d.ts
 jest.config.ts
+jest.config.js
 .prettierrc
 .env.development
 .env.production
