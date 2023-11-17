@@ -10,3 +10,5 @@ jest.config.js
 tsconfig.json
 tsconfig.eslint.json
 .eslintrc.json
+.gitignore
+amplify

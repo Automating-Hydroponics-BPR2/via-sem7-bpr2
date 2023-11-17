@@ -27,10 +27,12 @@ BPR2 (Bachelor Project) for VIA. Full-stack development with AWS Amplify.
     - [BCrypt](#bcrypt)
   - [API Endpoint Documentation](#api-endpoint-documentation)
     - [/device](#device)
+      - [GET](#get)
       - [PATCH](#patch)
       - [DELETE](#delete)
     - [/device/new](#devicenew)
       - [POST](#post)
+    - [/device/all](#deviceall)
     - [/device/current](#devicecurrent)
       - [GET](#get)
     - [/device/historical](#devicehistorical)
@@ -106,11 +108,11 @@ This will run all of the above commands in one go.
 
 This bachelor project has been build and hosted on AWS Amplify which is a way to deploy Full-stack applications under one roof. [Learn more](https://docs.amplify.aws/)
 
-The application has been hosted on 2 environments: Main and Dev.
-```
+The application has been hosted on 2 environments: Main and Dev:
+
 Main environment 👉 [link](https://main.d2w95gfx7rgwd6.amplifyapp.com/)
 Dev environment 👉 [link](https://stg-amplifychanges-4-10-23.d2w95gfx7rgwd6.amplifyapp.com/)
-```
+
 
 ![Image](https://techblog.nhn-techorus.com/wp-content/uploads/2022/11/AWSAmplify_OGP.png)
 
@@ -162,17 +164,29 @@ BCrypt is used for hashing the password of the user on the backend. The password
 
 [![BCrypt](https://media.geeksforgeeks.org/wp-content/uploads/20220427143809/Artboard1.jpg)](https://en.wikipedia.org/wiki/Bcrypt)
 
-## API Endpoint Documentation\
-The API has been developed in AWS APIGateway and is exposed in 2 stages: Main and Dev.
+## REST API Documentation
+The API has been developed in AWS APIGateway and is exposed in 2 stages: Main and Dev:
 
-```
 👉 Main [link](https://1aelqys6w7.execute-api.eu-central-1.amazonaws.com/main)
 👉 DEV [link](https://bvj938q4m0.execute-api.eu-central-1.amazonaws.com/dev)
-```
 
 Current routes configured: [device, user]. Each endpoint except login and register is protected with a JWT token. The token is extracted from the Authorization header and is checked if it is valid and not expired. If the token is valid the request is processed, otherwise the request is rejected with 401 **Unauthorized** status code.
 
 ### /device
+#### GET
+Endpoint for getting a device. Example request path: `/device?id=1234`
+Gets a device with id provided in queryParams. UserId is extracted from the JWT token and checked if it matches the userId of the device to be fetched. Then performs a query on the database to get the device with the provided id.
+
+Returns the device in the following format if any are found:
+```
+{
+    "id": "443155a5-5494-4269-84df-fe848b0f2bb0", // String. The id of the device is also returned with the response
+    "deviceId": "1234", // String. The deviceId if specified, otherwise the old deviceId is returned
+    "name": "Device updated ✅", // String. The name if specified, "Unnamed Device" otherwise.
+    "userId": "1234", // String. userId of the user that created the device is also returned with the response
+}
+```
+
 #### PATCH
 Endpoint for updating a device. Example request path: `/device?id=1234`
 Updates a device with id provided in queryParams and device properties to update in body. 
@@ -225,6 +239,22 @@ Returns the created device in the following format:
 }
 ```
 [More info about --> AWS Docs](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/classes/putitemcommand.html)
+
+### /device/all
+#### GET
+Endpoint for getting all device ids of a user. Example request path: `/device/all`
+Gets all device ids of a user. UserId is extracted from the JWT token and checked if it matches the userId of the devices to be fetched. Then performs a query on the database to get all devices of the user sorted by the timestamp property in the Devices DynamoDB table.
+
+Returns the devices in the following format if any are found:
+```
+"ids":
+[
+    "deviceId": "12345", // String. id of the device
+    "deviceId": "12347", // String. id of the device
+    "deviceId": "123453", // String. id of the device
+],
+"count": 1 // Number. The number of items in the Items array.
+```
 
 ### /device/current
 #### GET
