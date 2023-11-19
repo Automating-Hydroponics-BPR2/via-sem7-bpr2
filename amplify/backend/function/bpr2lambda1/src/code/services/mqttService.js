@@ -1,6 +1,6 @@
 import mqtt from 'mqtt';
 import { readingService } from './readingService.js';
-import { InternalServerError } from '../helpers/apiError';
+import { InternalServerError } from '../helpers/apiError.js';
 
 const connectMqtt = (options, deviceId) => {
   try {
