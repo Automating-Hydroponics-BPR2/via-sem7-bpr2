@@ -150,6 +150,7 @@ describe('deviceServices', () => {
   });
 
   describe('createDevice', () => {
+    // TODO Fix tests after adding the mqtt logic to create device
     it('should create a device if it does not already exist for the user', async () => {
       // Mock the DynamoDB send method for GetItemCommand to simulate a non-existing device
       mockSend.mockResolvedValueOnce({ Items: [] });
