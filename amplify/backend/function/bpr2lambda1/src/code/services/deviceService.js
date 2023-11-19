@@ -10,6 +10,7 @@ import {
 } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { NotFoundError, DynamoDBError, BadRequestError, ApiError } from '../helpers/apiError.js';
+import { mqttService } from './mqttService.js';
 const dynamoDb = new DynamoDBClient({ region: 'eu-central-1' });
 
 // Important for updating a device and deleting a device when the device id might be changed/undefined
@@ -99,6 +100,22 @@ const createDevice = async (device, userId) => {
         }),
       );
 
+      console.log(`Device created: ${deviceToCreate.deviceId}`);
+
+      // Connect to MQTT after DynamoDB operation
+      mqttService.connectMqtt(
+        {
+          protocol: 'mqtts',
+          host: process.env.MQTT_BROKER_HOST,
+          port: process.env.MQTT_BROKER_PORT,
+          username: process.env.MQTT_BROKER_USERNAME,
+          password: process.env.MQTT_BROKER_PASSWORD,
+        },
+        deviceToCreate.deviceId,
+      );
+
+      console.log(`MQTT connected for device: ${deviceToCreate.deviceId}`);
+
       return deviceToCreate;
     } else {
       throw new BadRequestError(
@@ -111,6 +128,7 @@ const createDevice = async (device, userId) => {
     throw new DynamoDBError(error, 'src/services/deviceService.js - createDevice');
   }
 };
+
 
 const deleteDeviceById = async (id, userId) => {
   try {
